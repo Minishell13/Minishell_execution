@@ -33,6 +33,18 @@ typedef struct	s_token {
 	t_token_type	type;   // token kind
 	struct s_token	*next;   // next in list
 	struct s_token	*prev;   // previous in list
-}				t_token;  
+}				t_token;
+
+t_token		*last(t_token *token);
+t_token		*new(char *value, t_token_type type);
+void		push(t_token **token, t_token *new);
+void		add(t_token **token, t_token *new);
+t_token		*pop(t_token **token);
+int			token_size(t_token *token);
+void		ft_clear(t_token **list);
+
+void	print_node(t_token *node);
+void	print_token(t_token *list);
+
 
 #endif 
