@@ -1,6 +1,9 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
+// Libft
+# include "../Libft/includes/libft.h"
+
 // Log
 # include <stdio.h>
 
@@ -15,21 +18,21 @@
 // Error
 # include <errno.h>
 
-typedef enum e_token {
-    TOK_WORD,        // e.g. "cat", "file.txt", "grep"
-    TOK_PIPE,        // '|'
-    TOK_REDIR_IN,    // '<'
-    TOK_REDIR_OUT,   // '>'
-    TOK_HERE_DOC,    // '<<'
-    TOK_APPEND,      // '>>'
-    /* … */
-}   t_token_type;  
+typedef enum	e_token_type {
+	TOK_WORD,		// e.g. "cat", "file.txt", "grep"
+	TOK_PIPE,		// '|'
+	TOK_REDIR_IN,	// '<'
+	TOK_REDIR_OUT,	// '>'
+	TOK_HERE_DOC,	// '<<'
+	TOK_APPEND,		// '>>'
+	/* … */
+}				t_token_type;
  
-typedef struct s_token {
-    char             *text;   // allocated string slice
-    t_token_type      type;   // token kind
-    struct s_token   *next;   // next in list
-    struct s_token   *prev;   // previous in list
-}   t_token;  
+typedef struct	s_token {
+	char			*value;   // allocated string slice
+	t_token_type	type;   // token kind
+	struct s_token	*next;   // next in list
+	struct s_token	*prev;   // previous in list
+}				t_token;  
 
 #endif 
