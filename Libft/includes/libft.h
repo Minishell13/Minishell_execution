@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 10:12:03 by abnsila           #+#    #+#             */
-/*   Updated: 2025/02/10 10:30:29 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/23 16:32:24 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <limits.h>
 # include "ft_printf.h"
 # include "get_next_line.h"
-# include "ft_malloc.h"
+# include "t_bool.h"
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);

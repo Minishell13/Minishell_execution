@@ -6,13 +6,13 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 15:45:27 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/23 16:14:52 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/23 16:22:59 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_token	*last(t_token *token)
+t_token	*ft_last_token(t_token *token)
 {
 	t_token	*current;
 
@@ -24,7 +24,7 @@ t_token	*last(t_token *token)
 	return (current);
 }
 
-t_token	*new(char *value, t_token_type type)
+t_token	*ft_new_token(char *value, t_token_type type)
 {
 	t_token	*node;
 
@@ -38,7 +38,7 @@ t_token	*new(char *value, t_token_type type)
 	return (node);
 }
 
-void	push(t_token **token, t_token *new)
+void	ft_push_token(t_token **token, t_token *new)
 {
 	t_token	*last_token;
 
@@ -47,7 +47,7 @@ void	push(t_token **token, t_token *new)
 		*token = new;
 		return ;
 	}
-	last_token = last(*token);
+	last_token = ft_last_token(*token);
 	new->next = *token;
 	new->prev = last_token;
 	(*token)->prev = new;
@@ -55,7 +55,7 @@ void	push(t_token **token, t_token *new)
 	*token = new;
 }
 
-void	add(t_token **token, t_token *new)
+void	ft_add_token(t_token **token, t_token *new)
 {
 	t_token	*last_token;
 
@@ -64,13 +64,13 @@ void	add(t_token **token, t_token *new)
 		*token = new;
 		return ;
 	}
-	last_token = last(*token);
+	last_token = ft_last_token(*token);
 	last_token->next = new;
 	new->next = (*token);
 	new->prev = last_token;
 }
 
-t_token	*pop(t_token **token)
+t_token	*ft_pop_token(t_token **token)
 {
 	t_token	*popped_token;
 	t_token	*last_token;
@@ -81,7 +81,7 @@ t_token	*pop(t_token **token)
 		*token = NULL;
 		return (popped_token);
 	}
-	last_token = last(*token);
+	last_token = ft_last_token(*token);
 	(*token) = (*token)->next;
 	last_token->next = *token;
 	(*token)->prev = last_token;
@@ -90,7 +90,7 @@ t_token	*pop(t_token **token)
 	return (popped_token);
 }
 
-int	token_size(t_token *token)
+int	ft_tokens_len(t_token *token)
 {
 	t_token	*current;
 	int		size;
@@ -107,7 +107,7 @@ int	token_size(t_token *token)
 	return (size);
 }
 
-void	ft_clear(t_token **list)
+void	ft_clear_tokens(t_token **list)
 {
 	t_token	*current;
 	t_token	*temp;
