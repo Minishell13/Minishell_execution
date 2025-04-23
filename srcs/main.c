@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/23 16:29:23 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/23 16:48:10 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,11 @@ void	ft_get_tokens(t_token **list)
 	ft_add_token(list, t7);
 }
 
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **ev)
 {
 	(void)ac;
 	(void)av;
+	(void)ev;
 	t_token *list;
 
 	list = NULL;
