@@ -6,12 +6,13 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/23 16:48:10 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/24 11:06:50 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+t_minishell	sh;
 
 // ┌───────────────┬────────────────┐
 // │ Token Type    │ Lexeme         │
@@ -53,6 +54,13 @@ void	ft_get_tokens(t_token **list)
 	ft_add_token(list, t7);
 }
 
+t_error	ft_init_minishell(char **ev)
+{
+	sh.envp = ev;
+	sh.exit_code = SUCCESS;
+	sh.shell = "sh";
+}
+
 int	main(int ac, char **av, char **ev)
 {
 	(void)ac;
@@ -64,6 +72,7 @@ int	main(int ac, char **av, char **ev)
 	// char *rl;
 	// rl = readline("Prompt > ");
 	// printf("%s\n", rl);
+	ft_init_minishell(ev);
 	ft_get_tokens(&list);
 	ft_print_tokens(list);
 	ft_clear_tokens(&list);
