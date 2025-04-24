@@ -7,7 +7,7 @@ INCLUDES = -I./includes -I./Libft/includes
 LIBFT_DIR = ./Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS =	$(SRC_DIR)/main.c $(SRC_DIR)/tokens.c \
+SRCS =	$(SRC_DIR)/main.c $(SRC_DIR)/lexer.c $(SRC_DIR)/parser.c $(SRC_DIR)/ast.c \
 		$(SRC_DIR)/debugging.c
 	
 OBJS = $(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/23 16:27:25 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/24 15:41:53 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,71 @@ void	ft_print_tokens(t_token *list)
 		current = current->next;
 	} while (current != list);
 }
+
+// Helper: get a human-readable name for each t_gram
+static const char *ft_gram_name(t_gram g)
+{
+	switch (g) {
+		case GRAM_COMPLETE_COMMAND:    return "COMPLETE_COMMAND";
+		case GRAM_COMMAND_LIST:        return "COMMAND_LIST";
+		case GRAM_COMPOUND_COMMAND:    return "COMPOUND_COMMAND";
+		case GRAM_PIPELINE:            return "PIPELINE";
+		case GRAM_COMMAND:             return "COMMAND";
+		case GRAM_SUBSHELL:            return "SUBSHELL";
+		case GRAM_SIMPLE_COMMAND:      return "SIMPLE_COMMAND";
+		case GRAM_REDIRECT_LIST:       return "REDIRECT_LIST";
+		case GRAM_IO_REDIRECT:         return "IO_REDIRECT";
+		case GRAM_WORD:                return "WORD";
+		case GRAM_OPERATOR_AND:        return "OPERATOR_AND";
+		case GRAM_OPERATOR_OR:         return "OPERATOR_OR";
+		case GRAM_OPERATOR_PIPE:       return "OPERATOR_PIPE";
+		case GRAM_REDIR_IN:            return "REDIR_IN";
+		case GRAM_REDIR_OUT:           return "REDIR_OUT";
+		case GRAM_REDIR_APPEND:        return "REDIR_APPEND";
+		case GRAM_HEREDOC:             return "HEREDOC";
+		case GRAM_FILENAME:            return "FILENAME";
+		case GRAM_LINEBREAK:           return "LINEBREAK";
+		default:                       return "UNKNOWN";
+	}
+}
+
+// The main recursive printer
+void	ft_print_ast(const t_ast *node, int indent)
+{
+	if (!node) return;
+
+	// Print indent
+	for (int i = 0; i < indent; i++) printf("  ");
+
+	// Print node type
+	printf("%s", ft_gram_name(node->type));
+
+	// If it's a simple command, dump argv[]
+	if (node->type == GRAM_SIMPLE_COMMAND) {
+		if (node->data.argv) {
+			printf(" argv: [");
+			for (char **arg = node->data.argv; *arg; arg++)
+				printf(" \"%s\",", *arg);
+			printf(" NULL ]");
+		}
+	}
+	// If it's I/O redirection, show file and mode
+	else if (node->type == GRAM_IO_REDIRECT) {
+		// You might encode the operator as a string in the node; 
+		// otherwise infer from node->type or value
+		printf(" {file: \"%s\", append: %s}",
+			   node->data.redir.file,
+			   node->data.redir.append ? "true" : "false");
+	}
+
+	putchar('\n');
+
+	// Recurse into left child
+	if (node->left)
+		ft_print_ast(node->left, indent + 2);
+
+	// Then into right child
+	if (node->right)
+		ft_print_ast(node->right, indent + 2);
+}
+

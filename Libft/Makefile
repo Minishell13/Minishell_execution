@@ -11,15 +11,7 @@ SRCS =	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
 	ft_print_str.c ft_print_ptr.c ft_print_nbr.c ft_print_hexa.c \
 	ft_print_unsigned_nbr.c get_next_line.c get_next_line_utils.c \
        
-
-SRCSB = ft_lstnew_bonus.c ft_lstadd_front_bonus.c \
-	ft_lstsize_bonus.c ft_lstlast_bonus.c \
-	ft_lstadd_back_bonus.c ft_lstdelone_bonus.c \
-	ft_lstclear_bonus.c ft_lstiter_bonus.c \
-	ft_lstmap_bonus.c
-
 OBJS = ${SRCS:.c=.o}
-OBJSB = ${SRCSB:.c=.o}
 NAME = libft.a
 LIBC = ar rcs
 CC = cc
@@ -29,14 +21,14 @@ CFLAGS = -Wall -Wextra -Werror -I${INCLUDES}
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(OBJSB)
-	$(LIBC) $(NAME) $(OBJS) $(OBJSB)
+$(NAME): $(OBJS)
+	$(LIBC) $(NAME) $(OBJS)
 
-%.o: %.c ${INCLUDES}/libft.h ${INCLUDES}/ft_printf.h ${INCLUDES}/get_next_line.h ${INCLUDES}/malloc.h ${INCLUDES}/ft_linked_lst.h ${INCLUDES}/t_bool.h
+%.o: %.c ${INCLUDES}/libft.h ${INCLUDES}/ft_printf.h ${INCLUDES}/get_next_line.h ${INCLUDES}/malloc.h ${INCLUDES}/t_bool.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	$(RM) $(OBJS) $(OBJSB)
+	$(RM) $(OBJS)
 
 fclean: clean
 	$(RM) $(NAME)

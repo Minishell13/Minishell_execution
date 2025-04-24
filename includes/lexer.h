@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
+/*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/01 22:39:13 by abnsila           #+#    #+#             */
-/*   Updated: 2024/11/03 16:06:00 by abnsila          ###   ########.fr       */
+/*   Created: 2025/04/24 16:09:24 by abnsila           #+#    #+#             */
+/*   Updated: 2025/04/24 16:26:01 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef LEXER_H
+#define LEXER_H
 
-t_list	*ft_lstlast(t_list *lst)
-{
-	if (!lst)
-		return (NULL);
-	while (lst->next)
-	{
-		lst = lst->next;
-	}
-	return (lst);
-}
+# include "typedef.h"
+
+t_token	*ft_new_token(const char *value, t_token_type type);
+void	ft_add_token(t_token **list, t_token *new_token);
+void	ft_clear_tokens(t_token **list);
+t_token	*ft_lexer(const char *input);
+
+#endif

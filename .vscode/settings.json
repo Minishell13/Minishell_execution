@@ -14,6 +14,14 @@
         "tuple": "c",
         "type_traits": "c",
         "utility": "c",
-        "t_bool.h": "c"
+        "t_bool.h": "c",
+        "compare": "c",
+        "variant": "c",
+        "errno.h": "c",
+        "typdef.h": "c",
+        "typedef.h": "c",
+        "string": "c",
+        "parser.h": "c",
+        "lexer.h": "c"
     }
 }
