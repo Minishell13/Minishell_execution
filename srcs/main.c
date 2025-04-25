@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/24 19:06:23 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/25 17:45:15 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int main(int argc, char **argv, char **envp) {
     t_ast   *root;
 
     while (1) {
-        line = readline("Prompt > ");
+        line = readline("> ");
         if (!line) { printf("exit\n"); break; }
         if (*line) add_history(line);
 
@@ -142,5 +142,5 @@ int main(int argc, char **argv, char **envp) {
 
         free(line);
     }
-    return 0;
+    exit(EXIT_SUCCESS);
 }
