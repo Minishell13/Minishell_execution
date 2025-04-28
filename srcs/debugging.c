@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/24 15:41:53 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/28 16:54:01 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,24 +76,27 @@ void	ft_print_ast(const t_ast *node, int indent)
 	for (int i = 0; i < indent; i++) printf("  ");
 
 	// Print node type
-	printf("%s", ft_gram_name(node->type));
+	printf("%s%s%s",BHCYN, ft_gram_name(node->type), RESET);
 
-	// If it's a simple command, dump argv[]
+	// If it's a simple command, dump args[]
 	if (node->type == GRAM_SIMPLE_COMMAND) {
-		if (node->data.argv) {
-			printf(" argv: [");
-			for (char **arg = node->data.argv; *arg; arg++)
+		if (node->data.args) {
+			printf("%s args: %s%s[", BHGRN, RESET, BHWHT);
+			for (char **arg = node->data.args; *arg; arg++)
 				printf(" \"%s\",", *arg);
-			printf(" NULL ]");
+			printf(" NULL ]%s", RESET);
 		}
 	}
 	// If it's I/O redirection, show file and mode
 	else if (node->type == GRAM_IO_REDIRECT) {
 		// You might encode the operator as a string in the node; 
 		// otherwise infer from node->type or value
-		printf(" {file: \"%s\", append: %s}",
-			   node->data.redir.file,
-			   node->data.redir.append ? "true" : "false");
+		const char *type = ft_gram_name(node->data.redir.type);
+		printf("%s redir:%s %s{file: \"%s\", type: %s, append: %s}%s",
+				BHYEL, RESET, BHWHT,
+				node->data.redir.file,
+				type,
+				node->data.redir.append ? "true" : "false", RESET);
 	}
 
 	putchar('\n');
@@ -107,3 +110,25 @@ void	ft_print_ast(const t_ast *node, int indent)
 		ft_print_ast(node->right, indent + 2);
 }
 
+void	ft_destroy_ast(t_ast *ast)
+{
+	int	i = 0;
+	if (!ast)
+		return ;
+	if (ast->type == GRAM_SIMPLE_COMMAND)
+	{
+		while (ast->data.args[i])
+		{
+			free(ast->data.args[i]);
+			i++;
+		}
+		free(ast->data.args);
+	}
+	else if (ast->type == GRAM_IO_REDIRECT)
+	{
+		free(ast->data.redir.file);
+	}
+	ft_destroy_ast(ast->left);
+	ft_destroy_ast(ast->right);
+	free(ast);
+}

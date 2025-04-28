@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:26 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/28 16:54:26 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/28 13:26:41 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,9 @@ t_ast	*parse_simple_command   (t_token **toks);
 t_ast	*ft_parser(t_token **toks);
 
 t_ast	*ft_new_ast_node(t_gram type);
-char	**ft_create_args(int count, ...);
+char	**ft_create_argv(int count, ...);
 void	ft_print_ast(const t_ast *node, int indent);
 void	ft_clear_ast(t_ast *ast);
-void	ft_destroy_ast(t_ast *ast);
-
 // t_ast	*ft_new_ast_node(t_gram type);
 // char	**ft_create_argv(t_token *tokens, int count);
 // void	ft_print_ast(const t_ast *node, int indent);

@@ -22,6 +22,7 @@
         "typedef.h": "c",
         "string": "c",
         "parser.h": "c",
-        "lexer.h": "c"
+        "lexer.h": "c",
+        "history.h": "c"
     }
 }

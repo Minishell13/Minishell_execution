@@ -1,0 +1,12 @@
+[0m[00;34m.[0m/
+[00;34m..[0m/
+[00;34m.git[0m/
+[00;34mincludes[0m/
+[00min.txt[0m
+[00;34mLibft[0m/
+[00mMakefile[0m
+[01;32mminishell[0m*
+[00mout.txt[0m
+[00mREADME.md[0m
+[00;34msrcs[0m/
+[00;34m.vscode[0m/

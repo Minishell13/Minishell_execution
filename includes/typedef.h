@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/24 16:00:19 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/28 17:21:14 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 // Readline
 # include <readline/readline.h>
 # include <readline/history.h>
+
+// Time
+# include <sys/wait.h>
 
 // Utils function
 # include <stdlib.h>
@@ -76,6 +79,7 @@ typedef enum s_token_type
 
 typedef enum s_gram 
 {
+	UNKNOWN,
 	GRAM_COMPLETE_COMMAND,
 	GRAM_COMMAND_LIST,
 	GRAM_COMPOUND_COMMAND,
@@ -105,6 +109,12 @@ typedef struct	s_token
 	struct s_token	*prev;   // previous in list
 }				t_token;
 
+typedef struct	s_redir
+{
+	char	*file;
+	t_gram	type;
+}				t_redir;
+
 typedef struct	s_ast
 {
 	t_gram			type;	 // node kind
@@ -113,13 +123,8 @@ typedef struct	s_ast
 	
 	union
 	{
-		char		**argv;       // for AST_CMD: NULL‑terminated argv
-		
-		struct 
-		{
-			char	*file;        // for redirections: target filename
-			t_bool	append;      // true for '>>'
-		}	redir;
+		char		**args;       // for AST_CMD: NULL‑terminated argv
+		t_redir		redir;
 		
 	}	data;
 }				t_ast;
