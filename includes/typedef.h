@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/28 17:21:14 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/29 15:57:39 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef enum e_error
 	PIPE_ERROR,
 	DUP_ERROR,
 	DUP2_ERROR,
+	REDIR_ERROR,
 	EXECVE_ERROR,
 	CMD_NOT_FOUND,
 	FILE_NOT_EXIST,
@@ -113,6 +114,7 @@ typedef struct	s_redir
 {
 	char	*file;
 	t_gram	type;
+	char	*limiter;
 }				t_redir;
 
 typedef struct	s_ast

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/28 16:54:01 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/29 15:11:33 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,11 @@ void	ft_print_ast(const t_ast *node, int indent)
 		// You might encode the operator as a string in the node; 
 		// otherwise infer from node->type or value
 		const char *type = ft_gram_name(node->data.redir.type);
-		printf("%s redir:%s %s{file: \"%s\", type: %s, append: %s}%s",
+		printf("%s redir:%s %s{file: \"%s\", type: %s, limiter: %s}%s",
 				BHYEL, RESET, BHWHT,
 				node->data.redir.file,
 				type,
-				node->data.redir.append ? "true" : "false", RESET);
+				node->data.redir.limiter, RESET);
 	}
 
 	putchar('\n');

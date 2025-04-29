@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:13:31 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/28 17:21:24 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/29 15:12:02 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_ast *ft_new_ast_node(t_gram type)
 	node->data.args = NULL;
 	node->data.redir.file = NULL;
 	node->data.redir.type = UNKNOWN;
+	node->data.redir.limiter = NULL;
 	return node;
 }
 

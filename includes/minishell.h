@@ -20,6 +20,8 @@
 t_ast	*ft_new_ast_node(t_gram type);
 char	**ft_create_args(int count, ...);
 
+t_error	ft_executor(t_ast *node, char **envp);
+
 void	ft_print_ast(const t_ast *node, int indent);
 void	ft_destroy_ast(t_ast *ast);
 
