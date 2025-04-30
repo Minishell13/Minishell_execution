@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 16:08:33 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/30 16:12:40 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ char	*ft_get_path(char *command, char **envp)
 	return (path);
 }
 
+
 //* --------------------------------SIMPLE_COMMAND --------------------------------
 t_error ft_execute_simple_cmd(t_ast *root, t_ast *node, char **envp)
 {
@@ -99,8 +100,8 @@ t_error ft_execute_simple_cmd(t_ast *root, t_ast *node, char **envp)
 }
 
 
-//* -------------------------------- PIPELINE --------------------------------
 
+//* -------------------------------- PIPELINE --------------------------------
 t_error	ft_redirect_fds(int fds[2], int fd)
 {
 	if (fd == STDOUT_FILENO)
@@ -182,7 +183,6 @@ void	ft_generate_tmpfile(t_redir *redir)
 	free(temp);
 }
 
-// TODO: You have an issue when you press (CTRL + D) for heredoc prompt
 void	ft_fill_here_doc(t_redir *redir, int fd)
 {
 	char	*line;
@@ -281,6 +281,9 @@ t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 	return (ft_executor(root, node->left, envp));
 }
 
+
+
+
 //* -------------------------------- SUBSHELL --------------------------------
 t_error ft_execute_subshell(t_ast *root, t_ast *node, char **envp)
 {
@@ -299,6 +302,8 @@ t_error ft_execute_subshell(t_ast *root, t_ast *node, char **envp)
     waitpid(pid, &status, 0);
     return WEXITSTATUS(status) ? EXECVE_ERROR : SUCCESS_ERROR;
 }
+
+
 
 
 //* -------------------------------- AND_OR --------------------------------

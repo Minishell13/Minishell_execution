@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 14:59:15 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/30 16:17:45 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ int	main(int ac, char **av, char **ev)
 	// root = ft_get_short_ast();
 	// root = ft_get_ast1();
 	// root = ft_get_ast2();
-	root = ft_get_ast3();
-	// root = ft_get_ast4();
+	// root = ft_get_ast3();
+	root = ft_get_ast4();
 	ft_print_ast(root, 0);
 	ft_executor(root, root, ev);
 	ft_destroy_ast(root);
