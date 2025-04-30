@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 15:46:50 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/30 16:08:33 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ t_error ft_execute_simple_cmd(t_ast *root, t_ast *node, char **envp)
 		perror("sh");
 		free(path);
 		ft_destroy_ast(root);
-		if (errno == ENOENT) exit(127);
-		if (errno == EACCES) exit(126);
+		if (errno == ENOENT) exit(NO_FILE_OR_DIR);
+		if (errno == EACCES) exit(PERMISSION_DENIED);
 		exit(EXIT_FAILURE);
 	}
 	waitpid(pid, &status, 0);
@@ -167,7 +167,6 @@ t_error ft_execute_pipe(t_ast *root, t_ast *node, char **envp)
 
 
 
-// TODO: You must use the redir struct for IO redirection logic
 //* -------------------------------- IO_REDIRECTION --------------------------------
 void	ft_generate_tmpfile(t_redir *redir)
 {
@@ -183,6 +182,7 @@ void	ft_generate_tmpfile(t_redir *redir)
 	free(temp);
 }
 
+// TODO: You have an issue when you press (CTRL + D) for heredoc prompt
 void	ft_fill_here_doc(t_redir *redir, int fd)
 {
 	char	*line;
@@ -190,14 +190,10 @@ void	ft_fill_here_doc(t_redir *redir, int fd)
 
 	while (1)
 	{
-		// ft_printf("here_doc> ");
-		printf("here_doc> ");
+		ft_putstr_fd("here_doc> ", STDIN_FILENO);
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
-		{
-			ft_printf("\n");
 			break ;
-		}
 		line_size = ft_strlen(line) - 1;
 		if (ft_strncmp(line, redir->limiter,
 				ft_strlen(redir->limiter)) == 0
