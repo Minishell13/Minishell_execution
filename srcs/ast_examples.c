@@ -6,26 +6,26 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 16:44:16 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/30 18:05:07 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//? Command: cat file.txt | grep foo > out.txt
+//? Command: cat ./temp/file.txt | grep foo > ./temp/out.txt
 t_ast	*ft_get_ast0(void)
 {
-	// Simple command: cat file.txt
+	// Simple command: cat ./temp/file.txt
 	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd1->data.args = ft_create_args(2, "cat", "file.txt");
+	cmd1->data.args = ft_create_args(2, "cat", "./temp/file.txt");
 
 	// Simple command: grep foo
 	t_ast *cmd2 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
 	cmd2->data.args = ft_create_args(2, "grep", "foo");
 
-	// I/O redirect: > out.txt
+	// I/O redirect: > ./temp/out.txt
 	t_ast *redir = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir->data.redir.file = strdup("out.txt");
+	redir->data.redir.file = strdup("./temp/out.txt");
 	redir->data.redir.type = GRAM_REDIR_OUT;
 	redir->left = cmd2;
 
@@ -40,8 +40,8 @@ t_ast	*ft_get_ast0(void)
 	return root;
 }
 
-//? Command: < infile cat | wc > outfile
-// Builds: input redirection, pipeline, output redirection
+//? Command: < ./temp/infile cat | wc > ./temp/outfile
+// Builds: input redirection, pipeline, ./temp/output redirection
 t_ast *ft_get_ast1(void)
 {
 	// Simple command: ls -l
@@ -57,15 +57,15 @@ t_ast *ft_get_ast1(void)
 	pipe->left  = cmd1;
 	pipe->right = cmd2;
 
-	// Output redirection: > outfile
+	// ./temp/Output redirection: > ./temp/outfile
 	t_ast *redir_out = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir_out->data.redir.file   = strdup("outfile");
+	redir_out->data.redir.file   = strdup("./temp/outfile");
 	redir_out->data.redir.type   = GRAM_REDIR_OUT;
 	redir_out->left              = pipe;
 
-	// Input redirection: < infile
+	// Input redirection: < ./temp/infile
 	t_ast *redir_in = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir_in->data.redir.file    = strdup("infile");
+	redir_in->data.redir.file    = strdup("./temp/infile");
 	redir_in->data.redir.type    = GRAM_REDIR_IN;
 	redir_in->left               = redir_out;
 
@@ -103,7 +103,7 @@ t_ast *ft_get_ast2(void)
 	return root;
 }
 
-//? Command: << "END" grep "gg" | wc -l >> outfile
+//? Command: << "END" grep "gg" | wc -l >> ./temp/outfile
 // Builds: here-doc, pipeline, append redirection
 t_ast *ft_get_ast3(void)
 {
@@ -127,9 +127,9 @@ t_ast *ft_get_ast3(void)
 	pipe->left  = heredoc;
 	pipe->right = cmd2;
 
-	// Append redirection: >> outfile
+	// Append redirection: >> ./temp/outfile
 	t_ast *redir_app = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir_app->data.redir.file = strdup("outfile");
+	redir_app->data.redir.file = strdup("./temp/outfile");
 	redir_app->data.redir.type = GRAM_REDIR_APPEND;
 	redir_app->left           = pipe;
 
@@ -138,7 +138,7 @@ t_ast *ft_get_ast3(void)
 	return root;
 }
 
-//? Command: << "END" grep "gg" | wc -l && (ls -l | wc > out) >> outfile
+//? Command: << "END" grep "gg" | wc -l && (ls -l | wc > ./temp/out) >> ./temp/outfile
 // Builds: here-doc, pipeline, AND, subshell, redirections, append
 t_ast *ft_get_ast4(void)
 {
@@ -162,7 +162,7 @@ t_ast *ft_get_ast4(void)
 	pipe1->left  = heredoc;
 	pipe1->right = cmd2;
 
-	// Subshell: ls -l | wc > out
+	// Subshell: ls -l | wc > ./temp/out
 	t_ast *cmd3 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
 	cmd3->data.args = ft_create_args(2, "ls", "-l");
 	t_ast *cmd4 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
@@ -171,15 +171,15 @@ t_ast *ft_get_ast4(void)
 	pipe2->left  = cmd3;
 	pipe2->right = cmd4;
 	t_ast *redir_sub = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir_sub->data.redir.file = strdup("out");
+	redir_sub->data.redir.file = strdup("./temp/out");
 	redir_sub->data.redir.type = GRAM_REDIR_OUT;
 	redir_sub->left = pipe2;
 	t_ast *subshell = ft_new_ast_node(GRAM_SUBSHELL);
 	subshell->left = redir_sub;
 
-	// Append redirection: >> outfile
+	// Append redirection: >> ./temp/outfile
 	t_ast *redir_app = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir_app->data.redir.file = strdup("outfile");
+	redir_app->data.redir.file = strdup("./temp/outfile");
 	redir_app->data.redir.type = GRAM_REDIR_APPEND;
 	redir_app->left           = subshell;
 	
@@ -193,7 +193,7 @@ t_ast *ft_get_ast4(void)
 	return root;
 }
 
-//? Command: grep "error" system.log | sort -u > errors.txt
+//? Command: grep "error" system.log | sort -u > ./temp/errors.txt
 t_ast *ft_get_ast5(void)
 {
     // grep "error" system.log
@@ -209,9 +209,9 @@ t_ast *ft_get_ast5(void)
     pipe->left  = cmd1;
     pipe->right = cmd2;
 
-    // redirect > errors.txt
+    // redirect > ./temp/errors.txt
     t_ast *redir = ft_new_ast_node(GRAM_IO_REDIRECT);
-    redir->data.redir.file   = strdup("errors.txt");
+    redir->data.redir.file   = strdup("./temp/errors.txt");
     redir->data.redir.type   = GRAM_REDIR_OUT;
     redir->left              = pipe;
 
@@ -251,7 +251,7 @@ t_ast *ft_get_ast6(void)
     return root;
 }
 
-//? Command: (cd src && make) > build.log
+//? Command: (cd src && make) > ./temp/build.log
 t_ast *ft_get_ast7(void)
 {
     // cd src
@@ -273,7 +273,7 @@ t_ast *ft_get_ast7(void)
 
     // redirect > build.log
     t_ast *redir = ft_new_ast_node(GRAM_IO_REDIRECT);
-    redir->data.redir.file = strdup("build.log");
+    redir->data.redir.file = strdup("./temp/build.log");
     redir->data.redir.type = GRAM_REDIR_OUT;
     redir->left            = sub;
 
@@ -282,7 +282,7 @@ t_ast *ft_get_ast7(void)
     return root;
 }
 
-//? Command: <<EOF grep foo | tee foo.log
+//? Command: <<EOF grep foo | tee ./temp/foo.log
 t_ast *ft_get_ast8(void)
 {
     // heredoc EOF
@@ -298,7 +298,7 @@ t_ast *ft_get_ast8(void)
 
     // tee foo.log
     t_ast *t = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-    t->data.args = ft_create_args(2, "tee", "foo.log");
+    t->data.args = ft_create_args(2, "tee", "./temp/foo.log");
 
     // hd | t
     t_ast *pipe = ft_new_ast_node(GRAM_PIPELINE);
@@ -310,12 +310,12 @@ t_ast *ft_get_ast8(void)
     return root;
 }
 
-//? Command: cat in.txt | grep -v "^#" && wc -l || echo "0"
+//? Command: cat ./temp/in.txt | grep -v "^#" && wc -l || echo "0"
 t_ast *ft_get_ast9(void)
 {
-    // cat in.txt
+    // cat ./temp/in.txt
     t_ast *c = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-    c->data.args = ft_create_args(2, "cat", "in.txt");
+    c->data.args = ft_create_args(2, "cat", "./temp/in.txt");
 
     // grep -v "^#"
     t_ast *g = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
@@ -349,7 +349,7 @@ t_ast *ft_get_ast9(void)
     return root;
 }
 
-//? Command: sleep 30 &> sleep.log &
+//? Command: sleep 30 &> ./temp/sleep.log &
 t_ast *ft_get_ast10(void)
 {
     // sleep 30
@@ -358,8 +358,8 @@ t_ast *ft_get_ast10(void)
 
     // redirect both stdout/stderr: &> sleep.log
     t_ast *redir = ft_new_ast_node(GRAM_IO_REDIRECT);
-    redir->data.redir.file = strdup("sleep.log");
-    redir->data.redir.type = GRAM_REDIR_OUT; // treat &> as OUT+ERR
+    redir->data.redir.file = strdup("./temp/sleep.log");
+    redir->data.redir.type = GRAM_REDIR_OUT; // treat &> as ./temp/OUT+ERR
     redir->left            = s;
 
     // (no intrinsic background node—handled in executor)
@@ -419,18 +419,18 @@ t_ast *ft_get_ast11(void)
     return root;
 }
 
-//? Command: <<A cat <<B fileB | sed 's/x/y/' | tee out.txt A B
+//? Command: <<A cat <<B fileB | sed 's/x/y/' | tee ./temp/out.txt A B
 t_ast *ft_get_ast12(void)
 {
     // heredoc A for first cat
     t_ast *hdA = ft_new_ast_node(GRAM_IO_REDIRECT);
-    hdA->data.redir.file    = strdup("A");
+    ft_generate_tmpfile(&(hdA->data.redir));
     hdA->data.redir.type    = GRAM_HEREDOC;
     hdA->data.redir.limiter = strdup("A");
 
     // heredoc B for cat
     t_ast *hdB = ft_new_ast_node(GRAM_IO_REDIRECT);
-    hdB->data.redir.file    = strdup("B");
+    ft_generate_tmpfile(&(hdB->data.redir));
     hdB->data.redir.type    = GRAM_HEREDOC;
     hdB->data.redir.limiter = strdup("B");
     hdB->left               = hdA;
@@ -449,9 +449,9 @@ t_ast *ft_get_ast12(void)
     p1->left  = hdB;
     p1->right = sed;
 
-    // tee out.txt
+    // tee ./temp/out.txt
     t_ast *tee = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-    tee->data.args = ft_create_args(2, "tee", "out.txt");
+    tee->data.args = ft_create_args(2, "tee", "./temp/out.txt");
 
     // p1 | tee
     t_ast *pipe2 = ft_new_ast_node(GRAM_PIPELINE);
@@ -486,16 +486,16 @@ t_ast *ft_get_ast13(void)
     return root;
 }
 
-//? Command: (grep foo < in.txt || echo nofoo) && tar -czf archive.tgz outdir >> log.txt
+//? Command: (grep foo < ./temp/in.txt || echo nofoo) && tar -czf archive.tgz ./temp/outdir >> ./temp/log.txt
 t_ast *ft_get_ast14(void)
 {
     // grep foo
     t_ast *g = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
     g->data.args = ft_create_args(2, "grep", "foo");
 
-    // input redirect for grep: < in.txt
+    // input redirect for grep: < ./temp/in.txt
     t_ast *ri = ft_new_ast_node(GRAM_IO_REDIRECT);
-    ri->data.redir.file = strdup("in.txt");
+    ri->data.redir.file = strdup("./temp/in.txt");
     ri->data.redir.type = GRAM_REDIR_IN;
     ri->left            = g;
 
@@ -512,13 +512,13 @@ t_ast *ft_get_ast14(void)
     t_ast *sub = ft_new_ast_node(GRAM_SUBSHELL);
     sub->left = or1;
 
-    // tar -czf archive.tgz outdir
+    // tar -czf archive.tgz ./temp/outdir
     t_ast *t = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-    t->data.args = ft_create_args(4, "tar", "-czf", "archive.tgz", "outdir");
+    t->data.args = ft_create_args(4, "tar", "-czf", "archive.tgz", "./temp/outdir");
 
-    // redirect append >> log.txt
+    // redirect append >> ./temp/log.txt
     t_ast *ro = ft_new_ast_node(GRAM_IO_REDIRECT);
-    ro->data.redir.file = strdup("log.txt");
+    ro->data.redir.file = strdup("./temp/log.txt");
     ro->data.redir.type = GRAM_REDIR_APPEND;
     ro->left            = t;
 
@@ -532,7 +532,7 @@ t_ast *ft_get_ast14(void)
     return root;
 }
 
-//? Command: (head -n1 && head -n2 | cat -e || ls) < infile | cat -n && echo hello > outfile
+//? Command: (head -n1 && head -n2 | cat -e || ls) < ./temp/infile | cat -n && echo hello > ./temp/outfile
 t_ast	*ft_get_ast15(void)
 {
 	//* ------------- (head -n1 && head -n2 | cat -e || ls) -------------
@@ -568,10 +568,10 @@ t_ast	*ft_get_ast15(void)
 	t_ast *subshell1 = ft_new_ast_node(GRAM_SUBSHELL);
 	subshell1->left = or1;
 
-	//* ------------- subshell1 < infile -------------
-	// I/O redirect: < infile
+	//* ------------- subshell1 < ./temp/infile -------------
+	// I/O redirect: < ./temp/infile
 	t_ast *redir1 = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir1->data.redir.file = strdup("infile");
+	redir1->data.redir.file = strdup("./temp/infile");
 	redir1->data.redir.type = GRAM_REDIR_IN;
 	redir1->left = subshell1;
 
@@ -584,13 +584,13 @@ t_ast	*ft_get_ast15(void)
 	pipe2->left = redir1;
 	pipe2->right = cmd5;
 
-	//* ------------- echo hello > outfile -------------
+	//* ------------- echo hello > ./temp/outfile -------------
 	// Simple command: echo hello
 	t_ast *cmd6 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
 	cmd6->data.args = ft_create_args(2, "echo", "hello");
-	// I/O redirect: > outfile
+	// I/O redirect: > ./temp/outfile
 	t_ast *redir2 = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir2->data.redir.file = strdup("outfile");
+	redir2->data.redir.file = strdup("./temp/outfile");
 	redir2->data.redir.type = GRAM_REDIR_OUT;
 	redir2->left = cmd6;
 
@@ -604,5 +604,35 @@ t_ast	*ft_get_ast15(void)
 	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
 	root->left = and2;
 	return root;
+}
+
+
+t_ast	*ft_get_ast_example(int n)
+{
+	static t_ast *(*examples[])(void) = {
+		ft_get_ast0,
+		ft_get_ast1,
+		ft_get_ast2,
+		ft_get_ast3,
+		ft_get_ast4,
+		ft_get_ast5,
+		ft_get_ast6,
+		ft_get_ast7,
+		ft_get_ast8,
+		ft_get_ast9,
+		ft_get_ast10,
+		ft_get_ast11,
+		ft_get_ast12,
+		ft_get_ast13,
+		ft_get_ast14,
+		ft_get_ast15,
+	};
+	int max = sizeof(examples) / sizeof(examples[0]);
+	if (n < 0 || n >= max)
+	{
+		ft_putstr_fd("Error on get_ast_example\n", STDERR_FILENO);	
+		return (NULL);
+	}
+	return (examples[n]());
 }
 

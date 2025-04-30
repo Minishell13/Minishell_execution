@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 15:37:51 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/30 17:11:44 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,14 @@ void	ft_print_ast(const t_ast *node, int indent)
 	}
 
 	putchar('\n');
-
+	
 	// Recurse into left child
 	if (node->left)
-		ft_print_ast(node->left, indent + 2);
-
+	ft_print_ast(node->left, indent + 2);
+	
 	// Then into right child
 	if (node->right)
-		ft_print_ast(node->right, indent + 2);
+	ft_print_ast(node->right, indent + 2);
 }
 
 // void	ft_destroy_ast(t_ast *ast)

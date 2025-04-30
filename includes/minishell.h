@@ -39,12 +39,7 @@ void	ft_free_count_array(char **arr, int count);
 void	ft_print_ast(const t_ast *node, int indent);
 
 // AST Examples
-t_ast   *ft_get_ast1(void);
-t_ast   *ft_get_ast2(void);
-t_ast   *ft_get_ast3(void);
-t_ast   *ft_get_ast4(void);
-t_ast	*ft_get_short_ast(void);
-t_ast	*ft_get_long_ast(void);
+t_ast	*ft_get_ast_example(int n);
 
 
 #endif
