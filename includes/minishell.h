@@ -17,15 +17,34 @@
 // void		ft_print_node(t_token *node);
 // void		ft_print_tokens(t_token *list);
 
+
+// AST Utils
 t_ast	*ft_new_ast_node(t_gram type);
 char	**ft_create_args(int count, ...);
 
-t_error	ft_executor(t_ast *node, char **envp);
+// Builts in execution functions
+void	ft_generate_tmpfile(t_redir *redir);
 
-void	ft_print_ast(const t_ast *node, int indent);
+
+// Execution
+t_error	ft_executor(t_ast *root, t_ast *node, char **envp);
+
+
+// Cleanup
 void	ft_destroy_ast(t_ast *ast);
-
 void	ft_free_array(char **arr);
 void	ft_free_count_array(char **arr, int count);
+
+// Debugging
+void	ft_print_ast(const t_ast *node, int indent);
+
+// AST Examples
+t_ast   *ft_get_ast1(void);
+t_ast   *ft_get_ast2(void);
+t_ast   *ft_get_ast3(void);
+t_ast   *ft_get_ast4(void);
+t_ast	*ft_get_short_ast(void);
+t_ast	*ft_get_long_ast(void);
+
 
 #endif

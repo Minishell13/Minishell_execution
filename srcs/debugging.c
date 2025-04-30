@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/29 15:11:33 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/30 15:37:51 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,10 @@ void	ft_print_tokens(t_token *list)
 }
 
 // Helper: get a human-readable name for each t_gram
-static const char *ft_gram_name(t_gram g)
+static char *ft_gram_name(t_gram g)
 {
-	switch (g) {
+	switch (g)
+	{
 		case GRAM_COMPLETE_COMMAND:    return "COMPLETE_COMMAND";
 		case GRAM_COMMAND_LIST:        return "COMMAND_LIST";
 		case GRAM_COMPOUND_COMMAND:    return "COMPOUND_COMMAND";
@@ -91,7 +92,7 @@ void	ft_print_ast(const t_ast *node, int indent)
 	else if (node->type == GRAM_IO_REDIRECT) {
 		// You might encode the operator as a string in the node; 
 		// otherwise infer from node->type or value
-		const char *type = ft_gram_name(node->data.redir.type);
+		char *type = ft_gram_name(node->data.redir.type);
 		printf("%s redir:%s %s{file: \"%s\", type: %s, limiter: %s}%s",
 				BHYEL, RESET, BHWHT,
 				node->data.redir.file,
@@ -110,23 +111,58 @@ void	ft_print_ast(const t_ast *node, int indent)
 		ft_print_ast(node->right, indent + 2);
 }
 
+// void	ft_destroy_ast(t_ast *ast)
+// {
+// 	int	i = 0;
+// 	if (!ast)
+// 		return ;
+// 	if (ast->type == GRAM_SIMPLE_COMMAND)
+// 	{
+// 		while (ast->data.args[i])
+// 		{
+// 			free(ast->data.args[i]);
+// 			i++;
+// 		}
+// 		free(ast->data.args);
+// 	}
+// 	else if (ast->type == GRAM_IO_REDIRECT)
+// 	{
+// 		free(ast->data.redir.file);
+// 	}
+// 	ft_destroy_ast(ast->left);
+// 	ft_destroy_ast(ast->right);
+// 	free(ast);
+// }
+
 void	ft_destroy_ast(t_ast *ast)
 {
-	int	i = 0;
+	int	i;
+
 	if (!ast)
 		return ;
+	i = 0;
 	if (ast->type == GRAM_SIMPLE_COMMAND)
 	{
-		while (ast->data.args[i])
+		if (ast->data.args)
 		{
-			free(ast->data.args[i]);
-			i++;
+			while (ast->data.args[i])
+			{
+				free(ast->data.args[i]);
+				i++;
+			}
+			free(ast->data.args);
 		}
-		free(ast->data.args);
 	}
 	else if (ast->type == GRAM_IO_REDIRECT)
 	{
-		free(ast->data.redir.file);
+		if (ast->data.redir.file)
+		{
+			if (ast->data.redir.type == GRAM_HEREDOC)
+				unlink(ast->data.redir.file);
+			free(ast->data.redir.file);
+		}
+		if (ast->data.redir.limiter)
+			free(ast->data.redir.limiter);
 	}
 	ft_destroy_ast(ast->left);
 	ft_destroy_ast(ast->right);

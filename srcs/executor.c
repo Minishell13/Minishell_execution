@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/29 16:34:49 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/30 15:46:50 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*ft_get_path(char *command, char **envp)
 }
 
 //* --------------------------------SIMPLE_COMMAND --------------------------------
-t_error ft_execute_simple_cmd(t_ast *node, char **envp)
+t_error ft_execute_simple_cmd(t_ast *root, t_ast *node, char **envp)
 {
 	pid_t	pid;
 	int		status;
@@ -88,6 +88,7 @@ t_error ft_execute_simple_cmd(t_ast *node, char **envp)
 		execve(path, node->data.args, envp);
 		perror("sh");
 		free(path);
+		ft_destroy_ast(root);
 		if (errno == ENOENT) exit(127);
 		if (errno == EACCES) exit(126);
 		exit(EXIT_FAILURE);
@@ -98,7 +99,7 @@ t_error ft_execute_simple_cmd(t_ast *node, char **envp)
 }
 
 
-//* -------------------------------- PIPLINE --------------------------------
+//* -------------------------------- PIPELINE --------------------------------
 
 t_error	ft_redirect_fds(int fds[2], int fd)
 {
@@ -119,7 +120,7 @@ t_error	ft_redirect_fds(int fds[2], int fd)
 	return (SUCCESS_ERROR);
 }
 
-t_error ft_execute_pipe(t_ast *node, char **envp)
+t_error ft_execute_pipe(t_ast *root, t_ast *node, char **envp)
 {
 	int		fds[2];
 	pid_t	lc,	rc;
@@ -136,7 +137,8 @@ t_error ft_execute_pipe(t_ast *node, char **envp)
 	{
 		if (ft_redirect_fds(fds, STDOUT_FILENO) != SUCCESS_ERROR)
 			return (DUP2_ERROR);
-		ft_executor(node->left, envp);
+		ft_executor(root, node->left, envp);
+		ft_destroy_ast(root);
 		exit(EXIT_FAILURE);
 	}
 
@@ -148,7 +150,8 @@ t_error ft_execute_pipe(t_ast *node, char **envp)
 	{
 		if (ft_redirect_fds(fds, STDIN_FILENO) != SUCCESS_ERROR)
 			return (DUP2_ERROR);
-		ft_executor(node->right, envp);
+		ft_executor(root, node->right, envp);
+		ft_destroy_ast(root);
 		exit(EXIT_FAILURE);
 	}
 
@@ -166,8 +169,6 @@ t_error ft_execute_pipe(t_ast *node, char **envp)
 
 // TODO: You must use the redir struct for IO redirection logic
 //* -------------------------------- IO_REDIRECTION --------------------------------
-
-
 void	ft_generate_tmpfile(t_redir *redir)
 {
 	char	*temp;
@@ -189,7 +190,8 @@ void	ft_fill_here_doc(t_redir *redir, int fd)
 
 	while (1)
 	{
-		ft_printf("here_doc> ");
+		// ft_printf("here_doc> ");
+		printf("here_doc> ");
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
 		{
@@ -212,7 +214,6 @@ void	ft_here_doc(t_redir *redir)
 {
 	int		fd;
 
-	ft_generate_tmpfile(redir);
 	fd = open(redir->file, (O_WRONLY | O_CREAT | O_TRUNC), 0777);
 	if (fd < 0)
 		perror("sh");
@@ -247,7 +248,7 @@ int	ft_parse_outfile(t_redir *redir)
 	return (fd);
 }
 
-t_error	ft_execute_redirection(t_ast *node, char **envp)
+t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 {
 	int		fd;
 	t_redir	*r;
@@ -281,9 +282,41 @@ t_error	ft_execute_redirection(t_ast *node, char **envp)
 		close(fd);
 	}
 	// 3) Now execute the command that’s been wrapped by this redirection
-	return (ft_executor(node->left, envp));
+	return (ft_executor(root, node->left, envp));
 }
 
+//* -------------------------------- SUBSHELL --------------------------------
+t_error ft_execute_subshell(t_ast *root, t_ast *node, char **envp)
+{
+    pid_t pid;
+    int   status;
+
+    pid = fork();
+    if (pid < 0)
+        return FORK_ERROR;
+    if (pid == 0)
+    {
+        ft_executor(root, node->left, envp);
+		ft_destroy_ast(root);
+        exit(EXIT_FAILURE);  // in case executor didn't exit
+    }
+    waitpid(pid, &status, 0);
+    return WEXITSTATUS(status) ? EXECVE_ERROR : SUCCESS_ERROR;
+}
+
+
+//* -------------------------------- AND_OR --------------------------------
+t_error ft_execute_and_or(t_ast *root, t_ast *node, char **envp)
+{
+    int left_status = ft_executor(root, node->left, envp);
+    // &&: right only if left succeeded
+    if (node->type == GRAM_OPERATOR_AND && left_status == 0)
+        return ft_executor(root, node->right, envp);
+    // ||: right only if left failed
+    if (node->type == GRAM_OPERATOR_OR && left_status != 0)
+        return ft_executor(root, node->right, envp);
+    return left_status;
+}
 
 
 // TODO: You need first to know the exact struct of AST tree
@@ -293,27 +326,32 @@ t_error	ft_execute_redirection(t_ast *node, char **envp)
 // TODO: Focus on execution flow, (memory, fds, error) management
 // TODO: ...
 
-t_error ft_executor(t_ast *node, char **envp)
+
+// TODO: The leaks is fixed, now go and make behavioure like shell
+t_error ft_executor(t_ast *root, t_ast *node, char **envp)
 {
 	if (!node) return 0;
 
 	switch (node->type)
 	{
+		case GRAM_COMPLETE_COMMAND:
+			return ft_executor(root, node->left, envp);
+			
 		case GRAM_SIMPLE_COMMAND:
-			return ft_execute_simple_cmd(node, envp);
+			return ft_execute_simple_cmd(root, node, envp);
 
 		case GRAM_PIPELINE:
-			return ft_execute_pipe(node, envp);
+			return ft_execute_pipe(root, node, envp);
 
 		case GRAM_IO_REDIRECT:
-			return ft_execute_redirection(node, envp);
+			return ft_execute_redirection(root, node, envp);
 
-		// case GRAM_SUBSHELL:
-		// 	return ft_execute_subshell(node, envp);
+		case GRAM_SUBSHELL:
+			return ft_execute_subshell(root, node, envp);
 
-		// case GRAM_OPERATOR_AND:
-		// case GRAM_OPERATOR_OR:
-		// 	return ft_execute_and_or(node, envp);
+		case GRAM_OPERATOR_AND:
+		case GRAM_OPERATOR_OR:
+			return ft_execute_and_or(root, node, envp);
 
 		default:
 			return 0;

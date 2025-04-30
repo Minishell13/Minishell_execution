@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/29 15:42:54 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/04/30 14:59:15 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,110 +64,6 @@ t_error	ft_init_minishell(char **ev)
 // 	ft_add_token(list, t7);
 // }
 
-//? Example: cat file.txt | grep foo > out.txt
-t_ast	*ft_get_short_ast(void)
-{
-	// Simple command: cat file.txt
-	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd1->data.args = ft_create_args(2, "cat", "file.txt");
-
-	// Simple command: grep foo
-	t_ast *cmd2 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd2->data.args = ft_create_args(2, "grep", "foo");
-
-	// I/O redirect: > out.txt
-	t_ast *redir = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir->data.redir.file = strdup("out.txt");
-	redir->data.redir.type = GRAM_REDIR_OUT;
-	redir->left = cmd2;
-
-	// Pipeline: cmd1 | redir(cmd2)
-	t_ast *pipe = ft_new_ast_node(GRAM_PIPELINE);
-	pipe->left = cmd1;
-	pipe->right = redir;
-
-	// Complete command wrapper
-	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
-	root->left = pipe;
-	return root;
-}
-
-//? Example: (head -n1 && head -n2 | cat -e || ls) < infile | cat -n && echo hello > outfile
-t_ast	*ft_get_long_ast(void)
-{
-	//* ------------- (head -n1 && head -n2 | cat -e || ls) -------------
-	// Simple command: head -n1
-	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd1->data.args = ft_create_args(2, "head", "-n1");
-
-	// Simple command: head -n2
-	t_ast *cmd2 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd2->data.args = ft_create_args(2, "head", "-n2");
-	// Simple command: cat -e
-	t_ast *cmd3 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd3->data.args = ft_create_args(2, "cat", "-e");
-	// Pipeline: cmd1 | cmd2
-	t_ast *pipe1 = ft_new_ast_node(GRAM_PIPELINE);
-	pipe1->left = cmd2;
-	pipe1->right = cmd3;
-
-	// Simple command: ls
-	t_ast *cmd4 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd4->data.args = ft_create_args(1, "ls");
-
-	// AND: cmd1 | pipe1
-	t_ast *and1 = ft_new_ast_node(GRAM_OPERATOR_AND);
-	and1->left = cmd1;
-	and1->right = pipe1;
-
-	// OR: and1 || cmd4
-	t_ast *or1 = ft_new_ast_node(GRAM_OPERATOR_OR);
-	or1->left = and1;
-	or1->right = cmd4;
-
-	t_ast *subshell1 = ft_new_ast_node(GRAM_SUBSHELL);
-	subshell1->left = or1;
-	subshell1->right = NULL;
-
-	//* ------------- subshell1 < infile -------------
-	// I/O redirect: < infile
-	t_ast *redir1 = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir1->data.redir.file = strdup("infile");
-	redir1->data.redir.type = GRAM_REDIR_IN;
-	redir1->left = subshell1;
-
-	//* ------------- redir1 | cat -n -------------
-	// Simple command: cat -e
-	t_ast *cmd5 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd5->data.args = ft_create_args(2, "cat", "-n");
-	// Pipeline: redir1 | cmd5
-	t_ast *pipe2 = ft_new_ast_node(GRAM_PIPELINE);
-	pipe2->left = redir1;
-	pipe2->right = cmd5;
-
-	//* ------------- echo hello > outfile -------------
-	// Simple command: echo hello
-	t_ast *cmd6 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd6->data.args = ft_create_args(2, "echo", "hello");
-	// I/O redirect: > outfile
-	t_ast *redir2 = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir2->data.redir.file = strdup("outfile");
-	redir1->data.redir.type = GRAM_REDIR_OUT;
-	redir2->left = cmd6;
-
-	//* ------------- pipe2 && redir2 -------------
-	// AND: pipe2 && redir2
-	t_ast *and2 = ft_new_ast_node(GRAM_OPERATOR_AND);
-	and2->left = pipe2;
-	and2->right = redir2;
-
-	// Complete command wrapper
-	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
-	root->left = and2;
-	return root;
-}
-
-
 
 int	main(int ac, char **av, char **ev)
 {
@@ -186,9 +82,13 @@ int	main(int ac, char **av, char **ev)
 	// ft_print_tokens(list);
 	// ft_clear_tokens(&list);
 	// root = ft_get_long_ast();
-	root = ft_get_short_ast();
+	// root = ft_get_short_ast();
+	// root = ft_get_ast1();
+	// root = ft_get_ast2();
+	root = ft_get_ast3();
+	// root = ft_get_ast4();
 	ft_print_ast(root, 0);
-	ft_executor(root->left, ev);
+	ft_executor(root, root, ev);
 	ft_destroy_ast(root);
 	return (EXIT_SUCCESS);
 	// exit(EXIT_SUCCESS);
