@@ -6,15 +6,13 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 18:00:57 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/01 19:04:11 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 t_minishell	sh;
-
-
 
 int	main(int ac, char **av, char **ev)
 {
