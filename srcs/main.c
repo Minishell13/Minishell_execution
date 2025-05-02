@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/01 19:04:11 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/02 14:48:05 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ int	main(int ac, char **av, char **ev)
 	if (ac != 2)
 		return (EXIT_FAILURE);
 	//? Display All ast examples
-	// for (int i = 0; i < 15; i++)
-	// {
-	// 	printf("\n\nAST Example: %d\n", i);
-	// 	root = ft_get_ast_example(i);
-	// 	ft_print_ast(root, 0);
-	// 	ft_destroy_ast(root);
-	// }
-	root = ft_get_ast_example(ft_atoi(av[1]));
-	ft_print_ast(root, 0);
-	ft_executor(root, root, ev);
-	ft_destroy_ast(root);
+	for (int i = 0; i < 15; i++)
+	{
+		printf("\n\nAST Example: %d\n", i);
+		root = ft_get_ast_example(i);
+		ft_print_ast(root, 0);
+		ft_destroy_ast(root);
+	}
+	// root = ft_get_ast_example(ft_atoi(av[1]));
+	// ft_print_ast(root, 0);
+	// ft_executor(root, root, ev);
+	// ft_destroy_ast(root);
 	return (EXIT_SUCCESS);
 }
