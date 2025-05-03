@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 06:38:13 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/02 20:17:02 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ typedef enum s_gram
 	GRAM_HEREDOC,          // <<
 	GRAM_FILENAME,         // filename after redirection
 	GRAM_LINEBREAK
-} t_gram;
+} 			t_gram;
 
 typedef struct	s_token
 {

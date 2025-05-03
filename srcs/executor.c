@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 16:12:40 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/03 16:44:59 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,10 @@ char	*ft_get_path(char *command, char **envp)
 	char	**all_path;
 	char	*path;
 
+	// 1) If name contains '/', try it directly
+	if (ft_strchr(command, '/'))
+		return ft_strdup(command);
+	// 2) Get PATH and split
 	i = -1;
 	while (envp[++i])
 	{
@@ -257,7 +261,6 @@ t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 		fd = ft_parse_infile(r);
 		if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
 		{
-			perror("sh");
 			if (fd >= 0)
 				close(fd);
 			return (REDIR_ERROR);
@@ -270,7 +273,6 @@ t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 		fd = ft_parse_outfile(r);
 		if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
 		{
-			perror("sh");
 			if (fd >= 0)
 				close(fd);
 			return (REDIR_ERROR);
@@ -287,20 +289,20 @@ t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 //* -------------------------------- SUBSHELL --------------------------------
 t_error ft_execute_subshell(t_ast *root, t_ast *node, char **envp)
 {
-    pid_t pid;
-    int   status;
+	pid_t pid;
+	int   status;
 
-    pid = fork();
-    if (pid < 0)
-        return FORK_ERROR;
-    if (pid == 0)
-    {
-        ft_executor(root, node->left, envp);
+	pid = fork();
+	if (pid < 0)
+		return FORK_ERROR;
+	if (pid == 0)
+	{
+		ft_executor(root, node->left, envp);
 		ft_destroy_ast(root);
-        exit(EXIT_FAILURE);  // in case executor didn't exit
-    }
-    waitpid(pid, &status, 0);
-    return WEXITSTATUS(status) ? EXECVE_ERROR : SUCCESS_ERROR;
+		exit(EXIT_FAILURE);  // in case executor didn't exit
+	}
+	waitpid(pid, &status, 0);
+	return WEXITSTATUS(status) ? EXECVE_ERROR : SUCCESS_ERROR;
 }
 
 
@@ -309,14 +311,14 @@ t_error ft_execute_subshell(t_ast *root, t_ast *node, char **envp)
 //* -------------------------------- AND_OR --------------------------------
 t_error ft_execute_and_or(t_ast *root, t_ast *node, char **envp)
 {
-    int left_status = ft_executor(root, node->left, envp);
-    // &&: right only if left succeeded
-    if (node->type == GRAM_OPERATOR_AND && left_status == 0)
-        return ft_executor(root, node->right, envp);
-    // ||: right only if left failed
-    if (node->type == GRAM_OPERATOR_OR && left_status != 0)
-        return ft_executor(root, node->right, envp);
-    return left_status;
+	int left_status = ft_executor(root, node->left, envp);
+	// &&: right only if left succeeded
+	if (node->type == GRAM_OPERATOR_AND && left_status == 0)
+		return ft_executor(root, node->right, envp);
+	// ||: right only if left failed
+	if (node->type == GRAM_OPERATOR_OR && left_status != 0)
+		return ft_executor(root, node->right, envp);
+	return left_status;
 }
 
 

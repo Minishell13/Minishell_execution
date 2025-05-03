@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 18:05:07 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/03 17:01:21 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -606,6 +606,58 @@ t_ast	*ft_get_ast15(void)
 	return root;
 }
 
+//? Command: /gg | ls > ./temp/out
+t_ast	*ft_get_ast16(void)
+{
+	// Simple command: /gg
+	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+	cmd1->data.args = ft_create_args(1, "/gg");
+
+	// Simple command: ls
+	t_ast *cmd2 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+	cmd2->data.args = ft_create_args(1, "ls");
+
+	// I/O redirect: > ./temp/out.txt
+	t_ast *redir = ft_new_ast_node(GRAM_IO_REDIRECT);
+	redir->data.redir.file = strdup("./temp");
+	redir->data.redir.type = GRAM_REDIR_OUT;
+	redir->left = cmd2;
+
+	// Pipeline: cmd1 | redir(cmd2)
+	t_ast *pipe = ft_new_ast_node(GRAM_PIPELINE);
+	pipe->left = cmd1;
+	pipe->right = redir;
+
+	// Complete command wrapper
+	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
+	root->left = pipe;
+	return root;
+}
+
+//? Commmand: ls -l < temp/infile > temp/outfile
+t_ast	*ft_get_ast17(void)
+{
+	// Simple command: ls -l
+	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+	cmd1->data.args = ft_create_args(1, "ls", "-l");
+
+    // I/O redirect: < temp/infile
+	t_ast *redir1 = ft_new_ast_node(GRAM_IO_REDIRECT);
+	redir1->data.redir.file = strdup("./temp/infile");
+	redir1->data.redir.type = GRAM_REDIR_IN;
+	redir1->left = cmd1;
+    
+	// I/O redirect: > ./temp/out.txt
+	t_ast *redir2 = ft_new_ast_node(GRAM_IO_REDIRECT);
+	redir2->data.redir.file = strdup("./temp/outfile");
+	redir2->data.redir.type = GRAM_REDIR_OUT;
+	redir2->left = redir1;
+
+	// Complete command wrapper
+	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
+	root->left = redir2;
+	return root;
+}
 
 t_ast	*ft_get_ast_example(int n)
 {
@@ -626,6 +678,8 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast13,
 		ft_get_ast14,
 		ft_get_ast15,
+		ft_get_ast16,
+		ft_get_ast17,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)
