@@ -4,6 +4,7 @@
 # include "typedef.h"
 // # include "lexer.h"
 // # include "parser.h"
+# include "execution.h"
 # include "colors.h"
 
 // t_token		*ft_last_token(t_token *token);
@@ -25,11 +26,6 @@ char	**ft_create_args(int count, ...);
 // Builts in execution functions
 void	ft_generate_tmpfile(t_redir *redir);
 
-
-// Execution
-t_error	ft_executor(t_ast *root, t_ast *node, char **envp);
-
-
 // Cleanup
 void	ft_destroy_ast(t_ast *ast);
 void	ft_free_array(char **arr);
@@ -40,6 +36,9 @@ void	ft_print_ast(const t_ast *node, int indent);
 
 // AST Examples
 t_ast	*ft_get_ast_example(int n);
+
+// Errors
+void	ft_put_error(char *arg);
 
 
 #endif

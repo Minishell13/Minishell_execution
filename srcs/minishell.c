@@ -6,11 +6,11 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:15:07 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/30 16:55:23 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/05 14:33:46 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 // ┌───────────────┬────────────────┐
 // │ Token Type    │ Lexeme         │
