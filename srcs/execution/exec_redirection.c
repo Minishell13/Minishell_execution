@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 14:43:50 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/06 14:08:03 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@ void	ft_generate_tmpfile(t_redir *redir)
 	temp = ft_itoa(getpid());
 	if (!temp)
 	{
-		redir->file = ft_strdup("/tmp/pipex_heredoc");
+		redir->file = ft_strdup("/tmp/heredoc");
 		return ;
 	}
-	redir->file = ft_strjoin("/tmp/pipex_heredoc_", temp);
+	redir->file = ft_strjoin("/tmp/heredoc_", temp);
 	free(temp);
 }
 
+// TODO: Chose between readline or get_next_line
 void	ft_fill_here_doc(t_redir *redir, int fd)
 {
 	char	*line;
@@ -46,6 +47,22 @@ void	ft_fill_here_doc(t_redir *redir, int fd)
 		ft_putstr_fd(line, fd);
 		free(line);
 	}
+	
+	// while (1)
+	// {
+	// 	line = readline("here_doc> ");
+	// 	if (!line)
+	// 		break ;
+	// 	line_size = ft_strlen(line);
+	// 	if (ft_strncmp(line, redir->limiter, ft_strlen(redir->limiter)) == 0
+	// 		&& line_size == ft_strlen(redir->limiter))
+	// 	{
+	// 		break ;
+	// 	}
+	// 	ft_putstr_fd(line, fd);
+	// 	ft_putstr_fd("\n", fd);
+	// 	free(line);
+	// }
 	free(line);
 	close(fd);
 }
@@ -88,38 +105,62 @@ int	ft_parse_outfile(t_redir *redir)
 	return (fd);
 }
 
+int ft_exec_redir(t_ast *root, t_ast *node, t_redir *r, char **envp)
+{
+	pid_t pid;
+	int   status;
+	int   fd;
+
+	pid = fork();
+	if (pid < 0)
+		return (FORK_ERROR);
+	if (pid == 0)
+	{
+		// 1) Handle input redirection: '<' or '<<'
+		if (r->type == GRAM_REDIR_IN || r->type == GRAM_HEREDOC)
+		{
+			fd = ft_parse_infile(r);
+			if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
+			{
+				if (fd >= 0)
+					close(fd);
+				return (REDIR_ERROR);
+			}
+			close(fd);
+		}
+		// 2) Handle output redirection: '>' or '>>'
+		else
+		{
+			fd = ft_parse_outfile(r);
+			if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
+			{
+				if (fd >= 0)
+					close(fd);
+				return (REDIR_ERROR);
+			}
+			close(fd);
+		}
+
+		// then execute the inner command
+		ft_executor(root, node->left, envp);
+		ft_destroy_ast(root);
+		exit(EXIT_FAILURE);
+	}
+	// parent waits; its stdin/stdout unchanged
+	waitpid(pid, &status, 0);
+	return WIFEXITED(status) ? WEXITSTATUS(status) : EXIT_FAILURE;
+}
+
 t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 {
-	int		fd;
 	t_redir	*r;
 
 	r = &node->data.redir;
-	// 1) Handle input redirection: '<' or '<<'
-	if (r->type == GRAM_REDIR_IN || r->type == GRAM_HEREDOC)
-	{
-		// ft_parse_infile will do here-doc if needed, then open for read
-		fd = ft_parse_infile(r);
-		if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
-		{
-			if (fd >= 0)
-				close(fd);
-			return (REDIR_ERROR);
-		}
-		close(fd);
-	}
-	// 2) Handle output redirection: '>' or '>>'
-	else if (r->type == GRAM_REDIR_OUT || r->type == GRAM_REDIR_APPEND)
-	{
-		fd = ft_parse_outfile(r);
-		if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
-		{
-			if (fd >= 0)
-				close(fd);
-			return (REDIR_ERROR);
-		}
-		close(fd);
-	}
 	// 3) Now execute the command that’s been wrapped by this redirection
-	return (ft_executor(root, node->left, envp));
+	return (ft_exec_redir(root, node, r, envp));
 }
+
+
+
+
 

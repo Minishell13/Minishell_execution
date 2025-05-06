@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 09:33:43 by abnsila           #+#    #+#             */
-/*   Updated: 2025/02/15 15:05:29 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/05 16:25:28 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	handlemaxcase(int sign)
 	return (0);
 }
 
-static int	ft_isspace(char c)
+int	ft_isspace(char c)
 {
 	return ((c >= 9 && c <= 13) || c == 32);
 }

@@ -6,16 +6,11 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 17:32:57 by abnsila           #+#    #+#             */
-/*   Updated: 2025/04/20 16:57:48 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/05 16:26:26 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
-static int	ft_isspace(char c)
-{
-	return ((c >= 9 && c <= 13) || c == 32);
-}
 
 static int	ft_get_sign(const char *nptr, int *i)
 {

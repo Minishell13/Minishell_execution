@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:15:07 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 14:33:46 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/05 15:59:43 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ int main(int argc, char **argv, char **envp) {
 	t_token *tokens;
 	t_ast   *root;
 
-	while (1) {
+	while (1)
+	{
 		line = readline("> ");
 		if (!line) { printf("exit\n"); break; }
 		if (*line) add_history(line);

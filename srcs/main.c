@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 14:33:44 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/05 19:01:15 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 t_minishell	sh;
 
+// TODO: Bro test in bash !!!!!!!!!!!!!!!!
 int	main(int ac, char **av, char **ev)
 {
 	(void)ac;
