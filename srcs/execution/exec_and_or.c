@@ -6,15 +6,11 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:31:59 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/07 21:33:02 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/08 00:06:08 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
- * In executor.c
- */
 
 int	exec_and_with_heredoc_first(t_ast *root, t_ast *node, char **envp)
 {
