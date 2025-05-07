@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:31:37 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 14:35:55 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/06 14:35:58 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,6 @@ t_error	ft_execute_subshell(t_ast *root, t_ast *node, char **envp)
 		exit(EXIT_FAILURE);  // in case executor didn't exit
 	}
 	waitpid(pid, &status, 0);
-	return WEXITSTATUS(status) ? EXECVE_ERROR : SUCCESS_ERROR;
+	return WEXITSTATUS(status) ? EXECVE_ERROR : SUCCESS;
 }
 
