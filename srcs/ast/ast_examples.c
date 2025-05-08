@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/06 18:38:27 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/08 17:50:14 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -701,34 +701,38 @@ t_ast *ft_get_ast19(void)
 }
 
 // TODO: Fix this ast example or the execution flow
-//? Command: ls && << EOF &&
+//! Maybe i need just to skip incomplet commands (i add "pwd" for now)
+//? Command: ls && << EOF && pwd
 t_ast *ft_get_ast20(void)
 {
-    // 1) Simple command: ls
-    t_ast *cmd_ls = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-    cmd_ls->data.args = ft_create_args(1, "ls");
+	// 1) Simple command: ls
+	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+	cmd1->data.args = ft_create_args(1, "ls");
 	
-    // 2) Here-doc redirect: << EOF (processed FIRST)
-    t_ast *hd_redirect = ft_new_ast_node(GRAM_IO_REDIRECT);
-    hd_redirect->data.redir.type = GRAM_HEREDOC;
-    hd_redirect->data.redir.limiter = strdup("EOF");
-    ft_generate_tmpfile(&hd_redirect->data.redir);
+	// 2) Here-doc redirect: << EOF (processed FIRST)
+	t_ast *hd_redirect = ft_new_ast_node(GRAM_IO_REDIRECT);
+	hd_redirect->data.redir.type = GRAM_HEREDOC;
+	hd_redirect->data.redir.limiter = strdup("EOF");
+	ft_generate_tmpfile(&hd_redirect->data.redir);
 
 
-    // 3) Build AND operators
-    t_ast *and1 = ft_new_ast_node(GRAM_OPERATOR_AND);
-    and1->left = hd_redirect;  // Process heredoc first
-    and1->right = cmd_ls;      // Then ls if heredoc succeeds
+	// 3) Build AND operators
+	t_ast *and1 = ft_new_ast_node(GRAM_OPERATOR_AND);
+	and1->left = hd_redirect;  // Process heredoc first
+	and1->right = cmd1;      // Then ls if heredoc succeeds
 
-    t_ast *and2 = ft_new_ast_node(GRAM_OPERATOR_AND);
-    and2->left = and1;
+	// 4) Simple command: ls
+	t_ast *cmd2 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+	cmd2->data.args = ft_create_args(1, "pwd");
 
-    t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
-    root->left = and2;
-    return root;
+	t_ast *and2 = ft_new_ast_node(GRAM_OPERATOR_AND);
+	and2->left = and1;
+	and2->right = cmd2;
+
+	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
+	root->left = and2;
+	return root;
 }
-
-
 
 t_ast	*ft_get_ast_example(int n)
 {

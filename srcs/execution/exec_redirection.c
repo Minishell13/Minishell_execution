@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/06 18:34:02 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/08 17:43:19 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	ft_parse_outfile(t_redir *redir)
 	return (fd);
 }
 
-t_error	ft_exec_redir(int fd, t_redir *r)
+t_error	ft_redir(int fd, t_redir *r)
 {
 	// 1) Handle input redirection: '<' or '<<'
 	if (r->type == GRAM_REDIR_IN || r->type == GRAM_HEREDOC)
@@ -139,18 +139,18 @@ t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 	int		fd = -1;
 	t_redir	*r;
 	t_error ret;
-	int saved_stdin = dup(STDIN_FILENO);
+	// int saved_stdin = dup(STDIN_FILENO);
 
 	r = &node->data.redir;
 	// 3) Now execute the command that’s been wrapped by this redirection
-	if (ft_exec_redir(fd, r) != SUCCESS)
+	if (ft_redir(fd, r) != SUCCESS)
 		return (REDIR_ERROR);
 		
 	ret = ft_executor(root, node->left, envp);
 
 	// Restore original stdin
-    dup2(saved_stdin, STDIN_FILENO);
-    close(saved_stdin);
+	// dup2(saved_stdin, STDIN_FILENO);
+	// close(saved_stdin);
 	
 	return (ret);
 }
