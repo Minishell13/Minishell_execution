@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/08 17:50:14 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/09 10:41:14 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -734,6 +734,30 @@ t_ast *ft_get_ast20(void)
 	return root;
 }
 
+//? Command: pwd
+t_ast *ft_get_ast21(void)
+{
+	// 1) Simple command: ls
+	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+	cmd1->data.args = ft_create_args(1, "pwd");
+
+	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
+	root->left = cmd1;
+	return root;
+}
+
+//? Command: echo -n "OK"
+t_ast *ft_get_ast22(void)
+{
+	// 1) Simple command: ls
+	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+	cmd1->data.args = ft_create_args(3, "echo", "-n", "OK");
+
+	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
+	root->left = cmd1;
+	return root;
+}
+
 t_ast	*ft_get_ast_example(int n)
 {
 	static t_ast *(*examples[])(void) = {
@@ -758,6 +782,8 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast18,
 		ft_get_ast19,
 		ft_get_ast20,
+		ft_get_ast21,
+		ft_get_ast22,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)

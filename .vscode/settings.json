@@ -24,6 +24,7 @@
         "parser.h": "c",
         "lexer.h": "c",
         "history.h": "c",
-        "numbers": "c"
+        "numbers": "c",
+        "random": "c"
     }
 }
