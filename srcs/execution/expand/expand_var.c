@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/10 17:08:57 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/10 17:56:48 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,20 @@ t_quote	is_quote(char c)
 		return (NONE);
 }
 
-char	*extarct_var(char *arg, int *i)
+char	*extarct_var_value(char *arg, int *i)
 {
 	(void)arg;
 	(void)i;
 	char	*var = ft_calloc(1, 1);
 
-	// while (arg[*i] && is_quote(arg[*i]) == NONE)
-	while (arg[*i])
+	while (arg[*i] && is_quote(arg[*i]) == NONE)
 	{
 		var = ft_charjoin(var, arg[*i]);
 		if (!var)
 			return (NULL);
 		(*i)++;
 	}
-	return (var);
+	return (ft_strdup(getenv(var)));
 }
 
 char	*expand_var_to_str(char *arg)
@@ -68,7 +67,7 @@ char	*expand_var_to_str(char *arg)
 				if (arg[i] != '$' || (arg[i] == '$' && is_quote(arg[i + 1]) != DOUBLE_Q))
 					value = ft_charjoin(value, arg[i]);
 				else if (arg[i] == '$' && is_quote(arg[i + 1]) == NONE)
-					value = ft_conststrjoin(value, extarct_var(arg, &i));
+					value = ft_conststrjoin(value, extarct_var_value(arg, &i));
 				i++;
 			}
 		}

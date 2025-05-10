@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/10 17:02:45 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/10 17:55:53 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int	main(int ac, char **av, char **ev)
 		}
 
 		printf("line: %s\n", line);
-		value = extarct_var(line, &i);
+		i = 0;
+		value = extarct_var_value(ft_strdup(line), &i);
 		printf("value: %s\n", value);
 		free(value);
 
