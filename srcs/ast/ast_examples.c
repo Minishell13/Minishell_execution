@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/09 10:41:14 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/09 17:59:22 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -758,6 +758,48 @@ t_ast *ft_get_ast22(void)
 	return root;
 }
 
+//? Command: echo "'""$PATH""'" && echo '""$SHELL""' && echo ""$PWD"" && echo ''$CC''
+t_ast *ft_get_ast23(void)
+{
+    // Command 1: echo "'""$PATH""'"
+    t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+    cmd1->data.args = ft_create_args(2, "echo", "'\"$PATH\"'");
+
+    // Command 2: echo '""$SHELL""'
+    t_ast *cmd2 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+    cmd2->data.args = ft_create_args(2, "echo", "\"\"$SHELL\"\"");
+
+    // Command 3: echo """$PWD""
+    t_ast *cmd3 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+    cmd3->data.args = ft_create_args(2, "echo", "\"\"$PWD\"\"");
+
+    // Command 4: echo ''$CC''
+    t_ast *cmd4 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+    cmd4->data.args = ft_create_args(2, "echo", "''$CC''");
+
+    // First AND: cmd1 && cmd2
+    t_ast *and1 = ft_new_ast_node(GRAM_OPERATOR_AND);
+    and1->left = cmd1;
+    and1->right = cmd2;
+
+    // Second AND: (cmd1 && cmd2) && cmd3
+    t_ast *and2 = ft_new_ast_node(GRAM_OPERATOR_AND);
+    and2->left = and1;
+    and2->right = cmd3;
+
+    // Third AND: ((cmd1 && cmd2) && cmd3) && cmd4
+    t_ast *and3 = ft_new_ast_node(GRAM_OPERATOR_AND);
+    and3->left = and2;
+    and3->right = cmd4;
+
+    // Wrap in complete command
+    t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
+    root->left = and3;
+
+    return root;
+}
+
+
 t_ast	*ft_get_ast_example(int n)
 {
 	static t_ast *(*examples[])(void) = {
@@ -784,6 +826,7 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast20,
 		ft_get_ast21,
 		ft_get_ast22,
+		ft_get_ast23,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)

@@ -25,6 +25,12 @@
         "lexer.h": "c",
         "history.h": "c",
         "numbers": "c",
-        "random": "c"
+        "random": "c",
+        "bit": "c",
+        "cstddef": "c",
+        "limits": "c",
+        "memory": "c",
+        "new": "c",
+        "text_encoding": "c"
     }
 }

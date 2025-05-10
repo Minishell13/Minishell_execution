@@ -2,13 +2,20 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -L./Libft -lft -lreadline -lncurses
-SRC_DIR = ./srcs
-INCLUDES = -I./includes -I./Libft/includes
+
 LIBFT_DIR = ./Libft
+SRC_DIR = ./srcs
+EXEC_DIR = $(SRC_DIR)/execution
+EXPAND_DIR = $(EXEC_DIR)/expand
+
+INCLUDES = -I./includes -I./Libft/includes
 LIBFT = $(LIBFT_DIR)/libft.a
 
-EXEC =	$(SRC_DIR)/execution/executor.c $(SRC_DIR)/execution/exec_cmd.c $(SRC_DIR)/execution/exec_pipeline.c $(SRC_DIR)/execution/exec_utils.c \
-		$(SRC_DIR)/execution/exec_redirection.c $(SRC_DIR)/execution/exec_subshell.c $(SRC_DIR)/execution/exec_and_or.c
+EXPAND =	$(EXPAND_DIR)/expand_var.c
+# $(EXPAND_DIR)/expand.c $(EXPAND_DIR)/expand_wildcard.c 
+
+EXEC =	$(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXEC_DIR)/exec_pipeline.c $(EXEC_DIR)/exec_utils.c \
+		$(EXEC_DIR)/exec_redirection.c $(EXEC_DIR)/exec_subshell.c $(EXEC_DIR)/exec_and_or.c
 
 SRCS =	$(EXEC) $(SRC_DIR)/main.c $(SRC_DIR)/ast/ast.c $(SRC_DIR)/cleanup/cleanup.c \
 		$(SRC_DIR)/debug/debugging.c $(SRC_DIR)/ast/ast_examples.c $(SRC_DIR)/exit/errors.c
@@ -24,7 +31,7 @@ all: $(LIBFT) $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(INCLUDES) -o minishell $(LDFLAGS)
 
-%.o: %.c ./includes/minishell.h ./includes/execution.h
+%.o: %.c ./includes/minishell.h ./includes/execution.h ./includes/expand.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):

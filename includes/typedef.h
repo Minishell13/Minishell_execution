@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/06 14:32:11 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/10 14:49:27 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,5 +128,28 @@ typedef struct	s_ast
 		
 	}	data;
 }				t_ast;
+
+
+typedef enum	s_quote_mode
+{
+	LITERAL,
+	EXPAND
+}				t_quote_mode;
+
+typedef enum	s_quote
+{
+	NONE,
+	SINGLE_Q,
+	DOUBLE_Q
+}				t_quote;
+
+// For $VAR expansion
+typedef struct	s_block
+{
+	char			*text;       // "$USER", '"', etc.
+	t_quote_mode	mode;
+	t_quote			quote;
+}				t_block;
+
 
 #endif

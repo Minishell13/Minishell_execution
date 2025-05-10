@@ -4,6 +4,7 @@
 # include "typedef.h"
 // # include "lexer.h"
 // # include "parser.h"
+# include "expand.h"
 # include "execution.h"
 # include "colors.h"
 

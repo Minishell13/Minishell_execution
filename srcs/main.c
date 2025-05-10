@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 19:01:15 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/10 17:02:45 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_minishell	sh;
 
 // TODO: Bro test in bash !!!!!!!!!!!!!!!!
-int	main(int ac, char **av, char **ev)
+int	main0(int ac, char **av, char **ev)
 {
 	(void)ac;
 	(void)av;
@@ -36,5 +36,35 @@ int	main(int ac, char **av, char **ev)
 	ft_print_ast(root, 0);
 	ft_executor(root, root, ev);
 	ft_destroy_ast(root);
+	return (EXIT_SUCCESS);
+}
+
+
+int	main(int ac, char **av, char **ev)
+{
+	(void)ac;
+	(void)av;
+	(void)ev;
+	int i = 0;
+	char  *line;
+	char *value;
+
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			printf("exit\n");
+			break ;
+		}
+
+		printf("line: %s\n", line);
+		value = extarct_var(line, &i);
+		printf("value: %s\n", value);
+		free(value);
+
+		free(line);
+	}
+
 	return (EXIT_SUCCESS);
 }
