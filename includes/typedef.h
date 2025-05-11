@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/10 14:49:27 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/11 16:41:57 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ typedef struct	s_ast
 
 typedef enum	s_quote_mode
 {
+	DEFAULT,
 	LITERAL,
 	EXPAND
 }				t_quote_mode;
