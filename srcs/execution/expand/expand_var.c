@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/11 17:12:45 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/11 18:16:21 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,40 @@ char	*extarct_var_value(char *arg, int *i)
 	}
 	value = getenv(var);
 	if (!value)
-		return (ft_strdup(var));
+		return (NULL);
 	return (ft_strdup(value));
+}
+
+//* -------------------------- Process modes --------------------------
+void	default_mode(char *arg, char *value, int *i)
+{
+	while (arg[*i] && which_quote(arg[*i + 1]) == NONE)
+	{
+		// Do not expand ($' and $")
+		if ((arg[*i] == '$' && which_quote(arg[*i + 1]) != NONE))
+			break ;
+		// Do not expand special char exept for $?
+		else if (arg[*i] == '$' && ft_isalnum(arg[*i + 1]) == 0)
+		{
+			// Expand to exit code
+			if (arg[*i + 1] == '?')
+				value = ft_conststrjoin(value, ft_strdup("1337"));
+			// Default action
+			value = ft_charjoin(value, arg[*i]);
+			(*i)++;
+			value = ft_charjoin(value, arg[*i]);
+		}
+		// Expand var to value
+		else if (arg[*i] == '$' && which_quote(arg[*i + 1]) == NONE)
+		{
+			(*i)++;
+			value = ft_conststrjoin(value, extarct_var_value(arg, i));
+		}
+		// Do not expand simple char
+		else
+			value = ft_charjoin(value, arg[*i]);
+		(*i)++;
+	}
 }
 
 void	expand_mode(char *arg, char *value, int *i)
@@ -55,7 +87,7 @@ void	expand_mode(char *arg, char *value, int *i)
 		{
 			// Expand to exit code
 			if (arg[*i + 1] == '?')
-				value = ft_charjoin(value, get_exit_code());
+				value = ft_conststrjoin(value, ft_strdup("1337"));
 			// Default action
 			value = ft_charjoin(value, arg[*i]);
 			(*i)++;
@@ -66,7 +98,10 @@ void	expand_mode(char *arg, char *value, int *i)
 			value = ft_charjoin(value, arg[*i]);
 			// Expand var to value
 		else if (arg[*i] == '$' && which_quote(arg[*i + 1]) == NONE)
+		{
+			(*i)++;	
 			value = ft_conststrjoin(value, extarct_var_value(arg, i));
+		}
 		// Do not expand simple char
 		else
 			value = ft_charjoin(value, arg[*i]);
@@ -74,43 +109,53 @@ void	expand_mode(char *arg, char *value, int *i)
 	}
 }
 
+void	literal_mode(char *arg, char *value, int *i)
+{
+	while (arg[*i] && which_quote(arg[*i + 1]) != SINGLE_Q)
+	{
+		value = ft_charjoin(value, arg[*i]);
+		(*i)++;
+	}
+}
+
 char	*expand_var_to_str(char *arg)
 {
-	int		i;
-	int		j;
-	char	*value = ft_calloc(1, 1);
-	t_quote_mode	mode = EXPAND;
+	int				i;
+	char			*value;
+	t_quote_mode	mode;
 
+	value = ft_calloc(1, 1);
+	if (!value)
+		return (NULL);
 	i = 0;
-	
+	mode = DEFAULT;
 	while (arg[i])
 	{
-		// TODO: The default is (DEFAULT OR NONE ????)
-		if (mode == NONE)
+		// Set Process mode
+		if (which_quote(arg[i] == SINGLE_Q))
+			mode = LITERAL;
+		else if (which_quote(arg[i] == DOUBLE_Q))
+			mode = EXPAND;
+		else
+			mode = DEFAULT;
+		i++;
+		// Process arg
+		if (mode == DEFAULT)
 		{
-			if (which_quote(arg[i] == SINGLE_Q))
-				mode = LITERAL;
-			else if (which_quote(arg[i] == DOUBLE_Q))
-				mode = EXPAND;
+			printf("Default\n");
+			default_mode(arg, value, &i);
 		}
-		if (mode == EXPAND || mode == DEFAULT)
+		else if (mode == EXPAND)
 		{
-			j = i;
-			while (arg[i] && which_quote(arg[i + 1]) == DOUBLE_Q)
-			{
-				
-				if (arg[i] != '$' || ((arg[i] == '$' && which_quote(arg[i + 1]) != DOUBLE_Q)
-					&& mode != DEFAULT))
-					value = ft_charjoin(value, arg[i]);
-				else if (arg[i] == '$' && which_quote(arg[i + 1]) == NONE)
-					value = ft_conststrjoin(value, extarct_var_value(arg, &i));
-				i++;
-			}
+			expand_mode(arg, value, &i);
 		}
-		if (arg[i] == '\'' || arg[i] == '"')
+		else if (mode == LITERAL)
+		{
+			literal_mode(arg, value, &i);
+		}
 		i++;
 	}
-	return (NULL);
+	return (value);
 }
 
 void	expand_var_in_argv(t_ast *ast)
