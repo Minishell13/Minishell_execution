@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/11 18:16:21 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 15:17:57 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,26 +131,30 @@ char	*expand_var_to_str(char *arg)
 	mode = DEFAULT;
 	while (arg[i])
 	{
+		printf("arg[%d]: %c\n", i, arg[i]);
 		// Set Process mode
-		if (which_quote(arg[i] == SINGLE_Q))
+		if (which_quote(arg[i]) == SINGLE_Q)
 			mode = LITERAL;
-		else if (which_quote(arg[i] == DOUBLE_Q))
+		else if (which_quote(arg[i]) == DOUBLE_Q)
 			mode = EXPAND;
 		else
 			mode = DEFAULT;
+		printf("mode: %d\n", mode);
 		i++;
 		// Process arg
 		if (mode == DEFAULT)
 		{
-			printf("Default\n");
+			printf("-------------- Default ---------------\n");
 			default_mode(arg, value, &i);
 		}
 		else if (mode == EXPAND)
 		{
+			printf("-------------- Expand ---------------\n");
 			expand_mode(arg, value, &i);
 		}
 		else if (mode == LITERAL)
 		{
+			printf("-------------- Literal ---------------\n");
 			literal_mode(arg, value, &i);
 		}
 		i++;
