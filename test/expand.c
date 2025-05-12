@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:33:34 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 18:06:06 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 20:10:29 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	main()
 	char	*value;
 	char	*arg;
 
-
 	while (1)
 	{
 		line = readline("> ");
@@ -28,12 +27,18 @@ int	main()
 			return (EXIT_FAILURE);
 
 		arg = ft_strdup(line);
-		value = expand_var_to_str(line);
+		value = expand_var_to_str(arg);
 		printf("%s\n", value);
 		free(arg);
 		free(value);
 		free(line);
 	}
+
+	// arg = ft_strdup("\"OK$SHELL'$SHELL$\"'$PATH$'$SHELL$");
+	// value = expand_var_to_str(arg);
+	// printf("%s\n", value);
+	// free(arg);
+	// free(value);
 
 	return (EXIT_SUCCESS);
 }

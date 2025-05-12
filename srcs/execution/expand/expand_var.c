@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 18:56:31 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 20:08:28 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*extarct_var_value(char *arg, int *i)
 	char	*var;
 	char	*value;
 
-	var = ft_calloc(1, 1);
+	var = ft_strdup("");
 	while (arg[*i] && (is_quote(arg[*i]) == NONE)
 			&& arg[*i] != '$' && ft_isspace(arg[*i]) == 0)
 	{
@@ -60,10 +60,11 @@ char	*extarct_var_value(char *arg, int *i)
 
 t_bool	try_expand_dollar(char *arg, char **value, int *i)
 {
+	(void)value;
 	if (arg[*i] != '$')
 		return (false);
 	// Do not expand ($' and $")
-	else if ((arg[*i + 1] && is_quote(arg[*i + 1])))
+	else if (arg[*i + 1] && is_quote(arg[*i + 1]))
 		return (false);
 	// Expand to exit code
 	else if (arg[*i + 1] == '?')
@@ -72,7 +73,7 @@ t_bool	try_expand_dollar(char *arg, char **value, int *i)
 		*i += 2;
 	}
 	// Do not expand special char exept for $?
-	else if (ft_isalnum(arg[*i + 1]) == 0 && is_quote(arg[*i + 1]) == NONE)
+	else if (arg[*i + 1] && ft_isalnum(arg[*i + 1]) == 0 && is_quote(arg[*i + 1]) == NONE)
 	{
 		*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
@@ -91,35 +92,15 @@ t_bool	try_expand_dollar(char *arg, char **value, int *i)
 //* -------------------------- Process modes --------------------------
 void	default_mode(char *arg, char **value, int *i)
 {
+	(void)value;
 	while (arg[*i] && is_quote(arg[*i]) == NONE)
 	{
 		// printf("[Default]     arg[%d] : %c\n", *i, arg[*i]);
-		// // Do not expand ($' and $")
-		// if ((arg[*i] == '$' && arg[*i + 1] && is_quote(arg[*i + 1])))
-		// 	break ;
-		// // Do not expand special char exept for $?
-		// else if (arg[*i] == '$' && ft_isalnum(arg[*i + 1]) == 0 && is_quote(arg[*i + 1]) == NONE)
-		// {
-		// 	// Expand to exit code
-		// 	if (arg[*i + 1] == '?')
-		// 	{	
-		// 		*value = ft_conststrjoin(*value, get_exit_code());
-		// 		(*i) += 2;
-		// 		continue ;
-		// 	}
-		// 	// Default action
-		// 	*value = ft_charjoin(*value, arg[*i]);
-		// 	(*i)++;
-		// 	*value = ft_charjoin(*value, arg[*i]);
-		// }
-		// // Expand var to *value
-		// else if (arg[*i] == '$' && is_quote(arg[*i + 1]) == NONE)
-		// {
-		// 	(*i)++;
-		// 	*value = ft_conststrjoin(*value, extarct_var_value(arg, i));
-		// 	continue ;
-		// }
-		if (arg[*i] == '$' && arg[*i + 1] && is_quote(arg[*i + 1]))
+		// Keep the ($) at the end
+		if (arg[*i] == '$' && arg[*i + 1] == '\0')
+			*value = ft_charjoin(*value, arg[*i]);
+		// Skip the ($) if quote come s after
+		else if (arg[*i] == '$' && arg[*i + 1] && is_quote(arg[*i + 1]))
 		{
 			(*i)++;
 			break ;
@@ -138,32 +119,6 @@ void	expand_mode(char *arg, char **value, int *i)
 	while (arg[*i] && is_quote(arg[*i]) != DOUBLE_Q)
 	{
 		// printf("[Expand]     arg[%d]: %c\n", *i, arg[*i]);
-		// // Do not expand special char exept for $?
-		// if (arg[*i] == '$' && ft_isalnum(arg[*i + 1]) == 0 && is_quote(arg[*i + 1]) == NONE)
-		// {
-		// 	// Expand to exit code
-		// 	if (arg[*i + 1] == '?')
-		// 	{	
-		// 		*value = ft_conststrjoin(*value, get_exit_code());
-		// 		(*i) += 2;
-		// 		continue ;
-		// 	}
-		// 	// Default action
-		// 	*value = ft_charjoin(*value, arg[*i]);
-		// 	(*i)++;
-		// 	*value = ft_charjoin(*value, arg[*i]);
-		// }
-		// // Do not expand ($' and $")
-		// else if ((arg[*i] == '$' && is_quote(arg[*i + 1])))
-		// 	*value = ft_charjoin(*value, arg[*i]);
-		// 	// Expand var to *value
-		// else if (arg[*i] == '$' && is_quote(arg[*i + 1]) == NONE)
-		// {
-		// 	(*i)++;	
-		// 	*value = ft_conststrjoin(*value, extarct_var_value(arg, i));
-		// 	// printf("value: %s\n", *value);
-		// 	continue;
-		// }
 		if (try_expand_dollar(arg, value, i))
 			continue ;
 		// Do not expand simple char
@@ -191,7 +146,7 @@ char	*expand_var_to_str(char *arg)
 	char			*value;
 	t_quote_mode	mode;
 
-	value = ft_calloc(1, 1);
+	value = ft_strdup("");
 	if (!value)
 		return (NULL);
 	i = 0;
