@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 15:18:37 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 16:42:45 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,12 @@ int	main0(int ac, char **av, char **ev)
 	return (EXIT_SUCCESS);
 }
 
-
-int	main(int ac, char **av, char **ev)
+int	main1(int ac, char **av, char **ev)
 {
 	(void)ac;
 	(void)av;
 	(void)ev;
-	int i = 0;
 	char  *line;
-	char *value;
 
 	while (1)
 	{
@@ -57,16 +54,9 @@ int	main(int ac, char **av, char **ev)
 			printf("exit\n");
 			break ;
 		}
-
 		printf("line: %s\n", line);
-		i = 0;
-		// value = extarct_var_value(ft_strdup(line), &i);
-		// TODO: First test => "OK$SHELL"'$PATH'$SHELL
-		value = expand_var_to_str(ft_strdup(line));
-		printf("value: %s\n", value);
-		free(value);
-
 		free(line);
+		break ;
 	}
 
 	return (EXIT_SUCCESS);

@@ -6,18 +6,34 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:33:34 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/10 15:36:03 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 18:06:06 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-
+// TODO: First test => "OK$SHELL'$SHELL$"'$PATH$'$SHELL$
+// arg = ft_strdup("\"OK$SHELL'$SHELL$\"'$PATH$'$SHELL$");
 int	main()
 {
-		char *s = "Hello";
-		char c = 'K';
-		char *v = ft_strjoin(s, &c);
-		printf("v = %s", v);
+	char	*line;
+	char	*value;
+	char	*arg;
+
+
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+			return (EXIT_FAILURE);
+
+		arg = ft_strdup(line);
+		value = expand_var_to_str(line);
+		printf("%s\n", value);
+		free(arg);
+		free(value);
+		free(line);
+	}
+
+	return (EXIT_SUCCESS);
 }

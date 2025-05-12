@@ -6,15 +6,26 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 15:17:57 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 18:56:31 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: i must expand var inside neested quotes
+extern	t_minishell	sh;
 
-t_quote	which_quote(char c)
+char	*get_exit_code()
+{
+	char	*value;
+
+	value = ft_itoa(sh.exit_code);
+	if (!value)
+		return (NULL);
+	return (value);
+}
+
+
+t_quote	is_quote(char c)
 {
 	if (c == '\'')
 		return (SINGLE_Q);
@@ -30,7 +41,8 @@ char	*extarct_var_value(char *arg, int *i)
 	char	*value;
 
 	var = ft_calloc(1, 1);
-	while (arg[*i] && which_quote(arg[*i]) == NONE)
+	while (arg[*i] && (is_quote(arg[*i]) == NONE)
+			&& arg[*i] != '$' && ft_isspace(arg[*i]) == 0)
 	{
 		var = ft_charjoin(var, arg[*i]);
 		if (!var)
@@ -38,84 +50,139 @@ char	*extarct_var_value(char *arg, int *i)
 		(*i)++;
 	}
 	value = getenv(var);
+	free(var);
+	// printf("[End of extract]     arg[%d]: %c\n", *i, arg[*i]);
+	// printf("value: %s\n", value);
 	if (!value)
 		return (NULL);
 	return (ft_strdup(value));
 }
 
+t_bool	try_expand_dollar(char *arg, char **value, int *i)
+{
+	if (arg[*i] != '$')
+		return (false);
+	// Do not expand ($' and $")
+	else if ((arg[*i + 1] && is_quote(arg[*i + 1])))
+		return (false);
+	// Expand to exit code
+	else if (arg[*i + 1] == '?')
+	{	
+		*value = ft_conststrjoin(*value, get_exit_code());
+		*i += 2;
+	}
+	// Do not expand special char exept for $?
+	else if (ft_isalnum(arg[*i + 1]) == 0 && is_quote(arg[*i + 1]) == NONE)
+	{
+		*value = ft_charjoin(*value, arg[*i]);
+		(*i)++;
+		*value = ft_charjoin(*value, arg[*i]);
+		(*i)++;
+	}
+	// Expand var to *value
+	else if (is_quote(arg[*i + 1]) == NONE)
+	{
+		(*i)++;
+		*value = ft_conststrjoin(*value, extarct_var_value(arg, i));
+	}
+	return (true);
+}
+
 //* -------------------------- Process modes --------------------------
-void	default_mode(char *arg, char *value, int *i)
+void	default_mode(char *arg, char **value, int *i)
 {
-	while (arg[*i] && which_quote(arg[*i + 1]) == NONE)
+	while (arg[*i] && is_quote(arg[*i]) == NONE)
 	{
-		// Do not expand ($' and $")
-		if ((arg[*i] == '$' && which_quote(arg[*i + 1]) != NONE))
+		// printf("[Default]     arg[%d] : %c\n", *i, arg[*i]);
+		// // Do not expand ($' and $")
+		// if ((arg[*i] == '$' && arg[*i + 1] && is_quote(arg[*i + 1])))
+		// 	break ;
+		// // Do not expand special char exept for $?
+		// else if (arg[*i] == '$' && ft_isalnum(arg[*i + 1]) == 0 && is_quote(arg[*i + 1]) == NONE)
+		// {
+		// 	// Expand to exit code
+		// 	if (arg[*i + 1] == '?')
+		// 	{	
+		// 		*value = ft_conststrjoin(*value, get_exit_code());
+		// 		(*i) += 2;
+		// 		continue ;
+		// 	}
+		// 	// Default action
+		// 	*value = ft_charjoin(*value, arg[*i]);
+		// 	(*i)++;
+		// 	*value = ft_charjoin(*value, arg[*i]);
+		// }
+		// // Expand var to *value
+		// else if (arg[*i] == '$' && is_quote(arg[*i + 1]) == NONE)
+		// {
+		// 	(*i)++;
+		// 	*value = ft_conststrjoin(*value, extarct_var_value(arg, i));
+		// 	continue ;
+		// }
+		if (arg[*i] == '$' && arg[*i + 1] && is_quote(arg[*i + 1]))
+		{
+			(*i)++;
 			break ;
-		// Do not expand special char exept for $?
-		else if (arg[*i] == '$' && ft_isalnum(arg[*i + 1]) == 0)
-		{
-			// Expand to exit code
-			if (arg[*i + 1] == '?')
-				value = ft_conststrjoin(value, ft_strdup("1337"));
-			// Default action
-			value = ft_charjoin(value, arg[*i]);
-			(*i)++;
-			value = ft_charjoin(value, arg[*i]);
 		}
-		// Expand var to value
-		else if (arg[*i] == '$' && which_quote(arg[*i + 1]) == NONE)
-		{
-			(*i)++;
-			value = ft_conststrjoin(value, extarct_var_value(arg, i));
-		}
+		else if (try_expand_dollar(arg, value, i))
+			continue ;
 		// Do not expand simple char
 		else
-			value = ft_charjoin(value, arg[*i]);
+			*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
 	}
 }
 
-void	expand_mode(char *arg, char *value, int *i)
+void	expand_mode(char *arg, char **value, int *i)
 {
-	while (arg[*i] && which_quote(arg[*i + 1]) == DOUBLE_Q)
+	while (arg[*i] && is_quote(arg[*i]) != DOUBLE_Q)
 	{
-		// Reach the end of expansion
-		if (which_quote(arg[*i + 1]) == DOUBLE_Q)
-			break ;
-		// Do not expand special char exept for $?
-		else if (arg[*i] == '$' && ft_isalnum(arg[*i + 1]) == 0)
-		{
-			// Expand to exit code
-			if (arg[*i + 1] == '?')
-				value = ft_conststrjoin(value, ft_strdup("1337"));
-			// Default action
-			value = ft_charjoin(value, arg[*i]);
-			(*i)++;
-			value = ft_charjoin(value, arg[*i]);
-		}
-		// Do not expand ($' and $")
-		else if ((arg[*i] == '$' && which_quote(arg[*i + 1]) != NONE))
-			value = ft_charjoin(value, arg[*i]);
-			// Expand var to value
-		else if (arg[*i] == '$' && which_quote(arg[*i + 1]) == NONE)
-		{
-			(*i)++;	
-			value = ft_conststrjoin(value, extarct_var_value(arg, i));
-		}
+		// printf("[Expand]     arg[%d]: %c\n", *i, arg[*i]);
+		// // Do not expand special char exept for $?
+		// if (arg[*i] == '$' && ft_isalnum(arg[*i + 1]) == 0 && is_quote(arg[*i + 1]) == NONE)
+		// {
+		// 	// Expand to exit code
+		// 	if (arg[*i + 1] == '?')
+		// 	{	
+		// 		*value = ft_conststrjoin(*value, get_exit_code());
+		// 		(*i) += 2;
+		// 		continue ;
+		// 	}
+		// 	// Default action
+		// 	*value = ft_charjoin(*value, arg[*i]);
+		// 	(*i)++;
+		// 	*value = ft_charjoin(*value, arg[*i]);
+		// }
+		// // Do not expand ($' and $")
+		// else if ((arg[*i] == '$' && is_quote(arg[*i + 1])))
+		// 	*value = ft_charjoin(*value, arg[*i]);
+		// 	// Expand var to *value
+		// else if (arg[*i] == '$' && is_quote(arg[*i + 1]) == NONE)
+		// {
+		// 	(*i)++;	
+		// 	*value = ft_conststrjoin(*value, extarct_var_value(arg, i));
+		// 	// printf("value: %s\n", *value);
+		// 	continue;
+		// }
+		if (try_expand_dollar(arg, value, i))
+			continue ;
 		// Do not expand simple char
 		else
-			value = ft_charjoin(value, arg[*i]);
+			*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
 	}
+	// printf("End value: %s\n", *value);
 }
 
-void	literal_mode(char *arg, char *value, int *i)
+void	literal_mode(char *arg, char **value, int *i)
 {
-	while (arg[*i] && which_quote(arg[*i + 1]) != SINGLE_Q)
+	while (arg[*i] && is_quote(arg[*i]) != SINGLE_Q)
 	{
-		value = ft_charjoin(value, arg[*i]);
+		// printf("[Literal]     arg[%d]: %c\n", *i, arg[*i]);
+		*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
 	}
+	// printf("End value: %s\n", *value);
 }
 
 char	*expand_var_to_str(char *arg)
@@ -131,31 +198,36 @@ char	*expand_var_to_str(char *arg)
 	mode = DEFAULT;
 	while (arg[i])
 	{
-		printf("arg[%d]: %c\n", i, arg[i]);
+		// printf("[[Begin mode]]    arg[%d]: %c\n", i, arg[i]);
 		// Set Process mode
-		if (which_quote(arg[i]) == SINGLE_Q)
+		if (is_quote(arg[i]) == SINGLE_Q)
 			mode = LITERAL;
-		else if (which_quote(arg[i]) == DOUBLE_Q)
+		else if (is_quote(arg[i]) == DOUBLE_Q)
 			mode = EXPAND;
 		else
 			mode = DEFAULT;
-		printf("mode: %d\n", mode);
-		i++;
+		// printf("mode: %d\n", mode);
 		// Process arg
 		if (mode == DEFAULT)
 		{
-			printf("-------------- Default ---------------\n");
-			default_mode(arg, value, &i);
+			// printf("-------------- Default ---------------\n");
+			default_mode(arg, &value, &i);
+			continue ;
+			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
 		else if (mode == EXPAND)
 		{
-			printf("-------------- Expand ---------------\n");
-			expand_mode(arg, value, &i);
+			i++;
+			// printf("-------------- Expand ---------------\n");
+			expand_mode(arg, &value, &i);
+			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
 		else if (mode == LITERAL)
 		{
-			printf("-------------- Literal ---------------\n");
-			literal_mode(arg, value, &i);
+			i++;
+			// printf("-------------- Literal ---------------\n");
+			literal_mode(arg, &value, &i);
+			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
 		i++;
 	}
