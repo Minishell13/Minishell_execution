@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:33:34 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 20:10:29 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 21:34:33 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // TODO: First test => "OK$SHELL'$SHELL$"'$PATH$'$SHELL$
 // arg = ft_strdup("\"OK$SHELL'$SHELL$\"'$PATH$'$SHELL$");
-int	main()
+int	main2()
 {
 	char	*line;
 	char	*value;
@@ -27,7 +27,7 @@ int	main()
 			return (EXIT_FAILURE);
 
 		arg = ft_strdup(line);
-		value = expand_var_to_str(arg);
+		value = process_arg(arg);
 		printf("%s\n", value);
 		free(arg);
 		free(value);
@@ -35,7 +35,7 @@ int	main()
 	}
 
 	// arg = ft_strdup("\"OK$SHELL'$SHELL$\"'$PATH$'$SHELL$");
-	// value = expand_var_to_str(arg);
+	// value = process_arg(arg);
 	// printf("%s\n", value);
 	// free(arg);
 	// free(value);

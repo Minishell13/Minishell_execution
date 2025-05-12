@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 20:08:28 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 21:49:48 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	default_mode(char *arg, char **value, int *i)
 		// Keep the ($) at the end
 		if (arg[*i] == '$' && arg[*i + 1] == '\0')
 			*value = ft_charjoin(*value, arg[*i]);
-		// Skip the ($) if quote come s after
+		// Skip the ($) if quote comes after
 		else if (arg[*i] == '$' && arg[*i + 1] && is_quote(arg[*i + 1]))
 		{
 			(*i)++;
@@ -140,7 +140,7 @@ void	literal_mode(char *arg, char **value, int *i)
 	// printf("End value: %s\n", *value);
 }
 
-char	*expand_var_to_str(char *arg)
+char	*process_arg(char *arg)
 {
 	int				i;
 	char			*value;
@@ -189,16 +189,36 @@ char	*expand_var_to_str(char *arg)
 	return (value);
 }
 
-void	expand_var_in_argv(t_ast *ast)
+void	expand_node_args(t_ast *ast)
 {
 	int		i;
 	char	**args;
+	char	*new_arg;
 
 	i = 0;
 	args = ast->data.args;
+	if (!args)
+		return ;
 	while (args[i])
 	{
-		if (args[i][0] == '$')
+		printf("args[%d]: %s\n", i, args[i]);
+		new_arg = process_arg(args[i]);
+		free(args[i]);
+		args[i] = NULL;
+		printf("args[%d]: %s\n", i, new_arg);
+		args[i] = new_arg;
 		i++;
 	}
+}
+
+void	expand_tree(t_ast *node)
+{
+	if (!node)
+		return;
+
+	expand_node_args(node);
+
+	// First recurse into children
+	expand_tree(node->left);
+	expand_tree(node->right);
 }

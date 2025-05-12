@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:31:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/11 18:09:20 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 21:37:15 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@
 # include "typedef.h"
 
 // Expand Var
-t_quote	which_quote(char c);
+t_quote	is_quote(char c);
 char	*extarct_var_value(char *arg, int *i);
-char	*expand_var_to_str(char *arg);
+char	*process_arg(char *arg);
+void	expand_node_args(t_ast *ast);
+void	expand_tree(t_ast *node);
 
 // Expand Wildcard
 

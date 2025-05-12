@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:54:51 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 16:42:45 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/12 21:51:02 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_minishell	sh;
 
 // TODO: Bro test in bash !!!!!!!!!!!!!!!!
-int	main0(int ac, char **av, char **ev)
+int	main(int ac, char **av, char **ev)
 {
 	(void)ac;
 	(void)av;
@@ -34,7 +34,10 @@ int	main0(int ac, char **av, char **ev)
 	// }
 	root = ft_get_ast_example(ft_atoi(av[1]));
 	ft_print_ast(root, 0);
-	ft_executor(root, root, ev);
+	//TODO: Do more test for expansion in ast tree
+	expand_tree(root);
+	// ft_executor(root, root, ev);
+	ft_print_ast(root, 0);
 	ft_destroy_ast(root);
 	return (EXIT_SUCCESS);
 }
