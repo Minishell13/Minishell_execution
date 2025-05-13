@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 21:49:48 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/13 13:28:31 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,10 @@ void	expand_node_args(t_ast *ast)
 	}
 }
 
+// TODO: Need To expand just to (&&) (||), then execute, after that expand again
+// TODO: expand before expand wildrad to the previous condition then repeat again
+// TODO: Maybe i need to test this in bash
+
 void	expand_tree(t_ast *node)
 {
 	if (!node)
@@ -221,4 +225,5 @@ void	expand_tree(t_ast *node)
 	// First recurse into children
 	expand_tree(node->left);
 	expand_tree(node->right);
+
 }
