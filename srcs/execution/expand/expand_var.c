@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/13 18:43:12 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/13 19:33:34 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_bool	try_expand_dollar(char *arg, char **value, int *i)
 		(*i)++;
 	}
 	// Expand var to *value
-	else if (is_quote(arg[*i + 1]) == NONE)
+	else
 	{
 		(*i)++;
 		*value = ft_conststrjoin(*value, extract_var_value(arg, i));
