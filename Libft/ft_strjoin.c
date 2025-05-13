@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 17:47:21 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 19:50:57 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/13 18:27:39 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,21 @@ char	*ft_conststrjoin(char *s1, char *s2)
 
 char	*ft_charjoin(char *s1, char c)
 {
+	size_t	s1_len;
 	size_t	total_size;
 	char	*ptr;
 
 	if (s1 == NULL)
 		return (NULL);
-	total_size = (ft_strlen(s1) + sizeof(c)) + 1;
+	s1_len = ft_strlen(s1);
+	total_size = (s1_len + sizeof(c)) + 1;
 	ptr = (char *) ft_calloc(1, total_size);
 	if (!ptr)
 		return (NULL);
 	ft_strlcpy(ptr, s1, total_size);
 	free(s1);
-	ptr[total_size - 2] = c;
-	ptr[total_size - 1] = '\0';
+	ptr[s1_len] = c;
+	ptr[s1_len + 1] = '\0';
 	return (ptr);
 }
 

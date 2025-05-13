@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/13 13:28:31 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/13 18:43:12 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,9 @@ char	*get_exit_code()
 
 	value = ft_itoa(sh.exit_code);
 	if (!value)
-		return (NULL);
+		return (ft_strdup(""));
 	return (value);
 }
-
 
 t_quote	is_quote(char c)
 {
@@ -35,7 +34,7 @@ t_quote	is_quote(char c)
 		return (NONE);
 }
 
-char	*extarct_var_value(char *arg, int *i)
+char	*extract_var_value(char *arg, int *i)
 {
 	char	*var;
 	char	*value;
@@ -54,13 +53,12 @@ char	*extarct_var_value(char *arg, int *i)
 	// printf("[End of extract]     arg[%d]: %c\n", *i, arg[*i]);
 	// printf("value: %s\n", value);
 	if (!value)
-		return (NULL);
+		return (ft_strdup(""));
 	return (ft_strdup(value));
 }
 
 t_bool	try_expand_dollar(char *arg, char **value, int *i)
 {
-	(void)value;
 	if (arg[*i] != '$')
 		return (false);
 	// Do not expand ($' and $")
@@ -72,8 +70,9 @@ t_bool	try_expand_dollar(char *arg, char **value, int *i)
 		*value = ft_conststrjoin(*value, get_exit_code());
 		*i += 2;
 	}
-	// Do not expand special char exept for $?
-	else if (arg[*i + 1] && ft_isalnum(arg[*i + 1]) == 0 && is_quote(arg[*i + 1]) == NONE)
+	// Do not expand special char exept for ($?) ($_...)
+	else if (arg[*i + 1] && ft_isalnum(arg[*i + 1]) == 0
+		&& arg[*i + 1] != '_' && is_quote(arg[*i + 1]) == NONE)
 	{
 		*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
@@ -84,7 +83,7 @@ t_bool	try_expand_dollar(char *arg, char **value, int *i)
 	else if (is_quote(arg[*i + 1]) == NONE)
 	{
 		(*i)++;
-		*value = ft_conststrjoin(*value, extarct_var_value(arg, i));
+		*value = ft_conststrjoin(*value, extract_var_value(arg, i));
 	}
 	return (true);
 }

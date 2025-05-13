@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:33:34 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 21:34:33 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/13 18:28:26 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // TODO: First test => "OK$SHELL'$SHELL$"'$PATH$'$SHELL$
 // arg = ft_strdup("\"OK$SHELL'$SHELL$\"'$PATH$'$SHELL$");
-int	main2()
+int	main()
 {
 	char	*line;
 	char	*value;
