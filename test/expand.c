@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:33:34 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/14 19:48:07 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/15 16:58:25 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,39 +32,65 @@
 
 // TODO: First test => "OK$SHELL'$SHELL$"'$PATH$'$SHELL$
 // arg = ft_strdup("\"OK$SHELL'$SHELL$\"'$PATH$'$SHELL$");
+// value = process_arg(arg);
+// printf("%s\n", value);
+// free(arg);
+// free(value);
 
-int main(void)
+int main(int ac, char **av, char **ev)
 {
-	char *line;
-	char *expanded;
+	(void)ac;
+	(void)av;
+	(void)ev;
+	// char *line;
+	// char *expanded;
 
-	while (1)
+	// while (1)
+	// {
+	// 	line = readline("> ");
+	// 	if (!line)
+	// 	{
+	// 		printf("exit\n");
+	// 		break;
+	// 	}
+
+	// 	if (*line)
+	// 		add_history(line);
+
+	// 	expanded = process_arg(line);
+	// 	printf("%s\n", expanded);
+	// 	free(expanded);
+
+	// 	free(line);
+	// }
+	// rl_clear_history();
+
+	//! Test Append an element to an array
+	// printf("len: %d\n", arr_len(av));
+	// char **arr = dup_arr(av);
+	// char *str = ft_strdup("END");
+	// char **new_arr = arr_append(arr, str);
+	// if (!new_arr)
+	// {
+	// 	clear_arr(arr);
+	// 	free(str);
+	// 	return (EXIT_FAILURE);
+	// }
+	// clear_arr(arr);
+
+	//! Test Merge two arrays
+	char **arr1 = dup_arr(av);
+	char **arr2 = dup_arr(av);
+	char **new_arr = merge_arr(arr1, arr2);
+	if (!new_arr)
 	{
-		line = readline("> ");
-		if (!line)
-		{
-			printf("exit\n");
-			break;
-		}
-
-		if (*line)
-			add_history(line);
-
-		expanded = process_arg(line);
-		printf("%s\n", expanded);
-		free(expanded);
-
-		free(line);
+		clear_arr(arr1);	
+		clear_arr(arr2);	
+		return (EXIT_FAILURE);
 	}
-
-	// arg = ft_strdup("\"OK$SHELL'$SHELL$\"'$PATH$'$SHELL$");
-	// value = process_arg(arg);
-	// printf("%s\n", value);
-	// free(arg);
-	// free(value);
-
-	rl_clear_history();
-
-	return 0;
+	
+	print_arr(new_arr);
+	clear_arr(new_arr);
+	return (EXIT_SUCCESS);
 }
 

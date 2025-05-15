@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-LDFLAGS = -L./Libft -lft -lreadline -lncurses
+LDFLAGS = -L./Libft -lft -lreadline -lncurses 
 
 TEST_DIR = ./test
 LIBFT_DIR = ./Libft
@@ -15,7 +15,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 # TODO: Just for testing !!!
 TEST = $(TEST_DIR)/expand.c $(TEST_DIR)/wildcard.c
 
-EXPAND =	$(EXPAND_DIR)/expand_var.c
+EXPAND =	$(EXPAND_DIR)/expand_var.c $(EXPAND_DIR)/utils.c
 # $(EXPAND_DIR)/expand.c $(EXPAND_DIR)/expand_wildcard.c 
 
 EXEC =	$(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXEC_DIR)/exec_pipeline.c $(EXEC_DIR)/exec_utils.c \

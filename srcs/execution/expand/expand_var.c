@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/13 19:33:34 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/15 15:55:15 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void	default_mode(char *arg, char **value, int *i)
 			*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
 	}
+	//TODO: return a splited array by space
 }
 
 void	expand_mode(char *arg, char **value, int *i)
@@ -126,6 +127,7 @@ void	expand_mode(char *arg, char **value, int *i)
 		(*i)++;
 	}
 	// printf("End value: %s\n", *value);
+	//TODO: return an array with one element not splited by space
 }
 
 void	literal_mode(char *arg, char **value, int *i)
@@ -141,6 +143,9 @@ void	literal_mode(char *arg, char **value, int *i)
 
 char	*process_arg(char *arg)
 {
+	//TODO: Change the return from char * to char ** (array of string)
+	//TODO:  expand a=".md i"
+	//TODO:  echo *$a* = ["*.md", "i*"]  but  echo *"$a"* = [".md", "i"]
 	int				i;
 	char			*value;
 	t_quote_mode	mode;
@@ -192,12 +197,14 @@ void	expand_node_args(t_ast *ast)
 {
 	int		i;
 	char	**args;
+	// char	**new_args;
 	char	*new_arg;
 
 	i = 0;
 	args = ast->data.args;
 	if (!args)
 		return ;
+	// TODO: new args = [...]          arg => [*.md, *i]
 	while (args[i])
 	{
 		printf("args[%d]: %s\n", i, args[i]);
