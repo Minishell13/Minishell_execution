@@ -13,9 +13,10 @@ INCLUDES = -I./includes -I./Libft/includes
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # TODO: Just for testing !!!
-TEST = $(TEST_DIR)/expand.c $(TEST_DIR)/wildcard.c
+TEST = $(TEST_DIR)/expand.c $(TEST_DIR)/wildcard.c $(TEST_DIR)/arr_utils.c
 
-EXPAND =	$(EXPAND_DIR)/expand_var.c $(EXPAND_DIR)/utils.c
+EXPAND =	$(EXPAND_DIR)/expand_var.c $(EXPAND_DIR)/utils.c $(EXPAND_DIR)/utils/arr_utils_1.c \
+			$(EXPAND_DIR)/utils/arr_utils_2.c
 # $(EXPAND_DIR)/expand.c $(EXPAND_DIR)/expand_wildcard.c 
 
 EXEC =	$(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXEC_DIR)/exec_pipeline.c $(EXEC_DIR)/exec_utils.c \

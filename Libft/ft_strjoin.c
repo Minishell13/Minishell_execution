@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 17:47:21 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/13 18:27:39 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/16 15:48:54 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,22 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (ptr);
 }
 
+#include <stdio.h>
 char	*ft_conststrjoin(char *s1, char *s2)
 {
 	size_t	total_size;
 	char	*ptr;
 
 	if (s1 == NULL && s2 == NULL)
-		return (NULL);
+	return (NULL);
 	if (!s1)
-		return ((char *)s2);
+	return ((char *)s2);
 	if (!s2)
-		return ((char *)s1);
+	return ((char *)s1);
 	total_size = (ft_strlen(s1) + ft_strlen(s2)) + 1;
 	ptr = (char *) malloc(total_size);
 	if (ptr == NULL)
-		return (NULL);
+	return (NULL);
 	ft_strlcpy(ptr, s1, total_size);
 	free(s1);
 	ft_strlcat(ptr, s2, total_size);

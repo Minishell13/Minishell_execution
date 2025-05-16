@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_var.c                                       :+:      :+:    :+:   */
+/*   expand_var_V0.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/16 17:42:37 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/15 17:08:09 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*extract_var_value(char *arg, int *i)
 
 	var = ft_strdup("");
 	while (arg[*i] && (is_quote(arg[*i]) == NONE)
-		&& !ft_strchr("$*", arg[*i]) && ft_isspace(arg[*i]) == 0)
+			&& arg[*i] != '$' && ft_isspace(arg[*i]) == 0)
 	{
 		var = ft_charjoin(var, arg[*i]);
 		if (!var)
@@ -87,7 +87,7 @@ t_bool	try_expand_dollar(char *arg, char **value, int *i)
 	}
 	return (true);
 }
-	
+
 //* -------------------------- Process modes --------------------------
 void	default_mode(char *arg, char **value, int *i)
 {
@@ -141,15 +141,13 @@ void	literal_mode(char *arg, char **value, int *i)
 	// printf("End value: %s\n", *value);
 }
 
-char	**_process_arg(char *arg)
+char	*process_arg(char *arg)
 {
 	//TODO: Change the return from char * to char ** (array of string)
 	//TODO:  expand a=".md i"
 	//TODO:  echo *$a* = ["*.md", "i*"]  but  echo *"$a"* = [".md", "i"]
 	int				i;
 	char			*value;
-	char			**arr = (char **) ft_calloc(1, sizeof(char *));
-	arr[0] = NULL;
 	t_quote_mode	mode;
 
 	value = ft_strdup("");
@@ -171,63 +169,35 @@ char	**_process_arg(char *arg)
 		// Process arg
 		if (mode == DEFAULT)
 		{
-			printf("-------------- Default ---------------\n");
+			// printf("-------------- Default ---------------\n");
 			default_mode(arg, &value, &i);
-			print_arr(arr);
-			printf("v: %s\n", value);
-			arr = inner_merge_arr(arr, ft_split(value, ' '));
-			print_arr(arr);
-			value = ft_strdup("");
 			continue ;
 			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
 		else if (mode == EXPAND)
 		{
-			//TODO: *$a'*' i think just ignore *, stored at diffrent arr[i]
 			i++;
-			printf("-------------- Expand ---------------\n");
+			// printf("-------------- Expand ---------------\n");
 			expand_mode(arg, &value, &i);
-			
-			// Just append the content
-			if (arr_len(arr) == 0)
-				arr = arr_append(arr, value, false);
-			// Already have some content join them
-			else
-				*get_last_item(arr) = ft_conststrjoin(*get_last_item(arr), value);
-			print_arr(arr);
-			value = ft_strdup("");
 			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
 		else if (mode == LITERAL)
 		{
 			i++;
-			printf("-------------- Literal ---------------\n");
+			// printf("-------------- Literal ---------------\n");
 			literal_mode(arg, &value, &i);
-			
-			// Just append the content
-			if (arr_len(arr) == 0)
-				arr = arr_append(arr, value, false);
-			// Already have some content join them
-			else
-				*get_last_item(arr) = ft_conststrjoin(*get_last_item(arr), value);
-			print_arr(arr);
-			value = ft_strdup("");
 			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
 		i++;
 	}
-	// return (value);
-	free(value);
-	return (arr);
+	return (value);
 }
 
-void	_expand_node_args(t_ast *ast)
+void	expand_node_args(t_ast *ast)
 {
 	int		i;
 	char	**args;
-	char	**new_args = (char **) ft_calloc(1, sizeof(char *));
-	new_args[0] = NULL;
-	// char	*new_arg;
+	char	*new_arg;
 
 	i = 0;
 	args = ast->data.args;
@@ -236,13 +206,10 @@ void	_expand_node_args(t_ast *ast)
 	// TODO: new args = [...]          arg => [*.md, *i]
 	while (args[i])
 	{
-		// new_arg = process_arg(args[i]);
-		// free(args[i]);
-		// args[i] = NULL;
-		// args[i] = new_arg;
-
-
-		merge_arr(new_args, _process_arg(args[i]));
+		new_arg = process_arg(args[i]);
+		free(args[i]);
+		args[i] = NULL;
+		args[i] = new_arg;
 		i++;
 	}
 }
@@ -251,15 +218,15 @@ void	_expand_node_args(t_ast *ast)
 // TODO: expand before expand wildrad to the previous condition then repeat again
 // TODO: Maybe i need to test this in bash
 
-// void	expand_tree(t_ast *node)
-// {
-// 	if (!node)
-// 		return;
+void	expand_tree(t_ast *node)
+{
+	if (!node)
+		return;
 
-// 	expand_node_args(node);
+	expand_node_args(node);
 
-// 	// First recurse into children
-// 	expand_tree(node->left);
-// 	expand_tree(node->right);
+	// First recurse into children
+	expand_tree(node->left);
+	expand_tree(node->right);
 
-// }
+}

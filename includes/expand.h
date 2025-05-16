@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:31:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/15 16:48:41 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/15 20:35:48 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,20 @@ char	*process_arg(char *arg);
 void	expand_node_args(t_ast *ast);
 void	expand_tree(t_ast *node);
 
+char	**_process_arg(char *arg);
+void	_expand_node_args(t_ast *ast);
+
 // Expand Wildcard
 
 // Utils
 int		arr_len(char **arr);
 char	**copy_arr(char **new_arr, char **arr);
 char	**dup_arr(char **arr);
-char	**arr_append(char **arr, char *str);
+char	**arr_append(char **arr, char *str, t_bool take_ownership);
 char	**merge_arr(char **arr1, char **arr2);
+//TODO: Must review this
+char	**inner_merge_arr(char **arr1, char **arr2);
+char	**get_last_item(char **arr);
 int 	print_arr(char **arr);
 void	clear_arr(char **arr);
 
