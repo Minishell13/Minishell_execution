@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/16 17:42:37 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/18 19:50:50 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ char	*get_exit_code()
 	if (!value)
 		return (ft_strdup(""));
 	return (value);
+}
+
+int	is_valid(char c)
+{
+	return (ft_isalnum(c) || c == '_');
 }
 
 t_quote	is_quote(char c)
@@ -41,7 +46,7 @@ char	*extract_var_value(char *arg, int *i)
 
 	var = ft_strdup("");
 	while (arg[*i] && (is_quote(arg[*i]) == NONE)
-		&& !ft_strchr("$*", arg[*i]) && ft_isspace(arg[*i]) == 0)
+		&& is_valid(arg[*i]) && ft_isspace(arg[*i]) == 0)
 	{
 		var = ft_charjoin(var, arg[*i]);
 		if (!var)
@@ -127,7 +132,6 @@ void	expand_mode(char *arg, char **value, int *i)
 		(*i)++;
 	}
 	// printf("End value: %s\n", *value);
-	//TODO: return an array with one element not splited by space
 }
 
 void	literal_mode(char *arg, char **value, int *i)
@@ -143,18 +147,12 @@ void	literal_mode(char *arg, char **value, int *i)
 
 char	**_process_arg(char *arg)
 {
-	//TODO: Change the return from char * to char ** (array of string)
-	//TODO:  expand a=".md i"
-	//TODO:  echo *$a* = ["*.md", "i*"]  but  echo *"$a"* = [".md", "i"]
 	int				i;
 	char			*value;
 	char			**arr = (char **) ft_calloc(1, sizeof(char *));
 	arr[0] = NULL;
 	t_quote_mode	mode;
 
-	value = ft_strdup("");
-	if (!value)
-		return (NULL);
 	i = 0;
 	mode = DEFAULT;
 	while (arg[i])
@@ -169,6 +167,7 @@ char	**_process_arg(char *arg)
 			mode = DEFAULT;
 		// printf("mode: %d\n", mode);
 		// Process arg
+		value = ft_strdup("");
 		if (mode == DEFAULT)
 		{
 			printf("-------------- Default ---------------\n");
@@ -176,8 +175,8 @@ char	**_process_arg(char *arg)
 			print_arr(arr);
 			printf("v: %s\n", value);
 			arr = inner_merge_arr(arr, ft_split(value, ' '));
-			print_arr(arr);
-			value = ft_strdup("");
+			// print_arr(arr);
+			free(value);
 			continue ;
 			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
@@ -190,12 +189,14 @@ char	**_process_arg(char *arg)
 			
 			// Just append the content
 			if (arr_len(arr) == 0)
-				arr = arr_append(arr, value, false);
+			{	
+				arr = arr_append(arr, ft_strdup(value));
+				free(value);
+			}
 			// Already have some content join them
 			else
 				*get_last_item(arr) = ft_conststrjoin(*get_last_item(arr), value);
 			print_arr(arr);
-			value = ft_strdup("");
 			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
 		else if (mode == LITERAL)
@@ -206,18 +207,18 @@ char	**_process_arg(char *arg)
 			
 			// Just append the content
 			if (arr_len(arr) == 0)
-				arr = arr_append(arr, value, false);
+			{	
+				arr = arr_append(arr, ft_strdup(value));
+				free(value);
+			}
 			// Already have some content join them
 			else
 				*get_last_item(arr) = ft_conststrjoin(*get_last_item(arr), value);
 			print_arr(arr);
-			value = ft_strdup("");
 			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
 		}
 		i++;
 	}
-	// return (value);
-	free(value);
 	return (arr);
 }
 

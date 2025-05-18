@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:33:34 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/15 21:10:49 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/18 20:01:25 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,56 +37,59 @@
 // free(arg);
 // free(value);
 
-int main(int ac, char **av, char **ev)
-{
-	(void)ac;
-	(void)av;
-	(void)ev;
-	char *line;
-	// char *expanded;
+// int main(int ac, char **av, char **ev)
+// {
+// 	(void)ac;
+// 	(void)av;
+// 	(void)ev;
+// 	// char *line;
+// 	// char *expanded;
 
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			printf("exit\n");
-			break;
-		}
+// 	// while (1)
+// 	// {
+// 	// 	line = readline("> ");
+// 	// 	if (!line)
+// 	// 	{
+// 	// 		printf("exit\n");
+// 	// 		break;
+// 	// 	}
 
-		if (*line)
-			add_history(line);
+// 	// 	if (*line)
+// 	// 		add_history(line);
 
-		// expanded = process_arg(line);
-		// printf("%s\n", expanded);
-		// free(expanded);
+// 	// 	// expanded = process_arg(line);
+// 	// 	// printf("%s\n", expanded);
+// 	// 	// free(expanded);
 
 
-		char **new_arr = _process_arg(line);
-		if (!new_arr)
-		{
-			clear_arr(new_arr);	
-			return (EXIT_FAILURE);
-		}
+// 	// 	char **new_arr = _process_arg(line);
+// 	// 	if (!new_arr)
+// 	// 	{
+// 	// 		clear_arr(new_arr);	
+// 	// 		return (EXIT_FAILURE);
+// 	// 	}
 		
-		print_arr(new_arr);
-		clear_arr(new_arr);
+// 	// 	print_arr(new_arr);
+// 	// 	clear_arr(new_arr);
 
-		free(line);
-	}
-	rl_clear_history();
-
-
-	// char **new_arr = _process_arg("*$a$USER*\"gg\"\"$SHELL\"\"$a\"");
-	// if (!new_arr)
-	// {
-	// 	clear_arr(new_arr);	
-	// 	return (EXIT_FAILURE);
-	// }
+// 	// 	free(line);
+// 	// }
+// 	// rl_clear_history();
 	
-	// print_arr(new_arr);
-	// clear_arr(new_arr);
 	
-	return (EXIT_SUCCESS);
-}
+// 	// char **new_arr = _process_arg("*$a$USER*\"gg\"\"$SHELL\"\"$a\"");
+// 	// char **new_arr = _process_arg("$?\"$SHELL\"$a*_?'$?$?'$_\"$USER\"");
+// 	//TODO : fix the leak
+// 	char **new_arr = _process_arg("\"$SHELL\"$a");
+// 	if (!new_arr)
+// 	{
+// 		clear_arr(new_arr);	
+// 		return (EXIT_FAILURE);
+// 	}
+	
+// 	print_arr(new_arr);
+// 	clear_arr(new_arr);
+	
+// 	return (EXIT_SUCCESS);
+// }
 

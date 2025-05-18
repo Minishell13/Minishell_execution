@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:31:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/15 20:35:48 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/18 15:34:54 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ void	_expand_node_args(t_ast *ast);
 int		arr_len(char **arr);
 char	**copy_arr(char **new_arr, char **arr);
 char	**dup_arr(char **arr);
-char	**arr_append(char **arr, char *str, t_bool take_ownership);
+char	**arr_append(char **arr, char *str);
 char	**merge_arr(char **arr1, char **arr2);
 //TODO: Must review this
 char	**inner_merge_arr(char **arr1, char **arr2);
 char	**get_last_item(char **arr);
-int 	print_arr(char **arr);
+void	print_arr(char **arr);
 void	clear_arr(char **arr);
 
 #endif

@@ -1,21 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/08 19:47:05 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/18 19:59:03 by abnsila          ###   ########.fr       */
+/*   Created: 2025/05/18 19:59:25 by abnsila           #+#    #+#             */
+/*   Updated: 2025/05/18 20:04:32 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_error	cd(char *path, char **env)
+int	main(int ac, char **av, char **ev)
 {
-	if (chdir(path) != 0)
+	(void)ac;
+	(void)av;
+	(void)ev;
+
+	char *line;
+	char *expanded;
+
+	while (1)
 	{
-		perror("cd");
+		line = readline("> ");
+		if (!line)
+		{
+			printf("exit\n");
+			break;
+		}
+
+		if (*line)
+			add_history(line);
+
+
+		t_error code = cd(line, ev);
+		if (code != SUCCESS)
+		{
+			return (EXIT_FAILURE);
+		}
+
+		free(line);
 	}
+	rl_clear_history();
+	return (EXIT_SUCCESS);
+		
 }

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 15:48:57 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/16 16:50:02 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/18 18:47:21 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	arr_len(char **arr)
 	int	len;
 	
 	len = 0;
+	if (!arr) return (len);
 	while (arr[len])
 		len++;
 	return (len);
@@ -27,6 +28,8 @@ char	**copy_arr(char **new_arr, char **arr)
 	int	i;
 
 	i = 0;
+	if (!arr || !new_arr)
+		return (NULL);
 	while (arr[i])
 	{
 		new_arr[i] = ft_strdup(arr[i]);
@@ -41,7 +44,9 @@ char	**copy_arr(char **new_arr, char **arr)
 char	**dup_arr(char **arr)
 {
 	char	**new_arr;
-	
+
+	if (!arr)
+		return (NULL);
 	new_arr = (char **) ft_calloc(arr_len(arr) + 1, sizeof(char *));
 	if (!new_arr)
 		return (NULL);
@@ -50,31 +55,29 @@ char	**dup_arr(char **arr)
 	return (new_arr);
 }
 
-int	print_arr(char **arr)
+void	print_arr(char **arr)
 {
 	int	i;
 
+	if (!arr) return ;
 	i = 0;
 	while (arr[i])
 	{
 		printf("arr[%d]: %s\n", i, arr[i]);
 		i++;
 	}
-	return (i);
 }
 
 char	**get_last_item(char **arr)
 {
-	int	i;
+    int	i;
 
-	i = 0;
-	while (true)
-	{
-		if (arr[i] && arr[i + 1] == NULL)
-			return (&arr[i]);
-		i++;
-	}
-	return (NULL);
+    if (!arr || !arr[0])
+        return (NULL);
+    i = 0;
+    while (arr[i + 1] != NULL)
+        i++;
+    return (&arr[i]);
 }
 
 void	clear_arr(char **arr)
@@ -82,11 +85,14 @@ void	clear_arr(char **arr)
 	int	i;
 
 	i = 0;
+	if (!arr) return ;
 	while (arr[i])
 	{
+		printf("clear: %s\n", arr[i]);
 		if (arr[i])
 			free(arr[i]);
 		i++;
 	}
-	free(arr);
+	if (arr)
+		free(arr);
 }
