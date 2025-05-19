@@ -6,12 +6,12 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 16:12:58 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/18 19:50:09 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/19 11:25:03 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+                                
 char	**arr_append(char **arr, char *str)
 {
 	char	**new_arr;
@@ -30,7 +30,7 @@ char	**arr_append(char **arr, char *str)
 	}
 	new_arr[new_len - 2] = str;
 	new_arr[new_len - 1] = NULL;
-	free(arr);
+	clear_arr(arr);
 	return (new_arr);
 }
 
