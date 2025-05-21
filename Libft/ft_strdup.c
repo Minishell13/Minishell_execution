@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 12:02:15 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/11 15:56:57 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 15:47:03 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_strdup(const char *s1)
 	if (!s1)
 		return (NULL);
 	src_len = ft_strlen(s1) + 1;
-	dst = (char *) malloc(src_len);
+	dst = (char *) ft_calloc(src_len, sizeof(char));
 	if (!dst)
 		return (NULL);
 	ft_strlcpy(dst, s1, src_len);
