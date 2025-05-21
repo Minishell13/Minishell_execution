@@ -6,11 +6,11 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 15:48:57 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 15:30:43 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 17:07:19 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
 int	arr_len(char **arr)
 {
@@ -58,6 +58,7 @@ char	**dup_arr(char **arr)
 	return (new_arr);
 }
 
+//TODO: Just for debugging
 void	print_arr(char **arr)
 {
 	int	i;
@@ -82,22 +83,4 @@ char	**last_item_ptr(char **arr)
 	while (arr[i + 1] != NULL)
 		i++;
 	return (&arr[i]);
-}
-
-void	clear_arr(char **arr)
-{
-	int	i;
-
-	i = 0;
-	// printf("---------------------- Clearing arr... ----------------------\n");
-	if (!arr) return ;
-	while (arr[i])
-	{
-		// printf("clear: %s\n", arr[i]);
-		if (arr[i])
-			free(arr[i]);
-		i++;
-	}
-	if (arr)
-		free(arr);
 }

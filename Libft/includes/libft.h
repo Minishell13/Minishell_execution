@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 10:12:03 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 15:15:34 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 17:45:34 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 # define LIBFT_H
 
 # include <limits.h>
+//TODO" Just for debugging
+# include <stdio.h>
 # include "ft_printf.h"
 # include "get_next_line.h"
 # include "t_bool.h"
+# include "array.h"
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);

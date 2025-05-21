@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 16:12:48 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 17:13:08 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,180 +14,13 @@
 
 extern	t_minishell	sh;
 
-char	*get_exit_code()
-{
-	char	*value;
-
-	value = ft_itoa(sh.exit_code);
-	if (!value)
-		return (ft_strdup(""));
-	return (value);
-}
-
-int	is_valid(char c)
-{
-	return (ft_isalnum(c) || c == '_');
-}
-
-t_quote	is_quote(char c)
-{
-	if (c == '\'')
-		return (SINGLE_Q);
-	else if (c == '"')
-		return (DOUBLE_Q);
-	else
-		return (NONE);
-}
-
-char	*extract_var_value(char *arg, int *i)
-{
-	char	*var;
-	char	*value;
-
-	var = ft_strdup("");
-	while (arg[*i] && (is_quote(arg[*i]) == NONE)
-		&& is_valid(arg[*i]) && ft_isspace(arg[*i]) == 0)
-	{
-		var = ft_charjoin(var, arg[*i]);
-		if (!var)
-			return (NULL);
-		(*i)++;
-	}
-	value = getenv(var);
-	free(var);
-	if (!value)
-		return (ft_strdup(""));
-	return (ft_strdup(value));
-}
-
-t_bool	try_expand_dollar(char *arg, char **value, int *i)
-{
-	if (arg[*i] != '$')
-		return (false);
-	// Do not expand ($' and $")
-	else if (arg[*i + 1] && is_quote(arg[*i + 1]))
-		return (false);
-	// Expand to exit code
-	else if (arg[*i + 1] == '?')
-	{	
-		*value = ft_conststrjoin(*value, get_exit_code());
-		*i += 2;
-	}
-	// Do not expand special char exept for ($?) ($_...)
-	else if (arg[*i + 1] && ft_isalnum(arg[*i + 1]) == 0
-		&& arg[*i + 1] != '_' && is_quote(arg[*i + 1]) == NONE)
-	{
-		*value = ft_charjoin(*value, arg[*i]);
-		(*i)++;
-		*value = ft_charjoin(*value, arg[*i]);
-		(*i)++;
-	}
-	// Expand var to *value
-	else
-	{
-		(*i)++;
-		*value = ft_conststrjoin(*value, extract_var_value(arg, i));
-	}
-	return (true);
-}
-	
-//* -------------------------- Process modes --------------------------
-void	default_mode(char *arg, char **value, int *i)
-{
-	while (arg[*i] && is_quote(arg[*i]) == NONE)
-	{
-		// Keep the ($) at the end
-		if (arg[*i] == '$' && arg[*i + 1] == '\0')
-			*value = ft_charjoin(*value, arg[*i]);
-		// Skip the ($) if quote comes after
-		else if (arg[*i] == '$' && arg[*i + 1] && is_quote(arg[*i + 1]))
-		{
-			(*i)++;
-			break ;
-		}
-		else if (try_expand_dollar(arg, value, i))
-			continue ;
-		// Do not expand simple char
-		else
-			*value = ft_charjoin(*value, arg[*i]);
-		(*i)++;
-	}
-	//TODO: return a splited array by space
-}
-
-void	expand_mode(char *arg, char **value, int *i)
-{
-	while (arg[*i] && is_quote(arg[*i]) != DOUBLE_Q)
-	{
-		if (try_expand_dollar(arg, value, i))
-			continue ;
-		// Do not expand simple char
-		else
-			*value = ft_charjoin(*value, arg[*i]);
-		(*i)++;
-	}
-}
-
-void	literal_mode(char *arg, char **value, int *i)
-{
-	while (arg[*i] && is_quote(arg[*i]) != SINGLE_Q)
-	{
-		*value = ft_charjoin(*value, arg[*i]);
-		(*i)++;
-	}
-}
-
-void	append_args(char ***arr, char **value, t_quote_mode mode)
-{
-	if (mode == DEFAULT)
-	{
-		*arr = inner_merge_arr(*arr, ft_split(*value, ' '));
-		free(*value);
-	}
-	else
-	{
-		if (arr_len(*arr) == 0)
-		{	
-			*arr = arr_append(*arr, ft_strdup(*value));
-			free(*value);
-		}
-		else
-		*last_item_ptr(*arr) = ft_conststrjoin(*last_item_ptr(*arr), *value);
-	}
-}
-
-t_bool	process_mode(char *arg, t_quote_mode mode, char ***arr, char **value, int *i)
-{
-		if (mode == DEFAULT)
-		{
-			printf("-------------- Default ---------------\n");
-			default_mode(arg, value, i);
-			append_args(arr, value, mode);
-			return (true);
-		}
-		else if (mode == EXPAND)
-		{
-			(*i)++;
-			printf("-------------- Expand ---------------\n");
-			expand_mode(arg, value, i);
-			append_args(arr, value, mode);
-		}
-		else if (mode == LITERAL)
-		{
-			(*i)++;
-			printf("-------------- Literal ---------------\n");
-			literal_mode(arg, value, i);
-			append_args(arr, value, mode);
-		}
-		return (false);
-}
 
 char	**process_arg(char *arg)
 {
 	int				i;
 	char			*value;
 	char			**arr;
-	t_quote_mode	mode;
+	t_q_mode	mode;
 	
 	i = 0;
 	mode = DEFAULT;
@@ -250,54 +83,9 @@ void	expand_tree(t_ast *node)
 		print_arr(node->data.args);
 		printf("----------------------      END [ node->data.args ] ----------------------\n");
 	}
+	else if (node->type == GRAM_IO_REDIRECT)
+	{
+		
+	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-//? Main expand Logic (from char	**process_arg(char *arg)) i replace it with a short version
-// if (mode == DEFAULT)
-// {
-// 	printf("-------------- Default ---------------\n");
-// 	default_mode(arg, &value, &i);
-// 	arr = inner_merge_arr(arr, ft_split(value, ' '));
-// 	free(value);
-// 	continue ;
-// }
-// else if (mode == EXPAND)
-// {
-// 	i++;
-// 	printf("-------------- Expand ---------------\n");
-// 	expand_mode(arg, &value, &i);
-	
-// 	if (arr_len(arr) == 0)
-// 	{	
-// 		arr = arr_append(arr, ft_strdup(value));
-// 		free(value);
-// 	}
-// 	else
-// 		*last_item_ptr(arr) = ft_conststrjoin(*last_item_ptr(arr), value);
-// }
-// else if (mode == LITERAL)
-// {
-// 	i++;
-// 	printf("-------------- Literal ---------------\n");
-// 	literal_mode(arg, &value, &i);
-	
-// 	if (arr_len(arr) == 0)
-// 	{	
-// 		arr = arr_append(arr, ft_strdup(value));
-// 		free(value);
-// 	}
-// 	else
-// 		*last_item_ptr(arr) = ft_conststrjoin(*last_item_ptr(arr), value);
-// }

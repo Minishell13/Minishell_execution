@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:31:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 15:30:59 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 17:45:59 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,17 @@
 
 // Expand Var
 t_quote	is_quote(char c);
+int	is_valid(char c);
 char	*extract_var_value(char *arg, int *i);
+t_bool	try_expand_dollar(char *arg, char **value, int *i);
+void	default_mode(char *arg, char **value, int *i);
+void	expand_mode(char *arg, char **value, int *i);
+void	literal_mode(char *arg, char **value, int *i);
+void	append_args(char ***arr, char **value, t_q_mode mode);
+t_bool	process_mode(char *arg, t_q_mode mode, char ***arr, char **value, int *i);
 char	**process_arg(char *arg);
 void	expand_node_args(t_ast *ast);
 void	expand_tree(t_ast *node);
-
-
-
-// Expand Wildcard
-
-// Utils
-int		arr_len(char **arr);
-char	**copy_arr(char **new_arr, char **arr);
-char	**dup_arr(char **arr);
-char	**arr_append(char **arr, char *str);
-char	**merge_arr(char **arr1, char **arr2);
-//TODO: Must review this
-char	**inner_merge_arr(char **arr1, char **arr2);
-char	**last_item_ptr(char **arr);
-void	print_arr(char **arr);
-void	clear_arr(char **arr);
 
 
 #endif
