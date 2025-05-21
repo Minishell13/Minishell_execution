@@ -6,13 +6,13 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:05 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/18 19:59:03 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/19 12:03:43 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_error	cd(char *path, char **env)
+t_error	exec_cd(char *path)
 {
 	if (chdir(path) != 0)
 	{

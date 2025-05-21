@@ -31,6 +31,11 @@
         "limits": "c",
         "memory": "c",
         "new": "c",
-        "text_encoding": "c"
+        "text_encoding": "c",
+        "sstream": "c",
+        "t_str.h": "c",
+        "t_frag.h": "c",
+        "libft.h": "c",
+        "limits.h": "c"
     }
 }

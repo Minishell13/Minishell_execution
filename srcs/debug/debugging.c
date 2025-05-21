@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 14:33:02 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/19 15:34:58 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,22 +136,12 @@ void	ft_print_ast(const t_ast *node, int indent)
 
 void	ft_destroy_ast(t_ast *ast)
 {
-	int	i;
-
 	if (!ast)
 		return ;
-	i = 0;
 	if (ast->type == GRAM_SIMPLE_COMMAND)
 	{
 		if (ast->data.args)
-		{
-			while (ast->data.args[i])
-			{
-				free(ast->data.args[i]);
-				i++;
-			}
-			free(ast->data.args);
-		}
+			clear_arr(ast->data.args);
 	}
 	else if (ast->type == GRAM_IO_REDIRECT)
 	{

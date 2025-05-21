@@ -6,43 +6,45 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:59:25 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/18 20:04:32 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/19 12:42:37 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int ac, char **av, char **ev)
-{
-	(void)ac;
-	(void)av;
-	(void)ev;
+///TODO: Work in builts in first env PATH, setup the envirenment
+//TODO: Ask about expansion, maybe you can found easy way to implement
+//TODO: 
 
-	char *line;
-	char *expanded;
+// int	main(int ac, char **av, char **env)
+// {
+// 	(void)ac;
+// 	(void)av;
+// 	(void)env;
 
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			printf("exit\n");
-			break;
-		}
+// 	// char *line;
 
-		if (*line)
-			add_history(line);
+// 	// while (1)
+// 	// {
+// 	// 	line = readline("> ");
+// 	// 	if (!line)
+// 	// 	{
+// 	// 		printf("exit\n");
+// 	// 		break;
+// 	// 	}
+
+// 	// 	if (*line)
+// 	// 		add_history(line);
 
 
-		t_error code = cd(line, ev);
-		if (code != SUCCESS)
-		{
-			return (EXIT_FAILURE);
-		}
+// 	// 	env(env);
 
-		free(line);
-	}
-	rl_clear_history();
-	return (EXIT_SUCCESS);
-		
-}
+// 	// 	free(line);
+// 	// }
+// 	// rl_clear_history();
+
+// 	setup_env(env);
+// 	exec_env();
+// 	clear_arr(sh.my_env);
+// 	return (EXIT_SUCCESS);
+// }

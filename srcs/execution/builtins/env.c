@@ -6,8 +6,21 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:58 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/08 19:48:45 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/19 12:03:49 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_error	exec_env()
+{
+	int	i;
+
+	i = 0;
+	while (sh.my_env[i])
+	{
+		printf("%s\n", sh.my_env[i]);
+		i++;
+	}
+	return (SUCCESS);
+}

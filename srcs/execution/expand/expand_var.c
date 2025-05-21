@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/18 19:50:50 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 16:12:48 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ char	*extract_var_value(char *arg, int *i)
 	}
 	value = getenv(var);
 	free(var);
-	// printf("[End of extract]     arg[%d]: %c\n", *i, arg[*i]);
-	// printf("value: %s\n", value);
 	if (!value)
 		return (ft_strdup(""));
 	return (ft_strdup(value));
@@ -96,10 +94,8 @@ t_bool	try_expand_dollar(char *arg, char **value, int *i)
 //* -------------------------- Process modes --------------------------
 void	default_mode(char *arg, char **value, int *i)
 {
-	(void)value;
 	while (arg[*i] && is_quote(arg[*i]) == NONE)
 	{
-		// printf("[Default]     arg[%d] : %c\n", *i, arg[*i]);
 		// Keep the ($) at the end
 		if (arg[*i] == '$' && arg[*i + 1] == '\0')
 			*value = ft_charjoin(*value, arg[*i]);
@@ -123,7 +119,6 @@ void	expand_mode(char *arg, char **value, int *i)
 {
 	while (arg[*i] && is_quote(arg[*i]) != DOUBLE_Q)
 	{
-		// printf("[Expand]     arg[%d]: %c\n", *i, arg[*i]);
 		if (try_expand_dollar(arg, value, i))
 			continue ;
 		// Do not expand simple char
@@ -131,136 +126,178 @@ void	expand_mode(char *arg, char **value, int *i)
 			*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
 	}
-	// printf("End value: %s\n", *value);
 }
 
 void	literal_mode(char *arg, char **value, int *i)
 {
 	while (arg[*i] && is_quote(arg[*i]) != SINGLE_Q)
 	{
-		// printf("[Literal]     arg[%d]: %c\n", *i, arg[*i]);
 		*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
 	}
-	// printf("End value: %s\n", *value);
 }
 
-char	**_process_arg(char *arg)
+void	append_args(char ***arr, char **value, t_quote_mode mode)
+{
+	if (mode == DEFAULT)
+	{
+		*arr = inner_merge_arr(*arr, ft_split(*value, ' '));
+		free(*value);
+	}
+	else
+	{
+		if (arr_len(*arr) == 0)
+		{	
+			*arr = arr_append(*arr, ft_strdup(*value));
+			free(*value);
+		}
+		else
+		*last_item_ptr(*arr) = ft_conststrjoin(*last_item_ptr(*arr), *value);
+	}
+}
+
+t_bool	process_mode(char *arg, t_quote_mode mode, char ***arr, char **value, int *i)
+{
+		if (mode == DEFAULT)
+		{
+			printf("-------------- Default ---------------\n");
+			default_mode(arg, value, i);
+			append_args(arr, value, mode);
+			return (true);
+		}
+		else if (mode == EXPAND)
+		{
+			(*i)++;
+			printf("-------------- Expand ---------------\n");
+			expand_mode(arg, value, i);
+			append_args(arr, value, mode);
+		}
+		else if (mode == LITERAL)
+		{
+			(*i)++;
+			printf("-------------- Literal ---------------\n");
+			literal_mode(arg, value, i);
+			append_args(arr, value, mode);
+		}
+		return (false);
+}
+
+char	**process_arg(char *arg)
 {
 	int				i;
 	char			*value;
-	char			**arr = (char **) ft_calloc(1, sizeof(char *));
-	arr[0] = NULL;
+	char			**arr;
 	t_quote_mode	mode;
-
+	
 	i = 0;
 	mode = DEFAULT;
+	arr = (char **) ft_calloc(1, sizeof(char *));
+	if (!arr)
+		return (NULL);
 	while (arg[i])
 	{
-		// printf("[[Begin mode]]    arg[%d]: %c\n", i, arg[i]);
-		// Set Process mode
 		if (is_quote(arg[i]) == SINGLE_Q)
 			mode = LITERAL;
 		else if (is_quote(arg[i]) == DOUBLE_Q)
 			mode = EXPAND;
 		else
 			mode = DEFAULT;
-		// printf("mode: %d\n", mode);
-		// Process arg
 		value = ft_strdup("");
-		if (mode == DEFAULT)
-		{
-			printf("-------------- Default ---------------\n");
-			default_mode(arg, &value, &i);
-			print_arr(arr);
-			printf("v: %s\n", value);
-			arr = inner_merge_arr(arr, ft_split(value, ' '));
-			// print_arr(arr);
-			free(value);
+		if (process_mode(arg, mode, &arr, &value, &i))
 			continue ;
-			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
-		}
-		else if (mode == EXPAND)
-		{
-			//TODO: *$a'*' i think just ignore *, stored at diffrent arr[i]
-			i++;
-			printf("-------------- Expand ---------------\n");
-			expand_mode(arg, &value, &i);
-			
-			// Just append the content
-			if (arr_len(arr) == 0)
-			{	
-				arr = arr_append(arr, ft_strdup(value));
-				free(value);
-			}
-			// Already have some content join them
-			else
-				*get_last_item(arr) = ft_conststrjoin(*get_last_item(arr), value);
-			print_arr(arr);
-			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
-		}
-		else if (mode == LITERAL)
-		{
-			i++;
-			printf("-------------- Literal ---------------\n");
-			literal_mode(arg, &value, &i);
-			
-			// Just append the content
-			if (arr_len(arr) == 0)
-			{	
-				arr = arr_append(arr, ft_strdup(value));
-				free(value);
-			}
-			// Already have some content join them
-			else
-				*get_last_item(arr) = ft_conststrjoin(*get_last_item(arr), value);
-			print_arr(arr);
-			// printf("[[End mode]]    arg[%d]: %c\n", i, arg[i]);
-		}
 		i++;
 	}
 	return (arr);
 }
 
-void	_expand_node_args(t_ast *ast)
+void	expand_node_args(t_ast *ast)
 {
 	int		i;
 	char	**args;
 	char	**new_args = (char **) ft_calloc(1, sizeof(char *));
 	new_args[0] = NULL;
-	// char	*new_arg;
 
 	i = 0;
 	args = ast->data.args;
 	if (!args)
 		return ;
-	// TODO: new args = [...]          arg => [*.md, *i]
 	while (args[i])
 	{
-		// new_arg = process_arg(args[i]);
-		// free(args[i]);
-		// args[i] = NULL;
-		// args[i] = new_arg;
-
-
-		merge_arr(new_args, _process_arg(args[i]));
+		new_args = merge_arr(new_args, process_arg(args[i]));
 		i++;
 	}
+	clear_arr(ast->data.args);
+	ast->data.args = new_args;
 }
 
 // TODO: Need To expand just to (&&) (||), then execute, after that expand again
 // TODO: expand before expand wildrad to the previous condition then repeat again
 // TODO: Maybe i need to test this in bash
 
-// void	expand_tree(t_ast *node)
+void	expand_tree(t_ast *node)
+{
+	if (!node)
+		return;
+
+	// First recurse into children
+	expand_tree(node->left);
+	expand_tree(node->right);
+
+	if (node->type == GRAM_SIMPLE_COMMAND)
+	{
+		expand_node_args(node);
+		printf("---------------------- Printing [ node->data.args ] ----------------------\n");
+		print_arr(node->data.args);
+		printf("----------------------      END [ node->data.args ] ----------------------\n");
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//? Main expand Logic (from char	**process_arg(char *arg)) i replace it with a short version
+// if (mode == DEFAULT)
 // {
-// 	if (!node)
-// 		return;
-
-// 	expand_node_args(node);
-
-// 	// First recurse into children
-// 	expand_tree(node->left);
-// 	expand_tree(node->right);
-
+// 	printf("-------------- Default ---------------\n");
+// 	default_mode(arg, &value, &i);
+// 	arr = inner_merge_arr(arr, ft_split(value, ' '));
+// 	free(value);
+// 	continue ;
+// }
+// else if (mode == EXPAND)
+// {
+// 	i++;
+// 	printf("-------------- Expand ---------------\n");
+// 	expand_mode(arg, &value, &i);
+	
+// 	if (arr_len(arr) == 0)
+// 	{	
+// 		arr = arr_append(arr, ft_strdup(value));
+// 		free(value);
+// 	}
+// 	else
+// 		*last_item_ptr(arr) = ft_conststrjoin(*last_item_ptr(arr), value);
+// }
+// else if (mode == LITERAL)
+// {
+// 	i++;
+// 	printf("-------------- Literal ---------------\n");
+// 	literal_mode(arg, &value, &i);
+	
+// 	if (arr_len(arr) == 0)
+// 	{	
+// 		arr = arr_append(arr, ft_strdup(value));
+// 		free(value);
+// 	}
+// 	else
+// 		*last_item_ptr(arr) = ft_conststrjoin(*last_item_ptr(arr), value);
 // }

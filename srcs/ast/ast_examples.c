@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/12 21:41:11 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 14:54:35 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -758,7 +758,7 @@ t_ast *ft_get_ast22(void)
 	return root;
 }
 
-//? Command: echo "'""$PATH""'" && echo '""$SHELL""' && echo ""$PWD"" && echo ''$CC''
+//? Command: echo "'""$PATH""'" && echo '""$SHELL""' && echo ""$PWD"" && echo '"$CC"'
 t_ast *ft_get_ast23(void)
 {
     // Command 1: echo "'""$PATH""'"
@@ -771,7 +771,7 @@ t_ast *ft_get_ast23(void)
 
     // Command 3: echo """$PWD""
     t_ast *cmd3 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-    cmd3->data.args = ft_create_args(2, "echo", "\"\"$PWD\"\"");
+    cmd3->data.args = ft_create_args(2, "echo", "$a\"\"");
 
     // Command 4: echo ''$CC''
     t_ast *cmd4 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
