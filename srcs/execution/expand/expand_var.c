@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 17:13:08 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 18:02:14 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ void	expand_tree(t_ast *node)
 	}
 	else if (node->type == GRAM_IO_REDIRECT)
 	{
-		
+		//! You must expand redirections args:
+		// heredoc first
 	}
 	
 }
