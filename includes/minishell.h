@@ -6,7 +6,10 @@
 // # include "parser.h"
 # include "expand.h"
 # include "execution.h"
+# include "builtins.h"
 # include "colors.h"
+
+extern	t_minishell sh;
 
 // t_token		*ft_last_token(t_token *token);
 // t_token		*ft_new_token(char *value, t_token_type type);

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/11 16:41:57 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/21 10:47:15 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 
 // Log
 # include <stdio.h>
+
+// Directory
+# include <dirent.h> 
 
 // Readline
 # include <readline/readline.h>
@@ -36,7 +39,8 @@
 typedef struct	s_minishell
 {
 	char	*shell;
-	char	**envp;
+	char	**env;
+	char	**my_env;
 	int		exit_code;
 }				t_minishell;
 
@@ -151,6 +155,5 @@ typedef struct	s_block
 	t_quote_mode	mode;
 	t_quote			quote;
 }				t_block;
-
 
 #endif

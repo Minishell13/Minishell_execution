@@ -3,6 +3,10 @@
 
 # include "typedef.h"
 
-t_error cd(char *path, char **ev);
+// Setup
+void	setup_env(char **env);
+
+t_error	exec_env();
+t_error exec_cd(char *path);
 
 #endif
