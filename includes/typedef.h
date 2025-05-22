@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 16:36:09 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 11:28:41 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_minishell
 typedef enum e_error
 {
 	SUCCESS,
+	ERROR,
 	MALLOC_ERROR,
 	FORK_ERROR,
 	PIPE_ERROR,
@@ -114,9 +115,10 @@ typedef struct	s_token
 
 typedef struct	s_redir
 {
-	char	*file;
 	t_gram	type;
+	char	*file;
 	char	*limiter;
+	t_bool	expanded;
 }				t_redir;
 
 typedef struct	s_ast
@@ -132,7 +134,6 @@ typedef struct	s_ast
 		
 	}	data;
 }				t_ast;
-
 
 typedef enum	s_q_mode
 {

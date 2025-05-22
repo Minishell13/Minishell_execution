@@ -36,6 +36,7 @@ void	ft_free_array(char **arr);
 void	ft_free_count_array(char **arr, int count);
 
 // Debugging
+void	ft_print_ast_node(const t_ast *node, int indent);
 void	ft_print_ast(const t_ast *node, int indent);
 
 // AST Examples
