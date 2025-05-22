@@ -6,14 +6,17 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 18:02:14 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 18:02:23 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern	t_minishell	sh;
+// TODO: Need To expand just to (&&) (||), then execute, after that expand again
+// TODO: expand before expand wildrad to the previous condition then repeat again
+// TODO: Maybe i need to test this in bash
 
+extern	t_minishell	sh;
 
 char	**process_arg(char *arg)
 {
@@ -59,34 +62,54 @@ void	expand_node_args(t_ast *ast)
 		new_args = merge_arr(new_args, process_arg(args[i]));
 		i++;
 	}
+
+	//? Just $ expansion
 	clear_arr(ast->data.args);
 	ast->data.args = new_args;
 }
 
-// TODO: Need To expand just to (&&) (||), then execute, after that expand again
-// TODO: expand before expand wildrad to the previous condition then repeat again
-// TODO: Maybe i need to test this in bash
+void	expand_redir(t_ast *node)
+{
+	// heredoc first
+	if (node->data.redir.type == GRAM_HEREDOC)
+		remove_quotes(&(node->data.redir));
+	else
+	{
+		char **arr = process_arg(node->data.redir.file);
+		int	len = arr_len(arr);
+		if (len != 1)
+		{
+			perror("sh");
+			clear_arr(arr);
+		}
+		else
+		{
+			free(node->data.redir.file);
+			node->data.redir.file = ft_strdup(arr[0]);
+			clear_arr(arr);	
+		}
+	}
+	ft_print_ast_node(node, 0);
+}
 
-void	expand_tree(t_ast *node)
+void	expand_tree(t_ast *node, int indent)
 {
 	if (!node)
 		return;
 
 	// First recurse into children
-	expand_tree(node->left);
-	expand_tree(node->right);
-
+	expand_tree(node->left, indent + 2);
+	expand_tree(node->right, indent + 2);
+		
 	if (node->type == GRAM_SIMPLE_COMMAND)
 	{
 		expand_node_args(node);
-		printf("---------------------- Printing [ node->data.args ] ----------------------\n");
-		print_arr(node->data.args);
-		printf("----------------------      END [ node->data.args ] ----------------------\n");
+		// printf("---------------------- Printing [ node->data.args ] ----------------------\n");
+		ft_print_ast_node(node, indent);
+		// printf("----------------------      END [ node->data.args ] ----------------------\n");
 	}
 	else if (node->type == GRAM_IO_REDIRECT)
 	{
-		//! You must expand redirections args:
-		// heredoc first
+		expand_redir(node);
 	}
-	
 }

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/06 14:35:28 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 20:27:35 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 // TODO: The leaks is fixed, now go and make behavioure like shell
 // TODO: ...
 
+
+//! The tree structure must:
+	// conatine child and sibling
+	// redirection go first
 t_error ft_executor(t_ast *root, t_ast *node, char **envp)
 {
 	if (!node) return 0;

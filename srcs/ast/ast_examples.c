@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 14:54:35 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 20:29:36 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -606,12 +606,12 @@ t_ast	*ft_get_ast15(void)
 	return root;
 }
 
-//? Command: /gg | ls > ./temp/out
+//? Command: cat | ls > ./temp/out
 t_ast	*ft_get_ast16(void)
 {
-	// Simple command: /gg
+	// Simple command: cat
 	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd1->data.args = ft_create_args(1, "/gg");
+	cmd1->data.args = ft_create_args(1, "cat");
 
 	// Simple command: ls
 	t_ast *cmd2 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
@@ -619,7 +619,7 @@ t_ast	*ft_get_ast16(void)
 
 	// I/O redirect: > ./temp/out.txt
 	t_ast *redir = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir->data.redir.file = strdup("./temp");
+	redir->data.redir.file = strdup("./temp/out");
 	redir->data.redir.type = GRAM_REDIR_OUT;
 	redir->left = cmd2;
 
@@ -634,28 +634,38 @@ t_ast	*ft_get_ast16(void)
 	return root;
 }
 
-//? Commmand: ls -l < temp/infile > temp/outfile
+//? Commmand: << A | ls -l < temp/infile > temp/outfile
 t_ast	*ft_get_ast17(void)
 {
+	t_ast *hdA = ft_new_ast_node(GRAM_IO_REDIRECT);
+	ft_generate_tmpfile(&(hdA->data.redir));
+	hdA->data.redir.type    = GRAM_HEREDOC;
+	hdA->data.redir.limiter = strdup("A");
+	
 	// Simple command: ls -l
 	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
-	cmd1->data.args = ft_create_args(1, "ls", "-l");
+	cmd1->data.args = ft_create_args(2, "ls", "-l");
 
 	// I/O redirect: < temp/infile
 	t_ast *redir1 = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir1->data.redir.file = strdup("./temp/infile");
+	redir1->data.redir.file = strdup("$f1");
 	redir1->data.redir.type = GRAM_REDIR_IN;
 	redir1->left = cmd1;
 	
 	// I/O redirect: > ./temp/out.txt
 	t_ast *redir2 = ft_new_ast_node(GRAM_IO_REDIRECT);
-	redir2->data.redir.file = strdup("./temp/outfile");
+	redir2->data.redir.file = strdup("$f2");
 	redir2->data.redir.type = GRAM_REDIR_OUT;
 	redir2->left = redir1;
 
+	t_ast *pipe = ft_new_ast_node(GRAM_PIPELINE);
+	pipe->left = hdA;
+	pipe->right = redir2;
+	
+
 	// Complete command wrapper
 	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
-	root->left = redir2;
+	root->left = pipe;
 	return root;
 }
 
@@ -799,6 +809,30 @@ t_ast *ft_get_ast23(void)
     return root;
 }
 
+//? Commmand: cat << A > ''"$f2"''
+t_ast	*ft_get_ast24(void)
+{
+	// Simple command: cat
+	t_ast *cmd1 = ft_new_ast_node(GRAM_SIMPLE_COMMAND);
+	cmd1->data.args = ft_create_args(1, "cat");
+	
+	t_ast *redir1 = ft_new_ast_node(GRAM_IO_REDIRECT);
+	redir1->data.redir.file = strdup("''\"$f1\"''");
+	redir1->data.redir.type    = GRAM_REDIR_OUT;
+	redir1->left = cmd1;
+	
+	t_ast *hdA = ft_new_ast_node(GRAM_IO_REDIRECT);
+	ft_generate_tmpfile(&(hdA->data.redir));
+	hdA->data.redir.type    = GRAM_HEREDOC;
+	hdA->data.redir.limiter = strdup("A");
+	// hdA->data.redir.limiter = strdup("\"A\"''");
+	hdA->left = redir1;
+
+	// Complete command wrapper
+	t_ast *root = ft_new_ast_node(GRAM_COMPLETE_COMMAND);
+	root->left = hdA;
+	return root;
+}
 
 t_ast	*ft_get_ast_example(int n)
 {
@@ -827,6 +861,7 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast21,
 		ft_get_ast22,
 		ft_get_ast23,
+		ft_get_ast24,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)

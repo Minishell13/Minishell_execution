@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:57:30 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 16:58:00 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 17:55:19 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	default_mode(char *arg, char **value, int *i)
 			*value = ft_charjoin(*value, arg[*i]);
 		(*i)++;
 	}
-	//TODO: return a splited array by space
 }
 
 void	expand_mode(char *arg, char **value, int *i)
@@ -76,27 +75,32 @@ void	append_args(char ***arr, char **value, t_q_mode mode)
 	}
 }
 
+//TODO: If you gonna use wildcard logic unsure you include quotes also
 t_bool	process_mode(char *arg, t_q_mode mode, char ***arr, char **value, int *i)
 {
 		if (mode == DEFAULT)
 		{
-			printf("-------------- Default ---------------\n");
+			// printf("-------------- Default ---------------\n");
 			default_mode(arg, value, i);
 			append_args(arr, value, mode);
 			return (true);
 		}
 		else if (mode == EXPAND)
 		{
+			// *value = ft_charjoin(*value, arg[*i]);
 			(*i)++;
-			printf("-------------- Expand ---------------\n");
+			// printf("-------------- Expand ---------------\n");
 			expand_mode(arg, value, i);
+			// *value = ft_charjoin(*value, arg[*i]);
 			append_args(arr, value, mode);
 		}
 		else if (mode == LITERAL)
 		{
+			// *value = ft_charjoin(*value, arg[*i]);
 			(*i)++;
-			printf("-------------- Literal ---------------\n");
+			// printf("-------------- Literal ---------------\n");
 			literal_mode(arg, value, i);
+			// *value = ft_charjoin(*value, arg[*i]);
 			append_args(arr, value, mode);
 		}
 		return (false);

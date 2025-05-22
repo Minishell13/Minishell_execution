@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/19 15:34:58 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 18:05:08 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,9 @@ static char *ft_gram_name(t_gram g)
 	}
 }
 
-// The main recursive printer
-void	ft_print_ast(const t_ast *node, int indent)
-{
-	if (!node) return;
 
+void	ft_print_ast_node(const t_ast *node, int indent)
+{
 	// Print indent
 	for (int i = 0; i < indent; i++) printf("  ");
 
@@ -101,14 +99,23 @@ void	ft_print_ast(const t_ast *node, int indent)
 	}
 
 	putchar('\n');
+}
+
+// The main recursive printer
+void	ft_print_ast(const t_ast *node, int indent)
+{
+	if (!node)
+		return;
+
+	ft_print_ast_node(node, indent);
 	
 	// Recurse into left child
 	if (node->left)
-	ft_print_ast(node->left, indent + 2);
+		ft_print_ast(node->left, indent + 2);
 	
 	// Then into right child
 	if (node->right)
-	ft_print_ast(node->right, indent + 2);
+		ft_print_ast(node->right, indent + 2);
 }
 
 // void	ft_destroy_ast(t_ast *ast)

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/08 17:43:19 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 11:20:24 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	ft_fill_here_doc(t_redir *redir, int fd)
 				ft_strlen(redir->limiter)) == 0
 			&& line_size == ft_strlen(redir->limiter))
 			break ;
+		if (redir->expanded)
+			expand_herdoc(redir, &line);
 		ft_putstr_fd(line, fd);
 		free(line);
 	}

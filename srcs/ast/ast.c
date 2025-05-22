@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:13:31 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 14:32:35 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 18:24:48 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // Create a new AST node: initializes all fields and sets up self-linked next/prev
 t_ast *ft_new_ast_node(t_gram type)
 {
-	t_ast *node = malloc(sizeof(t_ast));
+	t_ast *node = ft_calloc(1, sizeof(t_ast));
 	if (!node)
 		return NULL;
 	node->type = type;
@@ -26,6 +26,7 @@ t_ast *ft_new_ast_node(t_gram type)
 	node->data.redir.file = NULL;
 	node->data.redir.type = UNKNOWN;
 	node->data.redir.limiter = NULL;
+	node->data.redir.expanded = false;
 	return node;
 }
 
@@ -38,7 +39,7 @@ char	**ft_create_args(int count, ...)
 	}
 
 	// Allocate array of (count + 1) pointers
-	char **args = malloc((count + 1) * sizeof *args);
+	char **args = ft_calloc((count + 1), sizeof(char *));
 	if (!args) {
 		return NULL;  // malloc sets errno on failure
 	}
