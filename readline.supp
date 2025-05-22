@@ -1,6 +1,13 @@
 {
-   readline
-   Memcheck:Leak
-   fun:malloc
-   obj:/usr/lib/x86_64-linux-gnu/libreadline*
+	readline-internal
+	Memcheck:Leak
+	...
+	obj:*/libreadline.so*
+	obj:*/libhistory.so*
+	obj:*/libncurses*
+	obj:*/libtinfo*
+	obj:*/libc.so*
+	fun:*alloc
+	fun:*realloc
+	fun:*strdup
 }

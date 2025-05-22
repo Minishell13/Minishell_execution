@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:31:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 17:45:59 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 08:40:23 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #define EXPAND_H
 
 # include "typedef.h"
-
-
 
 // Expand Var
 t_quote	is_quote(char c);
@@ -30,6 +28,5 @@ t_bool	process_mode(char *arg, t_q_mode mode, char ***arr, char **value, int *i)
 char	**process_arg(char *arg);
 void	expand_node_args(t_ast *ast);
 void	expand_tree(t_ast *node);
-
 
 #endif

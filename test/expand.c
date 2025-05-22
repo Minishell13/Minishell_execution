@@ -6,30 +6,16 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:33:34 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 15:02:32 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/22 08:53:47 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: Look at those case with wildcard, to know about wildrad and VAR expansion bahavioure
-// abnsila@c3r4p10:~/Desktop/ms2$ ls
-// config	includes  libft  Makefile  minishell  README.md  srcs
-// abnsila@c3r4p10:~/Desktop/ms2$ export a="m"
-// abnsila@c3r4p10:~/Desktop/ms2$ echo "$a"*
-// minishell
-// abnsila@c3r4p10:~/Desktop/ms2$ echo $a
-// m
-// abnsila@c3r4p10:~/Desktop/ms2$ echo "$a"
-// m
-// abnsila@c3r4p10:~/Desktop/ms2$ echo $a*
-// minishell
-// abnsila@c3r4p10:~/Desktop/ms2$ echo "$a"*
-// minishell
-// abnsila@c3r4p10:~/Desktop/ms2$ echo "$a""*"
-// m*
-
-
+void	cleanup_readline() {
+	rl_clear_history();
+	rl_reset_terminal(NULL);
+}
 
 int main(int ac, char **av, char **env)
 {
@@ -65,12 +51,13 @@ int main(int ac, char **av, char **env)
 
 		free(line);
 	}
-	rl_clear_history();
+	// Cleanup
+    cleanup_readline();
 	
 	// // char **new_arr = process_arg("*$a$USER*\"gg\"\"$SHELL\"\"$a\"");
 	// // char **new_arr = process_arg("$?\"$SHELL\"$a*_?'$?$?'$_\"$USER\"");
 	// // TODO : Leak fixed, you can continue in this logic (but keep in mind this solution must be compatible with * wildcard)
-	// char **new_arr = process_arg("'LIT'$a\"EXP\"plain$?''\"$PWD\"LIT2");;
+	// char **new_arr = process_arg("\"$a\"$a\"$a\"$a'$a'\"$a\"'$a'$a$a$a$?'$?'\"$?\"\"$a\"$a''$\"\"$''\"$\"'$'$");;
 	// if (!new_arr)
 	// {
 	// 	clear_arr(new_arr);	
@@ -80,8 +67,8 @@ int main(int ac, char **av, char **env)
 	// print_arr(new_arr);
 	// clear_arr(new_arr);
 	
-	// clear_arr(sh.my_env);
-	// return (EXIT_SUCCESS);
+	clear_arr(sh.my_env);
+	return (EXIT_SUCCESS);
 }
 
 
