@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:18 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/06 14:35:51 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 18:01:41 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ t_error	ft_execute_pipe(t_ast *root, t_ast *node, char **envp)
 	{
 		if (ft_redirect_fds(fds, STDOUT_FILENO) != SUCCESS)
 			return (DUP2_ERROR);
-		ft_executor(root, node->left, envp);
-		ft_destroy_ast(root);
+		ft_executor(root, node->children[0], envp);
+		ast_destroy(root);
 		exit(EXIT_FAILURE);
 	}
 
@@ -62,8 +62,8 @@ t_error	ft_execute_pipe(t_ast *root, t_ast *node, char **envp)
 	{
 		if (ft_redirect_fds(fds, STDIN_FILENO) != SUCCESS)
 			return (DUP2_ERROR);
-		ft_executor(root, node->right, envp);
-		ft_destroy_ast(root);
+		ft_executor(root, node->children[1], envp);
+		ast_destroy(root);
 		exit(EXIT_FAILURE);
 	}
 

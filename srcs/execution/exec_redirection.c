@@ -6,13 +6,13 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/22 11:20:24 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 17:50:45 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//* -------------------------------- IO_REDIRECTION --------------------------------
+// //* -------------------------------- IO_REDIRECTION --------------------------------
 void	ft_generate_tmpfile(t_redir *redir)
 {
 	char	*temp;
@@ -148,7 +148,7 @@ t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 	if (ft_redir(fd, r) != SUCCESS)
 		return (REDIR_ERROR);
 		
-	ret = ft_executor(root, node->left, envp);
+	ret = ft_executor(root, node->children[0], envp);
 
 	// Restore original stdin
 	// dup2(saved_stdin, STDIN_FILENO);

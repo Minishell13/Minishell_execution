@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:29 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/06 14:35:42 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 16:15:08 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_error	ft_execute_simple_cmd(t_ast *root, t_ast *node, char **envp)
 		// perror("sh");
 		ft_put_error(path);
 		free(path);
-		ft_destroy_ast(root);
+		ast_destroy(root);
 		if (errno == ENOENT) exit(NO_FILE_OR_DIR);
 		if (errno == EACCES) exit(PERMISSION_DENIED);
 		exit(EXIT_FAILURE);
