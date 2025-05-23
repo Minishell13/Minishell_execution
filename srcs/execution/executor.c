@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 18:46:37 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 19:26:33 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_error	ft_executor(t_ast *root, t_ast *node, char **envp)
 
 	case GRAM_IO_REDIRECT:
 	{
-		// expand_redir(node);
+		expand_redir(node);
 		return (ft_execute_redirection(root, node, envp));
 	}
 

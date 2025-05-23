@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 15:58:05 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 18:41:54 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 19:27:00 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ int main(int ac, char **av, char **env)
 	if (ac != 2)
 		return (EXIT_FAILURE);
 	t_ast* root = ft_get_ast_example(ft_atoi(av[1]));
-
-	// expand_tree(root, 0);
-	// printf("\n\n\n");
+	
 	ft_executor(root, root, env);
 
 	// ast_print(root, 0);

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 18:54:54 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 19:31:54 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,14 @@ t_ast *ft_get_ast0(void)
     // 2) Redirect out to literal "''\"$f1\"''"
     t_ast *redir_out = ast_new_node(GRAM_IO_REDIRECT);
     redir_out->data.redir.type = GRAM_REDIR_OUT;
-    // redir_out->data.redir.file = strdup("''\"$f1\"''");
-    redir_out->data.redir.file = strdup("./temp/outfile");
+    redir_out->data.redir.file = strdup("''\"$f1\"''");
     ast_add_child(redir_out, cmd);
 
     // 3) Here‐doc <<A on top of that
     t_ast *heredoc = ast_new_node(GRAM_IO_REDIRECT);
     ft_generate_tmpfile(&heredoc->data.redir);
     heredoc->data.redir.type    = GRAM_HEREDOC;
-    heredoc->data.redir.limiter = strdup("A");
+    heredoc->data.redir.limiter = strdup("\"\"$a");
     ast_add_child(heredoc, redir_out);
 
     // 4) Wrap in COMPLETE_COMMAND
