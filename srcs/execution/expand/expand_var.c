@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/22 18:02:23 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 17:56:33 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,28 +46,6 @@ char	**process_arg(char *arg)
 	return (arr);
 }
 
-void	expand_node_args(t_ast *ast)
-{
-	int		i;
-	char	**args;
-	char	**new_args = (char **) ft_calloc(1, sizeof(char *));
-	new_args[0] = NULL;
-
-	i = 0;
-	args = ast->data.args;
-	if (!args)
-		return ;
-	while (args[i])
-	{
-		new_args = merge_arr(new_args, process_arg(args[i]));
-		i++;
-	}
-
-	//? Just $ expansion
-	clear_arr(ast->data.args);
-	ast->data.args = new_args;
-}
-
 void	expand_redir(t_ast *node)
 {
 	// heredoc first
@@ -89,27 +67,65 @@ void	expand_redir(t_ast *node)
 			clear_arr(arr);	
 		}
 	}
-	ft_print_ast_node(node, 0);
+	ast_print(node, 0);
 }
 
-void	expand_tree(t_ast *node, int indent)
+
+//TODO:  $ + *
+// void expand_cmd_node(t_ast *cmd)
+// {
+//     // args: char ** before expansion
+//     char **new_args = NULL;
+//     for (int i = 0; cmd->data.args[i]; i++)
+//     {
+//         char **parts    = process_arg(cmd->data.args[i]);
+//         char **with_glob = wildcard_expand_arr(parts);
+//         clear_arr(parts);
+
+//         new_args = merge_arr(new_args ? new_args : dup_arr(cmd->data.args), 
+//                              with_glob);
+//         clear_arr(with_glob);
+//     }
+//     clear_arr(cmd->data.args);
+//     cmd->data.args = new_args;
+// }
+
+void	expand_cmd_node(t_ast *cmd)
 {
-	if (!node)
-		return;
+    // args: char ** before expansion
+    char **new_args = NULL;
+    for (int i = 0; cmd->data.args[i]; i++)
+    {
+        char **parts    = process_arg(cmd->data.args[i]);
 
-	// First recurse into children
-	expand_tree(node->left, indent + 2);
-	expand_tree(node->right, indent + 2);
-		
-	if (node->type == GRAM_SIMPLE_COMMAND)
-	{
-		expand_node_args(node);
-		// printf("---------------------- Printing [ node->data.args ] ----------------------\n");
-		ft_print_ast_node(node, indent);
-		// printf("----------------------      END [ node->data.args ] ----------------------\n");
-	}
-	else if (node->type == GRAM_IO_REDIRECT)
-	{
-		expand_redir(node);
-	}
+        new_args = merge_arr(new_args ? new_args : dup_arr(cmd->data.args), 
+                            parts);
+        clear_arr(parts);
+    }
+    clear_arr(cmd->data.args);
+    cmd->data.args = new_args;
 }
+
+
+
+// void	expand_tree(t_ast *node, int indent)
+// {
+// 	if (!node)
+// 		return;
+
+// 	// First recurse into children
+// 	expand_tree(node->left, indent + 2);
+// 	expand_tree(node->right, indent + 2);
+		
+// 	if (node->type == GRAM_SIMPLE_COMMAND)
+// 	{
+// 		expand_node_args(node);
+// 		// printf("---------------------- Printing [ node->data.args ] ----------------------\n");
+// 		ft_print_ast_node(node, indent);
+// 		// printf("----------------------      END [ node->data.args ] ----------------------\n");
+// 	}
+// 	else if (node->type == GRAM_IO_REDIRECT)
+// 	{
+// 		expand_redir(node);
+// 	}
+// }

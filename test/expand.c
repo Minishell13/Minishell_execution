@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 15:33:34 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/22 18:38:15 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 15:58:11 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,28 +71,5 @@ void	cleanup_readline() {
 // 	clear_arr(sh.my_env);
 // 	return (EXIT_SUCCESS);
 // }
-
-
-
-int main(int ac, char **av, char **env)
-{
-	(void)ac;
-	(void)av;
-	(void)env;
-
-	if (ac != 2)
-		return (EXIT_FAILURE);
-	t_ast* root = ft_get_ast_example(ft_atoi(av[1]));
-
-	expand_tree(root, 0);
-	printf("\n\n\n");
-	ft_executor(root, root, env);
-
-	// ft_print_ast(root, 0);
-	
-	ft_destroy_ast(root);
-
-	return (EXIT_SUCCESS);
-}
 
 
