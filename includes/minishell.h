@@ -24,20 +24,20 @@ extern	t_minishell sh;
 
 
 // AST Utils
-t_ast	*ft_new_ast_node(t_gram type);
-char	**ft_create_args(int count, ...);
+t_ast	*ast_new_node(t_gram type);
+int		ast_add_child(t_ast *parent, t_ast *child);
+char	**ast_create_args(int count, ...);
+void	ast_destroy(t_ast *node);
 
 // Builts in execution functions
 void	ft_generate_tmpfile(t_redir *redir);
 
 // Cleanup
-void	ft_destroy_ast(t_ast *ast);
 void	ft_free_array(char **arr);
 void	ft_free_count_array(char **arr, int count);
 
 // Debugging
-void	ft_print_ast_node(const t_ast *node, int indent);
-void	ft_print_ast(const t_ast *node, int indent);
+void	ast_print(const t_ast *node, int indent);
 
 // AST Examples
 t_ast	*ft_get_ast_example(int n);

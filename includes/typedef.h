@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/22 11:28:41 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 15:40:22 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,7 @@ typedef struct	s_redir
 typedef struct	s_ast
 {
 	t_gram			type;	 // node kind
-	struct s_ast	*left;	 // left child / first element
-	struct s_ast	*right;	// right child / next element
+	struct s_ast	**children;
 	
 	union
 	{
