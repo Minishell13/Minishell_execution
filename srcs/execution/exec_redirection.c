@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 17:50:45 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 18:39:11 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	ft_here_doc(t_redir *redir)
 {
 	int		fd;
 
-	fd = open(redir->file, (O_WRONLY | O_CREAT | O_TRUNC), 0777);
+	fd = open(redir->file, (O_WRONLY | O_CREAT | O_TRUNC), 0600);
 	if (fd < 0)
 		perror("sh");
 	else
@@ -156,6 +156,3 @@ t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 	
 	return (ret);
 }
-
-
-

@@ -19,7 +19,7 @@ TEST =	$(TEST_DIR)/expand.c $(TEST_DIR)/arr_utils.c $(TEST_DIR)/builtins.c \
 
 BUILTINS =	$(BUILT_DIR)/env.c
 
-EXPAND =	$(EXPAND_DIR)/expand_var.c $(EXPAND_DIR)/utils.c $(EXPAND_DIR)/utils/expand_modes.c \
+EXPAND =	$(EXPAND_DIR)/expand.c $(EXPAND_DIR)/utils.c $(EXPAND_DIR)/utils/expand_modes.c \
 			$(EXPAND_DIR)/utils/extract_value.c $(EXPAND_DIR)/utils/expand_heredoc.c
 
 EXEC =	$(BUILTINS) $(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXEC_DIR)/exec_pipeline.c $(EXEC_DIR)/exec_utils.c \

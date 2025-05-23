@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 18:00:27 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 18:46:37 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_error	ft_executor(t_ast *root, t_ast *node, char **envp)
 
 	case GRAM_SIMPLE_COMMAND:
 	{
-		// expand_cmd_node(node);
+		expand_cmd_node(node);
 		return ft_execute_simple_cmd(root, node, envp);
 	}
 

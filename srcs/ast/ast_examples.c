@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 17:04:43 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 18:54:54 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ t_ast *ft_get_ast0(void)
     // 2) Redirect out to literal "''\"$f1\"''"
     t_ast *redir_out = ast_new_node(GRAM_IO_REDIRECT);
     redir_out->data.redir.type = GRAM_REDIR_OUT;
-    redir_out->data.redir.file = strdup("''\"$f1\"''");
+    // redir_out->data.redir.file = strdup("''\"$f1\"''");
+    redir_out->data.redir.file = strdup("./temp/outfile");
     ast_add_child(redir_out, cmd);
 
     // 3) Here‐doc <<A on top of that
@@ -159,6 +160,19 @@ t_ast *ft_get_ast4(void)
     return root;
 }
 
+//? echo "echo", "$USER", "$SHELL", "'$PWD'"
+t_ast *ft_get_ast5(void)
+{
+    t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
+    
+    // 1) Simple command: cat
+    t_ast *cmd = ast_new_node(GRAM_SIMPLE_COMMAND);
+    cmd->data.args = ast_create_args(4, "echo", "$USER", "$SHELL", "'$PWD'");
+
+    ast_add_child(root, cmd);
+    return root;
+}
+
 t_ast	*ft_get_ast_example(int n)
 {
 	static t_ast *(*examples[])(void) = {
@@ -167,6 +181,7 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast2,
 		ft_get_ast3,
 		ft_get_ast4,
+		ft_get_ast5,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)

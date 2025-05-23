@@ -1,16 +1,1 @@
-total 120
-drwxr-xr-x 2 abnsila candidates   142 May 21 14:28 includes
-drwxr-xr-x 4 abnsila candidates  4096 May 22 18:12 Libft
--rw-r--r-- 1 abnsila candidates     0 May 16 16:51 Lib*hello
--rw-r--r-- 1 abnsila candidates  1517 May 22 09:52 Makefile
-drwxr-xr-x 2 abnsila candidates    39 May  5 15:24 Markdown
--rwxr-xr-x 1 abnsila candidates 89608 May 22 18:12 minishell
--rw-r--r-- 1 abnsila candidates    96 May 22 11:23 o
-drwxr-xr-x 4 abnsila candidates    29 May 21 14:28 old
--rw-r--r-- 1 abnsila candidates   809 May 22 11:24 out
--rw-r--r-- 1 abnsila candidates   178 May 22 08:59 readline.supp
--rw-r--r-- 1 abnsila candidates    56 May  5 15:24 README.md
-drwxr-xr-x 8 abnsila candidates   137 May 22 18:12 srcs
-drwxr-xr-x 2 abnsila candidates    94 May  5 17:03 temp
-drwxr-xr-x 2 abnsila candidates    59 May 22 18:12 test
--rw-r--r-- 1 abnsila candidates   561 May 22 12:15 Todo.md
+arr[0]: cat
