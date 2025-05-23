@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 18:00:27 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 15:56:21 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,61 +20,49 @@
 // TODO: The leaks is fixed, now go and make behavioure like shell
 // TODO: ...
 
-int count_children(t_ast **ch);
-
-// Return length of NULL-terminated pointer array
-int count_children(t_ast **ch)
+typedef struct	s_ast
 {
-	int i = 0;
-	if (!ch) return 0;
-	while (ch[i]) i++;
-	return i;
-}
+	t_gram			type;	 // node kind
+	struct s_ast	*left;	 // left child / first element
+	struct s_ast	*right;	// right child / next element
+	
+	union
+	{
+		char		**args;       // for AST_CMD: NULL‑terminated argv
+		t_redir		redir;
+		
+	}	data;
+}				t_ast;
 
-t_error	ft_executor(t_ast *root, t_ast *node, char **envp)
+//! The tree structure must:
+	// redirection go first
+t_error ft_executor(t_ast *root, t_ast *node, char **envp)
 {
-	if (!node) 
-		return (SUCCESS);
+	if (!node) return 0;
 
 	switch (node->type)
 	{
-	case GRAM_COMPLETE_COMMAND:
-		// always exactly one child
-		return ft_executor(root, node->children[0], envp);
+		case GRAM_COMPLETE_COMMAND:
+			return ft_executor(root, node->left, envp);
+			
+		case GRAM_SIMPLE_COMMAND:
+			return ft_execute_simple_cmd(root, node, envp);
 
-	case GRAM_OPERATOR_AND:
-	{
-		return (ft_execute_and_or(root, node, envp));
-	}
+		case GRAM_PIPELINE:
+			return ft_execute_pipe(root, node, envp);
 
-	case GRAM_OPERATOR_OR:
-	{
-		return (ft_execute_and_or(root, node, envp));
-	}
+		case GRAM_IO_REDIRECT:
+			return ft_execute_redirection(root, node, envp);
 
-	case GRAM_PIPELINE:
-	{
-		return (ft_execute_pipe(root, node, envp));
-	}
+		case GRAM_SUBSHELL:
+			return ft_execute_subshell(root, node, envp);
 
-	case GRAM_IO_REDIRECT:
-	{
-		// expand_redir(node);
-		return (ft_execute_redirection(root, node, envp));
-	}
+		case GRAM_OPERATOR_AND:
+		case GRAM_OPERATOR_OR:
+			return ft_execute_and_or(root, node, envp);
 
-	case GRAM_SIMPLE_COMMAND:
-	{
-		// expand_cmd_node(node);
-		return ft_execute_simple_cmd(root, node, envp);
+		default:
+			return 0;
 	}
-
-	case GRAM_SUBSHELL:
-	{
-	   return (ft_execute_subshell(root, node, envp));
-	}
-
-	default:
-		return (SUCCESS);
-	}
+	return (SUCCESS);
 }
