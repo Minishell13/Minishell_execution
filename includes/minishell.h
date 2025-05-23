@@ -5,6 +5,7 @@
 // # include "lexer.h"
 // # include "parser.h"
 # include "expand.h"
+# include "setup.h"
 # include "execution.h"
 # include "builtins.h"
 # include "colors.h"

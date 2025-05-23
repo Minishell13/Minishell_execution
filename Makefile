@@ -15,7 +15,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 # TODO: Just for testing !!!
 TEST =	$(TEST_DIR)/expand.c $(TEST_DIR)/arr_utils.c $(TEST_DIR)/builtins.c \
-		$(TEST_DIR)/execution.c
+		$(TEST_DIR)/execution.c $(TEST_DIR)/setup.c
 
 BUILTINS =	$(BUILT_DIR)/env.c
 
