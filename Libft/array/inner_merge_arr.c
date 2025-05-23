@@ -6,43 +6,20 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 17:06:58 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/21 17:07:26 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 19:15:11 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-//? Calloc Version
-// char	**arr_append(char **arr, char *str)
-// {
-// 	char	**new_arr;
-// 	int		new_len;
-	
-// 	if (!arr || !str)
-// 		return (NULL);
-// 	new_len = arr_len(arr) + 2;
-// 	new_arr = (char **) ft_calloc(new_len, sizeof(char *));
-// 	if (!new_arr)
-// 		return (NULL);
-// 	if (!copy_arr(new_arr, arr))
-// 	{
-// 		clear_arr(new_arr);	
-// 		return (NULL);
-// 	}
-// 	new_arr[new_len - 2] = str;
-// 	new_arr[new_len - 1] = NULL;
-// 	clear_arr(arr);
-// 	return (new_arr);
-// }
-
-//? Realloc Version (Optimized)
 char **arr_append(char **arr, char *str)
 {
 	size_t old_len;
 	char **new_arr;
 
 	old_len = arr_len(arr);
-	new_arr = (char **) realloc(arr, sizeof(char*) * (old_len + 2));
+	new_arr = (char **) ft_realloc(arr, sizeof(char*) * (old_len + 1)
+				, sizeof(char*) * (old_len + 2));
 	if (!new_arr)
 		return (free(str), NULL);
 	new_arr[old_len]     = str;
