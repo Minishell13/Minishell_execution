@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:31:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 13:19:23 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 17:15:26 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 # include "typedef.h"
 
 // Expand node
-void	expand_cmd_node(t_ast *cmd);
-
+void	expand_cmd_node(t_ast *node, t_bool(*f)(char *, t_qmode, char ***, char **, int *));
 // Expand Heredoc
 t_bool	containe_quotes(char *s);
 t_error remove_quotes(t_redir *r);
