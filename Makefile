@@ -17,7 +17,8 @@ LIBFT = $(LIBFT_DIR)/libft.a
 TEST =	$(TEST_DIR)/expand.c $(TEST_DIR)/arr_utils.c $(TEST_DIR)/builtins.c \
 		$(TEST_DIR)/execution.c $(TEST_DIR)/setup.c
 
-BUILTINS =	$(BUILT_DIR)/env.c $(BUILT_DIR)/export.c $(BUILT_DIR)/unset.c $(BUILT_DIR)/pwd.c
+BUILTINS =	$(BUILT_DIR)/builtins.c $(BUILT_DIR)/utils.c $(BUILT_DIR)/env.c $(BUILT_DIR)/export.c $(BUILT_DIR)/unset.c $(BUILT_DIR)/pwd.c \
+			$(BUILT_DIR)/echo.c $(BUILT_DIR)/exit.c $(BUILT_DIR)/cd.c
 
 EXPAND =	$(EXPAND_DIR)/expand.c $(EXPAND_DIR)/utils.c $(EXPAND_DIR)/utils/expand_modes.c \
 			$(EXPAND_DIR)/utils/extract_value.c $(EXPAND_DIR)/utils/expand_heredoc.c
