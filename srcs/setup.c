@@ -6,15 +6,14 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:49:54 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 14:48:41 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 17:03:19 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //TODO: The anv of your shell must be setuped correctly
-//TODO: Create those utils: add_var, get_var, pop_var, 
-//TODO: also:
+//TODO: Create utils ...
 
 t_bool	var_exist(char *key)
 {
