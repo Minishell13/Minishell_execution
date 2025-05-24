@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 13:19:36 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 17:14:17 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,14 @@ void	expand_redir(t_ast *node)
 //     cmd->data.args = new_args;
 // }
 
-void	expand_cmd_node(t_ast *node)
+void	expand_cmd_node(t_ast *node, t_bool(*f)(char *, t_qmode, char ***, char **, int *))
 {
 	// args: char ** before expansion
 	char	**new_args = init_arr();
 
 	for (int i = 0; node->data.args[i]; i++)
 	{
-		char **parts = process_arg(node->data.args[i], process_mode_1);
+		char **parts = process_arg(node->data.args[i], f);
 
 		new_args = merge_arr(new_args, parts);
 	}
