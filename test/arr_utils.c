@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:01:56 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/15 17:03:01 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:48:49 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 // 	(void)ev;
 
 // 	//! Test Append an element to an array
-// 	printf("len: %d\n", arr_len(av));
+// 	printf("len: %d\n", len_arr(av));
 // 	char **arr = dup_arr(av);
 // 	char *str = ft_strdup("END");
-// 	char **new_arr = arr_append(arr, str);
+// 	char **new_arr = append_arr(arr, str);
 // 	if (!new_arr)
 // 	{
 // 		clear_arr(arr);

@@ -6,13 +6,13 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 15:48:57 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/22 15:46:53 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:45:07 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	arr_len(char **arr)
+int	len_arr(char **arr)
 {
 	int	len;
 	
@@ -50,7 +50,7 @@ char	**dup_arr(char **arr)
 
 	if (!arr)
 		return (NULL);
-	new_arr = (char **) ft_calloc(arr_len(arr) + 1, sizeof(char *));
+	new_arr = (char **) ft_calloc(len_arr(arr) + 1, sizeof(char *));
 	if (!new_arr)
 		return (NULL);
 	if (!copy_arr(new_arr, arr))

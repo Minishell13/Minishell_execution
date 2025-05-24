@@ -6,18 +6,18 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 17:06:58 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 19:15:11 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:44:08 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char **arr_append(char **arr, char *str)
+char **append_arr(char **arr, char *str)
 {
 	size_t old_len;
 	char **new_arr;
 
-	old_len = arr_len(arr);
+	old_len = len_arr(arr);
 	new_arr = (char **) ft_realloc(arr, sizeof(char*) * (old_len + 1)
 				, sizeof(char*) * (old_len + 2));
 	if (!new_arr)
@@ -33,7 +33,7 @@ static char	**dup_but_last(char **arr)
 	size_t	len;
 	size_t	i;
 
-	len = arr_len(arr);
+	len = len_arr(arr);
 	if (len == 0 || !arr)
 		return (ft_calloc(1, sizeof(char *)));
 	new = ft_calloc(len + 1, sizeof(char *));
@@ -69,7 +69,7 @@ static char	**append_rest(char **out, char **arr2)
 	i = 1;
 	while (arr2[i])
 	{
-		out = arr_append(out, ft_strdup(arr2[i]));
+		out = append_arr(out, ft_strdup(arr2[i]));
 		if (!out)
 		{
 			clear_arr(arr2);
@@ -86,8 +86,8 @@ char	**inner_merge_arr(char **arr1, char **arr2)
 	char	**out;
 	char	*edge;
 
-	lens[0] = arr_len(arr1);
-	lens[1] = arr_len(arr2);
+	lens[0] = len_arr(arr1);
+	lens[1] = len_arr(arr2);
 	if (lens[0]  == 0 && lens[1] == 0)
 		return (clear_arr(arr2), arr1);
 	if (lens[0]  == 0)
@@ -99,7 +99,7 @@ char	**inner_merge_arr(char **arr1, char **arr2)
 	if (!edge)
 		return (NULL);
 
-	out = arr_append(out, edge);
+	out = append_arr(out, edge);
 	if (!out)
 		return (free(edge), clear_arr(arr2), NULL);
 

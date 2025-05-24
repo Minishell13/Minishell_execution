@@ -6,7 +6,8 @@ INCLUDES = ./includes
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror -I${INCLUDES}
 
-ARR_SRCS = ${ARR_DIR}/inner_merge_arr.c ${ARR_DIR}/merge_arr.c ${ARR_DIR}/arr_utils.c ${ARR_DIR}/clear_arr.c
+ARR_SRCS =	${ARR_DIR}/inner_merge_arr.c ${ARR_DIR}/merge_arr.c ${ARR_DIR}/arr_utils.c ${ARR_DIR}/clear_arr.c \
+			${ARR_DIR}/int_arr.c
 
 SRCS =	${ARR_SRCS}	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
 		ft_isprint.c ft_strlen.c ft_memset.c ft_bzero.c \
