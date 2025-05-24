@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 15:40:22 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 13:20:00 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,12 +134,12 @@ typedef struct	s_ast
 	}	data;
 }				t_ast;
 
-typedef enum	s_q_mode
+typedef enum	s_qmode
 {
 	DEFAULT,
 	LITERAL,
 	EXPAND
-}				t_q_mode;
+}				t_qmode;
 
 typedef enum	s_quote
 {
@@ -152,7 +152,7 @@ typedef enum	s_quote
 typedef struct	s_block
 {
 	char			*text;       // "$USER", '"', etc.
-	t_q_mode	mode;
+	t_qmode	mode;
 	t_quote			quote;
 }				t_block;
 

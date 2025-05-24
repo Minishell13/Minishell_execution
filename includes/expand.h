@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:31:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 17:56:51 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 13:19:23 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,15 @@ t_quote	is_quote(char c);
 int	is_valid(char c);
 char	*extract_var_value(char *arg, int *i);
 t_bool	try_expand_dollar(char *arg, char **value, int *i);
-void	default_mode(char *arg, char **value, int *i);
-void	expand_mode(char *arg, char **value, int *i);
-void	literal_mode(char *arg, char **value, int *i);
-void	append_args(char ***arr, char **value, t_q_mode mode);
-t_bool	process_mode(char *arg, t_q_mode mode, char ***arr, char **value, int *i);
-char	**process_arg(char *arg);
+
+void	default_mode(char *arg, char **v, int *i);
+void	expand_mode(char *arg, char **v, int *i);
+void	literal_mode(char *arg, char **v, int *i);
+void	append_args(char ***arr, char **v, t_bool split);
+t_bool	process_mode_1(char *arg, t_qmode mode, char ***arr, char **v, int *i);
+t_bool	process_mode_2(char *arg, t_qmode mode, char ***arr, char **v, int *i);
+
+char	**process_arg(char *arg, t_bool(*f)(char *, t_qmode, char ***, char **, int *));
 void	expand_tree(t_ast *node, int indent);
 
 char    **wildcard_expand_arr(char **in_arr);
