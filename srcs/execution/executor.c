@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 10:38:15 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 17:15:49 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,13 @@ t_error	ft_executor(t_ast *root, t_ast *node, char **envp)
 	case GRAM_SIMPLE_COMMAND:
 	{
 		// TODO: If buitins == export expand just $VAR not * Wildcard
-		expand_cmd_node(node);
-		return ft_execute_simple_cmd(root, node, envp);
+		if (is_builtins(node))
+			return (exec_builtins(root, node));
+		else
+		{
+			expand_cmd_node(node, process_mode_1);
+			return (ft_execute_simple_cmd(root, node, envp));
+		}
 	}
 
 	case GRAM_SUBSHELL:
