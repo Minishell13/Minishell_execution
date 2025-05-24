@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:57:30 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/22 17:55:19 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:49:20 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ void	append_args(char ***arr, char **value, t_q_mode mode)
 	}
 	else
 	{
-		if (arr_len(*arr) == 0)
+		if (len_arr(*arr) == 0)
 		{	
-			*arr = arr_append(*arr, ft_strdup(*value));
+			*arr = append_arr(*arr, ft_strdup(*value));
 			free(*value);
 		}
 		else

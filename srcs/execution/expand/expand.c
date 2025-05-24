@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 19:05:50 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:45:59 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	expand_redir(t_ast *node)
 	else
 	{
 		char **arr = process_arg(node->data.redir.file);
-		int	len = arr_len(arr);
+		int	len = len_arr(arr);
 		if (len != 1)
 		{
 			perror("sh");

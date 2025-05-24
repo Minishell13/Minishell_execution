@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tmp.c                                              :+:      :+:    :+:   */
+/*   wild_tmp.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/22 16:18:53 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:49:11 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@
 //             }
 //         }
 //         // no glob → literal filename
-//         out = arr_append(out, pat);
+//         out = append_arr(out, pat);
 //     }
 //     return out;
 // }
@@ -265,7 +265,7 @@
 // 	else
 // 	{
 // 		char **arr = process_arg(node->data.redir.file);
-// 		int	len = arr_len(arr);
+// 		int	len = len_arr(arr);
 // 		if (len != 1)
 // 		{
 // 			perror("sh");

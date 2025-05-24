@@ -6,46 +6,85 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:30 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/19 12:35:39 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:40:01 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int valid_identifier(char c)
+int	valid_key(char *arg)
 {
-	return (ft_isalnum(c) || ft_strchr("_", c));
-}
+	int	i;
 
-int extract_var_and_value(char *arg)
-{
-	int i = 0;
-	char	*var = ft_strdup("");
-	char	*value = ft_strdup("");
-	// TODO: I need to expand First
-	if (!(ft_isalpha(arg[i]) || ft_strchr("_", arg[i])))
-		return (0);
-	var = ft_charjoin(var, arg[i]);
-	while (arg[i] && arg[i] != '=' && valid_identifier(arg[i]))
+	i = 0;
+	if (!ft_strchr(arg, '='))
+		return (-1);
+	while (arg[i] && arg[i] != '=')
 	{
-		var = ft_charjoin(var, arg[i]);
+		if (i == 0 && !(ft_isalpha(arg[i]) || arg[i] == '_'))
+			return (-1);
+		else if (!(ft_isalnum(arg[i]) || arg[i] == '_'))
+			return (-1);
 		i++;
 	}
+	return (i);
 }
 
-char    **parse_input(char **args)
+char	*extract_key(char *arg, int end)
 {
-	int i;
+	int		i;
+	char	*key;
 
+	i = 0;
+	key = ft_strdup("");
+	while (arg[i] && i < end)
+	{
+		key = ft_charjoin(key, arg[i]);
+		i++;
+	}
+	return (key);
+}
+
+char	*extract_value(char *arg, int end)
+{
+	char	*value;
+
+	value = ft_strdup("");
+	while (arg[end])
+	{
+		value = ft_charjoin(value, arg[end]);
+		end++;
+	}
+	return (value);
+}
+
+int	parse_input(char *arg)
+{
+	int		end;
+
+	end = valid_key(arg);
+	return (end);
+}
+
+t_error	exec_export(char **args)
+{
+	int		i;
+	int		end;
+	char	*key;
+	char	*value;
+	
 	i = 1;
 	while (args[i])
 	{
+		end = parse_input(args[i]);
+		if (end != -1)
+		{
+			key = extract_key(args[i], end);
+			value = extract_value(args[i], end + 1);
+			add_var(key, value);
+			free(key); free(value);
+		}
 		i++;
 	}
-}
-
-t_error	exec_export(char *arg)
-{
-	
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 21:25:54 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 22:06:18 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:48:38 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,33 @@ int main(int ac, char **av, char **env)
 	(void)av;
 	(void)env;
 
-	char *key = "name";
-	char *value = "Abdellah";
-	
 	setup_env(env);
-	add_var(key, value);
-	exec_env();
-	printf("index of var: %d\n", get_var_index(key));
-	char *v = get_value(key);
-	printf("var value: %s\n", v);
-	unset_var(key);
-	printf("index of var: %d\n", get_var_index(key));
-	exec_env();
+	
+	char **args = init_arr();
+	args = append_arr(args, ft_strdup("export"));
+	args = append_arr(args, ft_strdup("a==.c"));
+	args = append_arr(args, ft_strdup("b=*$f"));
+	args = append_arr(args, ft_strdup("c=.md i"));
+	args = append_arr(args, ft_strdup("a=*e.h"));
+	args = append_arr(args, ft_strdup("c="));
+	args = append_arr(args, ft_strdup("_="));
+	args = append_arr(args, ft_strdup("NVM_DIR=NONE"));
+	args = append_arr(args, ft_strdup("f_6=    OK"));
+	args = append_arr(args, ft_strdup("1hh="));
+	args = append_arr(args, ft_strdup("*hh="));
+	args = append_arr(args, ft_strdup("$hh="));
+	args = append_arr(args, ft_strdup("!6h="));
+	args = append_arr(args, ft_strdup("_!6h="));
+	args = append_arr(args, ft_strdup(".="));
+	print_arr(args);
 
-	free(v);
+
+	exec_export(args);
+
+	exec_env();
+	// printf("var value: %s\n", get_value("f"));
+	
+	clear_arr(args);
 	clear_arr(sh.my_env);
 
 	return (EXIT_SUCCESS);

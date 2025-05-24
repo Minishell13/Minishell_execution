@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:49:54 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 22:04:38 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 11:48:19 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ t_bool	var_exist(char *key)
 	key_len = ft_strlen(key);
 	while (sh.env[i])
 	{
-		if (ft_strncmp(sh.env[i], key, key_len) == 0
-			&& key_len == ft_strlen(sh.env[i]))
+		if (ft_strncmp(sh.my_env[i], key, key_len) == 0
+			&& sh.my_env[i][key_len] && sh.my_env[i][key_len] == '=')
 		{
 			return (true);
 		}
@@ -45,7 +45,7 @@ int	get_var_index(char *key)
 	while (sh.my_env[i])
 	{
 		if (ft_strncmp(sh.my_env[i], key, key_len) == 0
-			&& sh.my_env[i][key_len] == '=')
+			&& sh.my_env[i][key_len] && sh.my_env[i][key_len] == '=')
 			return (i);
 		i++;
 	}
@@ -63,12 +63,12 @@ void	unset_var(char *key)
 	while (sh.my_env[i])
 	{
 		if (ft_strncmp(sh.my_env[i], key, key_len) == 0
-			&& sh.my_env[i][key_len] == '=')
+			&& sh.my_env[i][key_len] && sh.my_env[i][key_len] == '=')
 		{
 			i++;
 			continue ;
 		}
-		new_env = arr_append(new_env, ft_strdup(sh.my_env[i]));
+		new_env = append_arr(new_env, ft_strdup(sh.my_env[i]));
 		i++;
 	}
 	clear_arr(sh.my_env);
@@ -86,7 +86,7 @@ char	*get_value(char *key)
 	while (sh.my_env[i])
 	{
 		if (ft_strncmp(sh.my_env[i], key, key_len) == 0
-			&& sh.my_env[i][key_len] == '=')
+			&& sh.my_env[i][key_len] && sh.my_env[i][key_len] == '=')
 		{
 			value = sh.my_env[i] + key_len;
 			value = ft_strdup(value + 1);
@@ -106,13 +106,16 @@ void	add_var(char *key, char *value)
 	var_index = get_var_index(key);
 	tmp = ft_strjoin(key, "=");
 	new_var = ft_strjoin(tmp, value);
-	// printf("joined: %s\n", new_var);
 	free(tmp);
 	if (var_index != -1)
+	{
+		free(sh.my_env[var_index]);
 		sh.my_env[var_index] = new_var;
+	}
 	else
-		sh.my_env = arr_append(sh.my_env, new_var);
+		sh.my_env = append_arr(sh.my_env, new_var);
 }
+
 
 void	setup_env(char **env)
 {
@@ -124,7 +127,7 @@ void	setup_env(char **env)
 		return ;
 	while (env[i])
 	{
-		sh.my_env = arr_append(sh.my_env, ft_strdup(env[i]));
+		sh.my_env = append_arr(sh.my_env, ft_strdup(env[i]));
 		i++;
 	}
 }
