@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:30 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 15:17:28 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 16:23:34 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,16 @@ int	parse_input(char *arg)
 	return (end);
 }
 
-t_error	exec_export(char **args)
+t_error	exec_export(t_ast *node)
 {
 	int		i;
 	int		end;
 	char	*key;
 	char	*value;
-	
+	char	**args;
+
 	i = 1;
+	args = node->data.args;
 	while (args[i])
 	{
 		end = parse_input(args[i]);
@@ -84,6 +86,11 @@ t_error	exec_export(char **args)
 			add_var(key, value);
 			free(key);
 			free(value);
+		}
+		else
+		{
+			ft_putendl_fd("sh: export: not a valid identifier", STDERR_FILENO);
+			return (ERROR);
 		}
 		i++;
 	}
