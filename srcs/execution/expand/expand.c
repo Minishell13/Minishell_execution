@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 11:45:59 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 13:19:36 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 
 extern	t_minishell	sh;
 
-char	**process_arg(char *arg)
+char	**process_arg(char *arg, t_bool(*f)(char *, t_qmode, char ***, char **, int *))
 {
 	int				i;
 	char			*value;
 	char			**arr;
-	t_q_mode	mode;
+	t_qmode	mode;
 	
 	i = 0;
 	mode = DEFAULT;
@@ -39,7 +39,7 @@ char	**process_arg(char *arg)
 		else
 			mode = DEFAULT;
 		value = ft_strdup("");
-		if (process_mode(arg, mode, &arr, &value, &i))
+		if (f(arg, mode, &arr, &value, &i))
 			continue ;
 		i++;
 	}
@@ -53,7 +53,7 @@ void	expand_redir(t_ast *node)
 		remove_quotes(&(node->data.redir));
 	else
 	{
-		char **arr = process_arg(node->data.redir.file);
+		char **arr = process_arg(node->data.redir.file, process_mode_1);
 		int	len = len_arr(arr);
 		if (len != 1)
 		{
@@ -91,17 +91,17 @@ void	expand_redir(t_ast *node)
 
 void	expand_cmd_node(t_ast *node)
 {
-    // args: char ** before expansion
-    char	**new_args = ft_calloc(1, sizeof(char *));
+	// args: char ** before expansion
+	char	**new_args = init_arr();
 
-    for (int i = 0; node->data.args[i]; i++)
-    {
-        char **parts = process_arg(node->data.args[i]);
+	for (int i = 0; node->data.args[i]; i++)
+	{
+		char **parts = process_arg(node->data.args[i], process_mode_1);
 
-        new_args = merge_arr(new_args, parts);
-    }
-    clear_arr(node->data.args);
-    node->data.args = new_args;
+		new_args = merge_arr(new_args, parts);
+	}
+	clear_arr(node->data.args);
+	node->data.args = new_args;
 }
 
 

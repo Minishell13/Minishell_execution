@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:05 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/19 12:03:43 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 15:33:44 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,7 @@ t_error	exec_cd(char *path)
 	if (chdir(path) != 0)
 	{
 		perror("cd");
+		return (ERROR);
 	}
+	return (SUCCESS);
 }

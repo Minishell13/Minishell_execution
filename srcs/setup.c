@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:49:54 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 11:48:19 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 14:48:41 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ void	add_var(char *key, char *value)
 		sh.my_env = append_arr(sh.my_env, new_var);
 }
 
-
 void	setup_env(char **env)
 {
 	int	i;
@@ -131,4 +130,3 @@ void	setup_env(char **env)
 		i++;
 	}
 }
-

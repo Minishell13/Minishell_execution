@@ -6,102 +6,134 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 16:57:30 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 11:49:20 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 13:19:48 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 	
-void	default_mode(char *arg, char **value, int *i)
+void	default_mode(char *arg, char **v, int *i)
 {
 	while (arg[*i] && is_quote(arg[*i]) == NONE)
 	{
 		// Keep the ($) at the end
 		if (arg[*i] == '$' && arg[*i + 1] == '\0')
-			*value = ft_charjoin(*value, arg[*i]);
+			*v = ft_charjoin(*v, arg[*i]);
 		// Skip the ($) if quote comes after
 		else if (arg[*i] == '$' && arg[*i + 1] && is_quote(arg[*i + 1]))
 		{
 			(*i)++;
 			break ;
 		}
-		else if (try_expand_dollar(arg, value, i))
+		else if (try_expand_dollar(arg, v, i))
 			continue ;
 		// Do not expand simple char
 		else
-			*value = ft_charjoin(*value, arg[*i]);
+			*v = ft_charjoin(*v, arg[*i]);
 		(*i)++;
 	}
 }
 
-void	expand_mode(char *arg, char **value, int *i)
+void	expand_mode(char *arg, char **v, int *i)
 {
 	while (arg[*i] && is_quote(arg[*i]) != DOUBLE_Q)
 	{
-		if (try_expand_dollar(arg, value, i))
+		if (try_expand_dollar(arg, v, i))
 			continue ;
 		// Do not expand simple char
 		else
-			*value = ft_charjoin(*value, arg[*i]);
+			*v = ft_charjoin(*v, arg[*i]);
 		(*i)++;
 	}
 }
 
-void	literal_mode(char *arg, char **value, int *i)
+void	literal_mode(char *arg, char **v, int *i)
 {
 	while (arg[*i] && is_quote(arg[*i]) != SINGLE_Q)
 	{
-		*value = ft_charjoin(*value, arg[*i]);
+		*v = ft_charjoin(*v, arg[*i]);
 		(*i)++;
 	}
 }
 
-void	append_args(char ***arr, char **value, t_q_mode mode)
+void	append_args(char ***arr, char **v, t_bool split)
 {
-	if (mode == DEFAULT)
+	if (split)
 	{
-		*arr = inner_merge_arr(*arr, ft_split(*value, ' '));
-		free(*value);
+		*arr = inner_merge_arr(*arr, ft_split(*v, ' '));
+		free(*v);
 	}
 	else
 	{
 		if (len_arr(*arr) == 0)
 		{	
-			*arr = append_arr(*arr, ft_strdup(*value));
-			free(*value);
+			*arr = append_arr(*arr, ft_strdup(*v));
+			free(*v);
 		}
 		else
-		*last_item_ptr(*arr) = ft_conststrjoin(*last_item_ptr(*arr), *value);
+		*last_item_ptr(*arr) = ft_conststrjoin(*last_item_ptr(*arr), *v);
 	}
 }
 
 //TODO: If you gonna use wildcard logic unsure you include quotes also
-t_bool	process_mode(char *arg, t_q_mode mode, char ***arr, char **value, int *i)
+// For normal expansion split is required
+t_bool	process_mode_1(char *arg, t_qmode mode, char ***arr, char **v, int *i)
 {
 		if (mode == DEFAULT)
 		{
 			// printf("-------------- Default ---------------\n");
-			default_mode(arg, value, i);
-			append_args(arr, value, mode);
+			default_mode(arg, v, i);
+			append_args(arr, v, true);
 			return (true);
 		}
 		else if (mode == EXPAND)
 		{
-			// *value = ft_charjoin(*value, arg[*i]);
+			// *v = ft_charjoin(*v, arg[*i]);
 			(*i)++;
 			// printf("-------------- Expand ---------------\n");
-			expand_mode(arg, value, i);
-			// *value = ft_charjoin(*value, arg[*i]);
-			append_args(arr, value, mode);
+			expand_mode(arg, v, i);
+			// *v = ft_charjoin(*v, arg[*i]);
+			append_args(arr, v, false);
 		}
 		else if (mode == LITERAL)
 		{
-			// *value = ft_charjoin(*value, arg[*i]);
+			// *v = ft_charjoin(*v, arg[*i]);
 			(*i)++;
 			// printf("-------------- Literal ---------------\n");
-			literal_mode(arg, value, i);
-			// *value = ft_charjoin(*value, arg[*i]);
-			append_args(arr, value, mode);
+			literal_mode(arg, v, i);
+			// *v = ft_charjoin(*v, arg[*i]);
+			append_args(arr, v, false);
+		}
+		return (false);
+}
+
+// For export expansion [no split is needed]
+t_bool	process_mode_2(char *arg, t_qmode mode, char ***arr, char **v, int *i)
+{
+		if (mode == DEFAULT)
+		{
+			// printf("-------------- Default ---------------\n");
+			default_mode(arg, v, i);
+			append_args(arr, v, false);
+			return (true);
+		}
+		else if (mode == EXPAND)
+		{
+			// *v = ft_charjoin(*v, arg[*i]);
+			(*i)++;
+			// printf("-------------- Expand ---------------\n");
+			expand_mode(arg, v, i);
+			// *v = ft_charjoin(*v, arg[*i]);
+			append_args(arr, v, false);
+		}
+		else if (mode == LITERAL)
+		{
+			// *v = ft_charjoin(*v, arg[*i]);
+			(*i)++;
+			// printf("-------------- Literal ---------------\n");
+			literal_mode(arg, v, i);
+			// *v = ft_charjoin(*v, arg[*i]);
+			append_args(arr, v, false);
 		}
 		return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:30 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 11:40:01 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/24 15:17:28 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ t_error	exec_export(char **args)
 			key = extract_key(args[i], end);
 			value = extract_value(args[i], end + 1);
 			add_var(key, value);
-			free(key); free(value);
+			free(key);
+			free(value);
 		}
 		i++;
 	}
