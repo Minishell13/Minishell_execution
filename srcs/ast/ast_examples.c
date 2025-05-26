@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/25 18:53:13 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/26 18:53:01 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,38 +132,48 @@ t_ast	*ft_get_ast4(void)
 {
 	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
 	c1->data.args = ast_create_args("ls");
-	
 	t_ast *c2 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	c2->data.args = ast_create_args("grep M");
-	
+	c2->data.args = ast_create_args("cat -n");
 	t_ast *p1 = ast_new_node(GRAM_PIPELINE);
 	ast_add_child(p1, c1);
 	ast_add_child(p1, c2);
 	
 	t_ast *c3 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	c3->data.args = ast_create_args("wc -l");
-	
+	c3->data.args = ast_create_args("grep M");
 	t_ast *p2 = ast_new_node(GRAM_PIPELINE);
 	ast_add_child(p2, p1);
 	ast_add_child(p2, c3);
+
+
+	t_ast *c4 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c4->data.args = ast_create_args("wc -l");
+	t_ast *p3 = ast_new_node(GRAM_PIPELINE);
+	ast_add_child(p3, p2);
+	ast_add_child(p3, c4);
 	
-	// t_ast *c4 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	// c4->data.args = ast_create_args("echo OK");
+	t_ast *c5 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c5->data.args = ast_create_args("cat -e");
+	t_ast *p4 = ast_new_node(GRAM_PIPELINE);
+	ast_add_child(p4, p3);
+	ast_add_child(p4, c5);
 	
-	// t_ast *and_2 = ast_new_node(GRAM_OPERATOR_AND);
-	// ast_add_child(and_2, p2);
-	// ast_add_child(and_2, c4);
+	t_ast *c6 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c6->data.args = ast_create_args("echo OK");
 	
-	// t_ast *c5 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	// c5->data.args = ast_create_args("echo ERROR");
+	t_ast *and_2 = ast_new_node(GRAM_OPERATOR_AND);
+	ast_add_child(and_2, p4);
+	ast_add_child(and_2, c6);
 	
-	// t_ast *or = ast_new_node(GRAM_OPERATOR_OR);
-	// ast_add_child(or, and_2);
-	// ast_add_child(or, c5);
+	t_ast *c7 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c7->data.args = ast_create_args("echoo ERROR");
+	
+	t_ast *or = ast_new_node(GRAM_OPERATOR_OR);
+	ast_add_child(or, and_2);
+	ast_add_child(or, c7);
 	
 	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
-	ast_add_child(root, p2);
-	// ast_add_child(root, or);
+	// ast_add_child(root, and_2);
+	ast_add_child(root, or);
 	return root;
 }
 

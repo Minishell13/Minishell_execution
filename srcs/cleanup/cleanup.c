@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:03:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 14:32:54 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/26 16:14:47 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,10 @@ void	ft_free_count_array(char **arr, int count)
 	}
 	free(arr);
 	arr = NULL;
+}
+
+void	clear_sh(t_ast *root)
+{
+	ast_destroy(root);
+	clear_arr(sh.my_env);
 }

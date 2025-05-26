@@ -2,6 +2,7 @@
     "files.associations": {
         "typedef.h": "c",
         "minishell.h": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "random": "c"
     }
 }

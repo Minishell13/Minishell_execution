@@ -6,14 +6,14 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:31:37 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 17:49:10 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/26 17:00:46 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //* -------------------------------- SUBSHELL --------------------------------
-t_error	ft_execute_subshell(t_ast *root, t_ast *node, char **envp)
+t_error	execute_subshell(t_ast *root, t_ast *node, char **envp)
 {
 	pid_t pid;
 	int   status;
@@ -23,11 +23,12 @@ t_error	ft_execute_subshell(t_ast *root, t_ast *node, char **envp)
 		return FORK_ERROR;
 	if (pid == 0)
 	{
-		ft_executor(root, node->children[0], envp);
+		executor(root, node->child, envp);
 		ast_destroy(root);
 		exit(EXIT_FAILURE);  // in case executor didn't exit
 	}
 	waitpid(pid, &status, 0);
-	return WEXITSTATUS(status) ? EXECVE_ERROR : SUCCESS;
+	sh.exit_code = WEXITSTATUS(status);
+	return (WEXITSTATUS(status));
 }
 

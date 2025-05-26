@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:31:59 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 17:58:20 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/26 16:47:30 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,15 @@
 
 
 //* -------------------------------- AND_OR --------------------------------
-
-t_error	ft_execute_and_or(t_ast *root, t_ast *node, char **envp)
+t_error	execute_and_or(t_ast *root, t_ast *node, char **envp)
 {
-    if (node->type == GRAM_OPERATOR_AND)
-    {
-        int status = ft_executor(root, node->children[0], envp);
-        if (status == 0)
-            status = ft_executor(root, node->children[1], envp);
-        return (status);
-    }
+	int	st;
 
-    if (node->type == GRAM_OPERATOR_OR)
-    {
-        int status = ft_executor(root, node->children[0], envp);
-        if (status != 0)
-            status = ft_executor(root, node->children[1], envp);
-        return (status);
-    }
-    return (ERROR);
+	st = executor(root, node->child, envp);
+	
+	if (node->type == GRAM_OPERATOR_AND && st == 0)
+		return executor(root, node->child->sibling, envp);
+	if (node->type == GRAM_OPERATOR_OR && st != 0)
+		return executor(root, node->child->sibling, envp);
+	return (st);
 }
-

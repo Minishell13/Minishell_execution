@@ -6,14 +6,14 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/23 18:39:11 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/25 13:11:37 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // //* -------------------------------- IO_REDIRECTION --------------------------------
-void	ft_generate_tmpfile(t_redir *redir)
+void	generate_tmpfile(t_redir *redir)
 {
 	char	*temp;
 
@@ -28,7 +28,7 @@ void	ft_generate_tmpfile(t_redir *redir)
 }
 
 // TODO: Chose between readline or get_next_line
-void	ft_fill_here_doc(t_redir *redir, int fd)
+void	fill_here_doc(t_redir *redir, int fd)
 {
 	char	*line;
 	size_t	line_size;
@@ -69,7 +69,7 @@ void	ft_fill_here_doc(t_redir *redir, int fd)
 	close(fd);
 }
 
-void	ft_here_doc(t_redir *redir)
+void	here_doc(t_redir *redir)
 {
 	int		fd;
 
@@ -77,22 +77,22 @@ void	ft_here_doc(t_redir *redir)
 	if (fd < 0)
 		perror("sh");
 	else
-		ft_fill_here_doc(redir, fd);
+		fill_here_doc(redir, fd);
 }
 
-int	ft_parse_infile(t_redir *redir)
+int	parse_infile(t_redir *redir)
 {
 	int	fd;
 
 	if (redir->type == GRAM_HEREDOC)
-		ft_here_doc(redir);
+		here_doc(redir);
 	fd = open(redir->file, O_RDONLY);
-	if (fd < 0 || ft_check_access(redir->file, (R_OK | F_OK)) == false)
+	if (fd < 0 || check_access(redir->file, (R_OK | F_OK)) == false)
 		perror("sh");
 	return (fd);
 }
 
-int	ft_parse_outfile(t_redir *redir)
+int	parse_outfile(t_redir *redir)
 {
 	int	flags;
 	int	fd;
@@ -102,17 +102,17 @@ int	ft_parse_outfile(t_redir *redir)
 	else
 		flags = (O_WRONLY | O_CREAT | O_TRUNC);
 	fd = open(redir->file, flags, 0644);
-	if (fd < 0 || ft_check_access(redir->file, W_OK) == false)
+	if (fd < 0 || check_access(redir->file, W_OK) == false)
 		perror("sh");
 	return (fd);
 }
 
-t_error	ft_redir(int fd, t_redir *r)
+t_error	redir(int fd, t_redir *r)
 {
 	// 1) Handle input redirection: '<' or '<<'
 	if (r->type == GRAM_REDIR_IN || r->type == GRAM_HEREDOC)
 	{
-		fd = ft_parse_infile(r);
+		fd = parse_infile(r);
 		if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
 		{
 			if (fd >= 0)
@@ -124,7 +124,7 @@ t_error	ft_redir(int fd, t_redir *r)
 	// 2) Handle output redirection: '>' or '>>'
 	else
 	{
-		fd = ft_parse_outfile(r);
+		fd = parse_outfile(r);
 		if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
 		{
 			if (fd >= 0)
@@ -136,7 +136,7 @@ t_error	ft_redir(int fd, t_redir *r)
 	return (SUCCESS);
 }
 
-t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
+t_error	execute_redirection(t_ast *root, t_ast *node, char **envp)
 {
 	int		fd = -1;
 	t_redir	*r;
@@ -145,10 +145,10 @@ t_error	ft_execute_redirection(t_ast *root, t_ast *node, char **envp)
 
 	r = &node->data.redir;
 	// 3) Now execute the command that’s been wrapped by this redirection
-	if (ft_redir(fd, r) != SUCCESS)
+	if (redir(fd, r) != SUCCESS)
 		return (REDIR_ERROR);
 		
-	ret = ft_executor(root, node->children[0], envp);
+	ret = executor(root, node->child, envp);
 
 	// Restore original stdin
 	// dup2(saved_stdin, STDIN_FILENO);

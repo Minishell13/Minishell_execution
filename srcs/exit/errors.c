@@ -6,37 +6,52 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:17:40 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/05 14:33:23 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/26 18:36:07 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_format_error(char *format, char *error, char *arg)
+void	format_error(char *format, char *arg, char *error)
 {
 	char	buffer[1024];
 
 	ft_bzero(buffer, sizeof(buffer));
 	if (!format || !error)
 		return ;
-	ft_strlcat(buffer, "sh", sizeof(buffer));
+	ft_strlcat(buffer, "minishell", sizeof(buffer));
 	ft_strlcat(buffer, ": ", sizeof(buffer));
-	ft_strlcat(buffer, error, sizeof(buffer));
 	if (arg)
 	{
-		ft_strlcat(buffer, ": ", sizeof(buffer));
 		ft_strlcat(buffer, arg, sizeof(buffer));
+		ft_strlcat(buffer, ": ", sizeof(buffer));
 	}
+	ft_strlcat(buffer, error, sizeof(buffer));
 	ft_strlcat(buffer, "\n", sizeof(buffer));
 	write(STDERR_FILENO, buffer, ft_strlen(buffer));
 }
 
-void	ft_put_error(char *arg)
+void	put_error(char *cmd)
 {
-	if (!arg)
-		ft_format_error("%s: %s: %s", "command not found", " ");
-	else if (ft_strchr(arg, '/'))
-		ft_format_error("%s: %s: %s", strerror(errno), arg);
+	if (!cmd)
+		format_error("%s: %s: %s", " ", "command not found");
+	// if (ft_strlcmp(cmd, ".") || ft_strlcmp(cmd, ".."))
+	// 	format_error("%s: %s: %s", "Is a directory", cmd);
+	else if (ft_strchr(cmd, '/'))
+		format_error("%s: %s: %s", cmd, strerror(errno));
 	else
-		ft_format_error("%s: %s: %s", "command not found", arg);
+		format_error("%s: %s: %s", cmd, "command not found");
+}
+
+
+void	get_error(char *path)
+{
+	if (path && (ft_strlcmp(path, ".") || ft_strlcmp(path, "..")))
+		sh.exit_code = 2;
+	else if (errno == ENOENT)
+		sh.exit_code = NO_FILE_OR_DIR;
+	else if (errno == EACCES)
+		sh.exit_code = PERMISSION_DENIED;
+	else
+		sh.exit_code = ERROR;
 }

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 17:14:17 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/25 11:35:17 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	expand_redir(t_ast *node)
 			clear_arr(arr);	
 		}
 	}
-	ast_print(node, 0);
 }
 
 //TODO:  $ + *

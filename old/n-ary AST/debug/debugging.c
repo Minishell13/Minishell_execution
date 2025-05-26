@@ -6,11 +6,24 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 14:40:33 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/25 10:09:38 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+typedef struct	s_ast
+{
+	t_gram			type;	 // node kind
+	struct s_ast	**children;
+	
+	union
+	{
+		char		**args;       // for AST_CMD: NULL‑terminated argv
+		t_redir		redir;
+		
+	}	data;
+}				t_ast;
 
 void	ft_print_node(t_token *node)
 {
@@ -40,7 +53,7 @@ void	ft_print_tokens(t_token *list)
 	} while (current != list);
 }
 
-char *gram_name(t_gram g)
+static char *gram_name(t_gram g)
 {
 	switch (g)
 	{
@@ -60,31 +73,31 @@ char *gram_name(t_gram g)
 	}
 }
 
-void	ast_print(const t_ast *n, int indent)
+void	ast_print(const t_ast *node, int indent)
 {
-	if (!n) return;
+	if (!node) return;
+	for (int i = 0; i < indent; i++)	putchar(' ');
+	printf("%s%s%s",BHCYN, gram_name(node->type), RESET);
 
-	// indent and print this node
-	for (int i = 0; i < indent; i++) putchar(' ');
-	printf("%s", gram_name(n->type));
-
-	if (n->type == GRAM_SIMPLE_COMMAND && n->data.args) {
-		printf(" [");
-		for (char **a = n->data.args; *a; ++a) {
-			printf(" \"%s\"", *a);
-		}
-		printf(" ]");
+	if (node->type == GRAM_SIMPLE_COMMAND && node->data.args)
+	{
+		printf("%s args: %s%s[", BHGRN, RESET, BHWHT);
+		for (char **arg = node->data.args; *arg; arg++)
+			printf(" \"%s\",", *arg);
+		printf(" NULL ]%s", RESET);
 	}
-	else if (n->type == GRAM_IO_REDIRECT) {
-		const char *t = gram_name(n->data.redir.type);
-		printf(" { file=\"%s\", type=%s, limiter=\"%s\" }",
-			   n->data.redir.file,
-			   t,
-			   n->data.redir.limiter ? n->data.redir.limiter : "");
+	else if (node->type == GRAM_IO_REDIRECT)
+	{
+		char *type = gram_name(node->data.redir.type);
+		printf("%s redir:%s %s{file: \"%s\", type: %s, limiter: %s}%s",
+				BHYEL, RESET, BHWHT,
+				node->data.redir.file,
+				type,
+				node->data.redir.limiter, RESET);
 	}
 	putchar('\n');
 
-	// recurse into first child, then siblings
-	ast_print(n->child, indent + 2);
-	ast_print(n->sibling, indent);
+	// Recurse into children
+	for (int i = 0; node->children && node->children[i]; i++)
+		ast_print(node->children[i], indent + 2);
 }

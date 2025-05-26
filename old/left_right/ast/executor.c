@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 16:45:18 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/23 15:56:21 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,33 +20,49 @@
 // TODO: The leaks is fixed, now go and make behavioure like shell
 // TODO: ...
 
-t_error executor(t_ast *root, t_ast *node, char **envp)
+typedef struct	s_ast
 {
-    if (!node) return SUCCESS;
+	t_gram			type;	 // node kind
+	struct s_ast	*left;	 // left child / first element
+	struct s_ast	*right;	// right child / next element
+	
+	union
+	{
+		char		**args;       // for AST_CMD: NULL‑terminated argv
+		t_redir		redir;
+		
+	}	data;
+}				t_ast;
 
-    switch (node->type)
-    {
-    case GRAM_COMPLETE_COMMAND:
-        return executor(root, node->child, envp);
+//! The tree structure must:
+	// redirection go first
+t_error ft_executor(t_ast *root, t_ast *node, char **envp)
+{
+	if (!node) return 0;
 
-    case GRAM_OPERATOR_AND:
-    case GRAM_OPERATOR_OR:
-        return execute_and_or(root, node, envp);
+	switch (node->type)
+	{
+		case GRAM_COMPLETE_COMMAND:
+			return ft_executor(root, node->left, envp);
+			
+		case GRAM_SIMPLE_COMMAND:
+			return ft_execute_simple_cmd(root, node, envp);
 
-    case GRAM_PIPELINE:
-        return execute_pipeline(root, node, envp);
+		case GRAM_PIPELINE:
+			return ft_execute_pipe(root, node, envp);
 
-    case GRAM_IO_REDIRECT:
-        expand_redir(node);
-        return execute_redirection(root, node, envp);
+		case GRAM_IO_REDIRECT:
+			return ft_execute_redirection(root, node, envp);
 
-    case GRAM_SIMPLE_COMMAND:
-        return execute_simple_cmd(root, node, envp, false);
+		case GRAM_SUBSHELL:
+			return ft_execute_subshell(root, node, envp);
 
-    case GRAM_SUBSHELL:
-        return execute_subshell(root, node, envp);
+		case GRAM_OPERATOR_AND:
+		case GRAM_OPERATOR_OR:
+			return ft_execute_and_or(root, node, envp);
 
-    default:
-        return SUCCESS;
-    }
+		default:
+			return 0;
+	}
+	return (SUCCESS);
 }
