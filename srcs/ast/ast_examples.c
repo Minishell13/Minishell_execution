@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 18:53:01 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/26 19:25:35 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,14 +158,14 @@ t_ast	*ft_get_ast4(void)
 	ast_add_child(p4, c5);
 	
 	t_ast *c6 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	c6->data.args = ast_create_args("echo OK");
+	c6->data.args = ast_create_args("echoo OK");
 	
 	t_ast *and_2 = ast_new_node(GRAM_OPERATOR_AND);
 	ast_add_child(and_2, p4);
 	ast_add_child(and_2, c6);
 	
 	t_ast *c7 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	c7->data.args = ast_create_args("echoo ERROR");
+	c7->data.args = ast_create_args("echo ERROR");
 	
 	t_ast *or = ast_new_node(GRAM_OPERATOR_OR);
 	ast_add_child(or, and_2);
