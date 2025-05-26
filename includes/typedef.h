@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 13:20:00 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/26 16:21:50 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ typedef struct	s_minishell
 	char	**env;
 	char	**my_env;
 	int		exit_code;
+	int		in;
+	int		out;
+	pid_t	pids[2];
+	int		pipefd[2];
 }				t_minishell;
 
 typedef enum e_error
@@ -123,15 +127,16 @@ typedef struct	s_redir
 
 typedef struct	s_ast
 {
-	t_gram			type;	 // node kind
-	struct s_ast	**children;
+	t_gram	type;
 	
 	union
 	{
-		char		**args;       // for AST_CMD: NULL‑terminated argv
-		t_redir		redir;
-		
+		char	**args;
+		t_redir	redir;
 	}	data;
+	
+	struct s_ast	*child;
+	struct s_ast	*sibling;
 }				t_ast;
 
 typedef enum	s_qmode
@@ -151,7 +156,7 @@ typedef enum	s_quote
 // For $VAR expansion
 typedef struct	s_block
 {
-	char			*text;       // "$USER", '"', etc.
+	char			*text;		// "$USER", '"', etc.
 	t_qmode	mode;
 	t_quote			quote;
 }				t_block;
