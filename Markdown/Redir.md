@@ -62,3 +62,10 @@ Output:
 ```bash
 a
 ```
+
+
+## Remarque
+- Before run the cmd, you see the redir list
+- all heredoc execute first, then run all other redir, then run the cmd
+- so the last redir affect the stdin/stdout
+- Each herdoc restore stdin
