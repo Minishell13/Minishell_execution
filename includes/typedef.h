@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 16:21:50 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 18:41:32 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ typedef struct	s_minishell
 	char	**env;
 	char	**my_env;
 	int		exit_code;
-	int		in;
-	int		out;
 	pid_t	pids[2];
 	int		pipefd[2];
 }				t_minishell;
@@ -153,12 +151,5 @@ typedef enum	s_quote
 	DOUBLE_Q
 }				t_quote;
 
-// For $VAR expansion
-typedef struct	s_block
-{
-	char			*text;		// "$USER", '"', etc.
-	t_qmode	mode;
-	t_quote			quote;
-}				t_block;
 
 #endif
