@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 12:35:44 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 18:56:36 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,8 +248,7 @@ t_ast	*ft_get_ast7(void)
     return root;
 }
 
-//! cat Makefile << A > a << B > b << C > c
-//! The heredoc run first
+//! (ls | cat -n) | (wc -l | cat -e)
 t_ast	*ft_get_ast8(void)
 {	
     t_ast *r1 = ast_new_node(GRAM_IO_REDIRECT);
@@ -301,6 +300,80 @@ t_ast	*ft_get_ast8(void)
     return root;
 }
 
+t_ast	*ft_get_ast9(void)
+{
+	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c1->data.args = ast_create_args("/bin/ls");
+	t_ast *c2 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c2->data.args = ast_create_args("cat -n");
+	t_ast *p1 = ast_new_node(GRAM_PIPELINE);
+	ast_add_child(p1, c1);
+	ast_add_child(p1, c2);
+
+    t_ast *s1 = ast_new_node(GRAM_SUBSHELL);
+    ast_add_child(s1, p1);
+	
+	
+	
+	t_ast *c3 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c3->data.args = ast_create_args("wc -l");
+	t_ast *c4 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c4->data.args = ast_create_args("cat -e");
+	t_ast *p2 = ast_new_node(GRAM_PIPELINE);
+	ast_add_child(p2, c3);
+	ast_add_child(p2, c4);
+	
+    t_ast *s2 = ast_new_node(GRAM_SUBSHELL);
+    ast_add_child(s2, p2);
+
+
+	
+	t_ast *p3 = ast_new_node(GRAM_PIPELINE);
+	ast_add_child(p3, s1);
+	ast_add_child(p3, s2);
+
+	t_ast *c5 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c5->data.args = ast_create_args("echo ERROR: $?");
+	
+	t_ast *or = ast_new_node(GRAM_OPERATOR_OR);
+	ast_add_child(or, p3);
+	ast_add_child(or, c5);
+	
+    t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
+    ast_add_child(root, or);
+    return root;
+}
+
+t_ast	*ft_get_ast10(void)
+{
+	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c1->data.args = ast_create_args("cat");
+	t_ast *c2 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c2->data.args = ast_create_args("cat");
+	t_ast *p1 = ast_new_node(GRAM_PIPELINE);
+	ast_add_child(p1, c1);
+	ast_add_child(p1, c2);
+
+	
+	
+	t_ast *c3 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c3->data.args = ast_create_args("wc -l");
+	t_ast *c4 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c4->data.args = ast_create_args("cat -e");
+	t_ast *p2 = ast_new_node(GRAM_PIPELINE);
+	ast_add_child(p2, c3);
+	ast_add_child(p2, c4);
+
+	t_ast *p3 = ast_new_node(GRAM_PIPELINE);
+	ast_add_child(p3, p1);
+	ast_add_child(p3, p2);
+
+
+	 t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
+    ast_add_child(root, p3);
+    return root;
+}
+
 t_ast	*ft_get_ast_example(int n)
 {
 	static t_ast *(*examples[])(void) = {
@@ -313,6 +386,8 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast6,
 		ft_get_ast7,
 		ft_get_ast8,
+		ft_get_ast9,
+		ft_get_ast10,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)

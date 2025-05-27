@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/05 14:48:43 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 18:25:17 by abnsila          ###   ########.fr       */
+/*   Created: 2025/05/27 14:48:57 by abnsila           #+#    #+#             */
+/*   Updated: 2025/05/27 16:04:50 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,8 @@ char	*parse_path(char **all_path, char *cmd)
 	return (result);
 }
 
-char	*get_path(char *cmd, char **envp)
+char	*get_path(char *cmd)
 {
-	(void)envp;
 	char	*path_var;
 	char	**all_path;
 	char	*path;

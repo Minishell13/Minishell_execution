@@ -6,23 +6,18 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:31:59 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 16:47:30 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 17:45:01 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
 //* -------------------------------- AND_OR --------------------------------
-t_error	execute_and_or(t_ast *root, t_ast *node, char **envp)
+void	execute_and_or(t_ast *root, t_ast *node)
 {
-	int	st;
-
-	st = executor(root, node->child, envp);
-	
-	if (node->type == GRAM_OPERATOR_AND && st == 0)
-		return executor(root, node->child->sibling, envp);
-	if (node->type == GRAM_OPERATOR_OR && st != 0)
-		return executor(root, node->child->sibling, envp);
-	return (st);
+	executor(root, node->child);
+	if (node->type == GRAM_OPERATOR_AND && sh.exit_code == 0)
+		executor(root, node->child->sibling);
+	else if (node->type == GRAM_OPERATOR_OR && sh.exit_code != 0)
+		executor(root, node->child->sibling);
 }

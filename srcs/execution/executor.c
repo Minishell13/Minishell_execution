@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 08:53:21 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 16:10:14 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,32 +20,32 @@
 // TODO: The leaks is fixed, now go and make behavioure like shell
 // TODO: ...
 
-t_error executor(t_ast *root, t_ast *node, char **envp)
+void	executor(t_ast *root, t_ast *node)
 {
-	if (!node) return SUCCESS;
-
+	if (!node)
+		return ;
 	switch (node->type)
 	{
 	case GRAM_COMPLETE_COMMAND:
-		return executor(root, node->child, envp);
-
+		executor(root, node->child);
+		break ;
 	case GRAM_OPERATOR_AND:
 	case GRAM_OPERATOR_OR:
-		return execute_and_or(root, node, envp);
-
+		execute_and_or(root, node);
+		break ;
 	case GRAM_PIPELINE:
-		return execute_pipeline(root, node, envp);
-
+		execute_pipeline(root, node);
+		break ;
 	case GRAM_IO_REDIRECT:
-		return execute_redirection(root, node, envp);
-
+		execute_redirection(node);
+		break ;
 	case GRAM_SIMPLE_COMMAND:
-		return execute_simple_cmd(root, node, envp, false);
-
+		execute_simple_cmd(root, node, false);
+		break ;
 	case GRAM_SUBSHELL:
-		return execute_subshell(root, node, envp);
-
+		execute_subshell(root, node);
+		break ;
 	default:
-		return SUCCESS;
+		return ;
 	}
 }
