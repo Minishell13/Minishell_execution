@@ -6,11 +6,13 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 15:58:05 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 18:48:17 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 13:15:26 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_minishell	sh;
 
 int main(int ac, char **av, char **env)
 {

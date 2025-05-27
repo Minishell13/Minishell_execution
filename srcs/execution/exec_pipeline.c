@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:18 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 18:50:50 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 06:56:14 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -529,18 +529,12 @@ t_error execute_pipeline(t_ast *root, t_ast *node, char **envp)
 	close(sh.pipefd[0]);
 	close(sh.pipefd[1]);
 	waitpid(sh.pids[0],  &status, 0);
-	// printf("status: %d\n", status);
 	sh.exit_code = WEXITSTATUS(status);
-	// printf("code: %d\n\n\n", sh.exit_code);
 	waitpid(sh.pids[1], &status, 0);
-	// printf("status: %d\n", status);
 	sh.exit_code = WEXITSTATUS(status);
-	// printf("code: %d\n\n\n", sh.exit_code);
 
 	// return the exit status of the rightmost stage
-	// printf("status: %d\n", status);
 	sh.exit_code = WEXITSTATUS(status);
-	// printf("code: %d\n\n\n", sh.exit_code);
 	return (WEXITSTATUS(status));
 }
 

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:29 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 18:56:05 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 13:02:36 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,76 @@ void	execve_helper(t_ast *root, t_ast *cmd, char **envp)
 	exit(sh.exit_code);
 }
 
+void	heredoc_first(t_ast *root, t_ast *node, char **envp, int heredoc_total)
+{
+	t_ast	*c;
+	int		heredoc_index;
+	int		backup_fd;
+
+	c = node->child;
+	heredoc_index = 1;
+	while (c)
+	{
+		if (c->data.redir.type == GRAM_HEREDOC)
+		{
+			//! Restore prev heredoc
+			if (heredoc_index < heredoc_total)
+			{
+				backup_fd = dup(STDIN_FILENO);
+				execute_redirection(root, c, envp);
+				dup2(backup_fd, STDIN_FILENO);
+				close(backup_fd);
+			}
+			//! Do not restore last heredoc
+			else
+				execute_redirection(root, c, envp);
+			heredoc_index++;
+		}
+		c = c->sibling;
+	}
+}
+
+void	exec_redir(t_ast *root, t_ast *node, char **envp)
+{
+	t_ast 	*c;
+	int		heredoc_total = 0;
+
+	// 0. Count heredoc redirs
+	c = node->child;
+	heredoc_total = 0;
+	while (c)
+	{
+		if (c->data.redir.type == GRAM_HEREDOC)
+			heredoc_total++;
+		c = c->sibling;
+	}
+	// 1. Do heredocs first
+	heredoc_first(root, node, envp, heredoc_total);
+	// 2. Do all other redirs (saving last in/out)
+	c = node->child;
+	while (c)
+	{
+		if (c->data.redir.type != GRAM_HEREDOC)
+		{
+			execute_redirection(root, c, envp);
+		}
+		c = c->sibling;
+	}
+}
+
+
 t_error	execute_simple_cmd(t_ast *root, t_ast *node, char **envp, t_bool no_fork)
 {
 	pid_t	pid;
-
-	executor(root, node->child, envp);
+	
+	//! I need to confirm that [cmd node] can only contain [redir nodes list]
+	exec_redir(root, node, envp);
+	// Execute Builtins
 	if (is_builtins(node))
 	{
-		executor(root, node->child, envp);
 		return (exec_builtins(root, node));
 	}
-	printf("NOOOOOOOOOOOOOOOO\n");
+	// Execute Simple Command
 	expand_cmd_node(node, process_mode_1);
 	if (no_fork)
 		execve_helper(root, node, envp);
@@ -44,7 +103,6 @@ t_error	execute_simple_cmd(t_ast *root, t_ast *node, char **envp, t_bool no_fork
 		return FORK_ERROR;
 	if (pid == 0)
 	{
-		printf("%s Foked\n", node->data.args[0]);
 		execve_helper(root, node, envp);
 	}
 	int status;
@@ -52,7 +110,6 @@ t_error	execute_simple_cmd(t_ast *root, t_ast *node, char **envp, t_bool no_fork
 	sh.exit_code = WEXITSTATUS(status);
 	return (WEXITSTATUS(status));
 }
-
 
 
 // //* --------------------------------SIMPLE_COMMAND --------------------------------

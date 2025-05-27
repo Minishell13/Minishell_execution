@@ -6,13 +6,21 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/25 13:11:37 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 12:41:03 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // //* -------------------------------- IO_REDIRECTION --------------------------------
+void	restore_redir(int saved_stdin, int saved_stdout)
+{
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
+}
+
 void	generate_tmpfile(t_redir *redir)
 {
 	char	*temp;
@@ -38,7 +46,12 @@ void	fill_here_doc(t_redir *redir, int fd)
 		ft_putstr_fd("here_doc> ", STDIN_FILENO);
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
+		{
+			ft_putstr_fd("\nminishell: warning: here-document delimited by \
+end-of-file (wanted `Limiter')\n", STDERR_FILENO);
 			break ;
+		}
+		
 		line_size = ft_strlen(line) - 1;
 		if (ft_strncmp(line, redir->limiter,
 				ft_strlen(redir->limiter)) == 0
@@ -75,7 +88,7 @@ void	here_doc(t_redir *redir)
 
 	fd = open(redir->file, (O_WRONLY | O_CREAT | O_TRUNC), 0600);
 	if (fd < 0)
-		perror("sh");
+		perror("sh_heredoc");
 	else
 		fill_here_doc(redir, fd);
 }
@@ -88,7 +101,7 @@ int	parse_infile(t_redir *redir)
 		here_doc(redir);
 	fd = open(redir->file, O_RDONLY);
 	if (fd < 0 || check_access(redir->file, (R_OK | F_OK)) == false)
-		perror("sh");
+		perror("sh_infile");
 	return (fd);
 }
 
@@ -103,7 +116,7 @@ int	parse_outfile(t_redir *redir)
 		flags = (O_WRONLY | O_CREAT | O_TRUNC);
 	fd = open(redir->file, flags, 0644);
 	if (fd < 0 || check_access(redir->file, W_OK) == false)
-		perror("sh");
+		perror("sh_outfile");
 	return (fd);
 }
 
@@ -113,6 +126,7 @@ t_error	redir(int fd, t_redir *r)
 	if (r->type == GRAM_REDIR_IN || r->type == GRAM_HEREDOC)
 	{
 		fd = parse_infile(r);
+		printf("parse out fd: %d\n", fd);
 		if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
 		{
 			if (fd >= 0)
@@ -136,23 +150,28 @@ t_error	redir(int fd, t_redir *r)
 	return (SUCCESS);
 }
 
+
 t_error	execute_redirection(t_ast *root, t_ast *node, char **envp)
 {
+	(void)root;
+	(void)envp;
 	int		fd = -1;
 	t_redir	*r;
-	t_error ret;
-	// int saved_stdin = dup(STDIN_FILENO);
 
+	expand_redir(node);
 	r = &node->data.redir;
-	// 3) Now execute the command that’s been wrapped by this redirection
-	if (redir(fd, r) != SUCCESS)
-		return (REDIR_ERROR);
-		
-	ret = executor(root, node->child, envp);
-
-	// Restore original stdin
-	// dup2(saved_stdin, STDIN_FILENO);
-	// close(saved_stdin);
-	
-	return (ret);
+	if (r->type == GRAM_HEREDOC)
+	{
+		if (redir(fd, r) != SUCCESS)
+		{
+			restore_redir(sh.in, sh.out);
+			return (REDIR_ERROR);
+		}
+	}
+	else
+	{
+		if (redir(fd, r) != SUCCESS)
+			return (REDIR_ERROR);
+	}
+	return (SUCCESS);
 }
