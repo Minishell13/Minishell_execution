@@ -10,7 +10,7 @@ SRC_DIR = ./srcs
 SETUP_DIR = $(SRC_DIR)/setup
 AST_DIR = $(SRC_DIR)/ast
 EXEC_DIR = $(SRC_DIR)/execution
-EXPAND_DIR = $(SRC_DIR)/expand
+EXPAND_DIR = $(SRC_DIR)/expansion
 BUILT_DIR = $(EXEC_DIR)/builtins
 INCLUDES = -I${INC_DIR} -I./Libft/includes
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -25,8 +25,8 @@ BUILTINS =	$(BUILT_DIR)/builtins.c $(BUILT_DIR)/utils.c $(BUILT_DIR)/env.c $(BUI
 EXPAND =	$(EXPAND_DIR)/expand.c $(EXPAND_DIR)/utils.c $(EXPAND_DIR)/utils/expand_modes.c \
 			$(EXPAND_DIR)/utils/extract_value.c $(EXPAND_DIR)/utils/expand_heredoc.c
 
-EXEC =	$(BUILTINS) $(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXEC_DIR)/exec_pipeline.c $(EXEC_DIR)/exec_utils.c \
-		$(EXEC_DIR)/exec_redirection.c $(EXEC_DIR)/exec_subshell.c $(EXEC_DIR)/exec_and_or.c
+EXEC =	$(BUILTINS) $(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXEC_DIR)/exec_pipeline.c $(EXEC_DIR)/exec_redirection.c \
+		$(EXEC_DIR)/exec_subshell.c $(EXEC_DIR)/exec_and_or.c $(EXEC_DIR)/utils/heredoc_utils.c $(EXEC_DIR)/utils/path_utils.c
 
 AST =  $(AST_DIR)/ast.c $(AST_DIR)/ast_examples.c
 
