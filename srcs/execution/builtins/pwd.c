@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:21 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 16:24:29 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 18:07:04 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_error	exec_pwd(t_ast *node)
 	if (check_input(node->data.args))
 	{
 		ft_putendl_fd("sh: pwd: no options allowed", STDERR_FILENO);
+		sh.exit_code = EXIT_FAILURE;
 		return (ERROR);
 	}
 	pwd = getcwd(NULL, 0);
@@ -28,6 +29,7 @@ t_error	exec_pwd(t_ast *node)
 		if (!pwd)
 		{
 			perror("sh");
+			sh.exit_code = EXIT_FAILURE;
 			return (ERROR);
 		}
 		printf("%s\n", pwd);

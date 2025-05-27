@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:46:54 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 17:12:05 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 18:04:09 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,27 @@ t_error	exec_echo(t_ast *node)
 {
 	int		i;
 	char	**args;
+	t_bool	flag;
 
-	i = 1;
+	if (write(STDOUT_FILENO, "", 0) == -1)
+	{	
+		sh.exit_code = EXIT_FAILURE;
+		return (ERROR);
+	}
 	args = node->data.args;
+	flag = check_flag(node->data.args[1]);
+	if (flag)
+		i = 2;
+	else
+		i = 1;
 	while (args[i])
 	{
-		if (i != 1)
+		if ((!flag && i > 1) || (flag && i > 2))
 			ft_putchar_fd(' ', STDOUT_FILENO);
 		ft_putstr_fd(args[i], STDOUT_FILENO);
 		i++;
 	}
-	if (!check_flag(node->data.args[1]))
+	if (!flag)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 	return (SUCCESS);
 }
