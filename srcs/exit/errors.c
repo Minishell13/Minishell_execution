@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:17:40 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 18:36:07 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 17:12:49 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ void	format_error(char *format, char *arg, char *error)
 
 void	put_error(char *cmd)
 {
+	perror("minishell");
 	if (!cmd)
 		format_error("%s: %s: %s", " ", "command not found");
-	// if (ft_strlcmp(cmd, ".") || ft_strlcmp(cmd, ".."))
-	// 	format_error("%s: %s: %s", "Is a directory", cmd);
+	else if (ft_strlcmp(cmd, "/"))
+		format_error("%s: %s: %s", cmd, "Is a directory");
 	else if (ft_strchr(cmd, '/'))
 		format_error("%s: %s: %s", cmd, strerror(errno));
 	else
