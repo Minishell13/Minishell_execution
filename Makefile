@@ -7,9 +7,11 @@ INC_DIR = ./includes
 TEST_DIR = ./test
 LIBFT_DIR = ./Libft
 SRC_DIR = ./srcs
+SETUP_DIR = $(SRC_DIR)/setup
+AST_DIR = $(SRC_DIR)/ast
 EXEC_DIR = $(SRC_DIR)/execution
+EXPAND_DIR = $(SRC_DIR)/expand
 BUILT_DIR = $(EXEC_DIR)/builtins
-EXPAND_DIR = $(EXEC_DIR)/expand
 INCLUDES = -I${INC_DIR} -I./Libft/includes
 LIBFT = $(LIBFT_DIR)/libft.a
 
@@ -26,8 +28,12 @@ EXPAND =	$(EXPAND_DIR)/expand.c $(EXPAND_DIR)/utils.c $(EXPAND_DIR)/utils/expand
 EXEC =	$(BUILTINS) $(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXEC_DIR)/exec_pipeline.c $(EXEC_DIR)/exec_utils.c \
 		$(EXEC_DIR)/exec_redirection.c $(EXEC_DIR)/exec_subshell.c $(EXEC_DIR)/exec_and_or.c
 
-SRCS =	$(TEST) $(EXEC) $(SRC_DIR)/setup.c $(SRC_DIR)/main.c $(SRC_DIR)/ast/ast.c $(SRC_DIR)/cleanup/cleanup.c \
-		$(SRC_DIR)/debug/debugging.c $(SRC_DIR)/ast/ast_examples.c $(SRC_DIR)/exit/errors.c
+AST =  $(AST_DIR)/ast.c $(AST_DIR)/ast_examples.c
+
+SETUP = $(SETUP_DIR)/setup.c
+
+SRCS =	$(TEST) $(SETUP) $(AST) $(EXEC)  $(SRC_DIR)/cleanup/cleanup.c \
+		$(SRC_DIR)/debug/debugging.c $ $(SRC_DIR)/exit/errors.c
 
 	
 OBJS = $(SRCS:.c=.o)
