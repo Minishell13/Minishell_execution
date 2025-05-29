@@ -6,24 +6,21 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:58 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 16:21:08 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/28 16:53:58 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_error	exec_env(t_ast *node)
+int	exec_env(t_ast *node)
 {
 	int	i;
 
-	if (check_input(node->data.args))
-	{
-		ft_putendl_fd("sh: env: no options allowed", STDERR_FILENO);
-		return (ERROR);
-	}
+	if (!no_args(node->data.args))
+		return (builtins_error("env", NULL, ": no options allowed"));
 	i = 0;
 	if (!sh.my_env)
-		return (ERROR);
+		return (EXIT_FAILURE);
 	while (sh.my_env[i])
 	{
 		if (!sh.my_env[i])
@@ -34,5 +31,5 @@ t_error	exec_env(t_ast *node)
 		ft_putendl_fd(sh.my_env[i], STDOUT_FILENO);
 		i++;
 	}
-	return (SUCCESS);
+	return (EXIT_SUCCESS);
 }
