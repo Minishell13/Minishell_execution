@@ -29,3 +29,9 @@ ls && << EOF && pwd
 - Do necessary actions (Remove quotes, split, merge, append, ...), to produce the final arr of args (files)
 - 
 - Replace the old node args arr with new expanded arr
+
+
+## Learn about signals:
+- Add them to your readline loop
+- each forked proceess
+- Ask about this ...
