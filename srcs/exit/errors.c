@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:17:40 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 17:12:49 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 20:40:10 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	format_error(char *format, char *arg, char *error)
 
 void	put_error(char *cmd)
 {
-	perror("minishell");
 	if (!cmd)
 		format_error("%s: %s: %s", " ", "command not found");
 	else if (ft_strlcmp(cmd, "/"))
