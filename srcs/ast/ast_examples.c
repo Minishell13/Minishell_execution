@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 18:56:36 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/29 16:15:09 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,6 +344,7 @@ t_ast	*ft_get_ast9(void)
     return root;
 }
 
+// cat | cat | wc -l | cat -e
 t_ast	*ft_get_ast10(void)
 {
 	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
@@ -374,6 +375,21 @@ t_ast	*ft_get_ast10(void)
     return root;
 }
 
+t_ast	*ft_get_ast11(void)
+{
+    // attach in encounter order
+    t_ast *cmd = ast_new_node(GRAM_SIMPLE_COMMAND);
+    // cmd->data.args = ast_create_args("echo -n -n -n -n -n -n -j gg -n");
+    // cmd->data.args = ast_create_args("env");
+    // cmd->data.args = ast_create_args("export !a=gg");
+    // cmd->data.args = ast_create_args("unset -n jyj");
+    cmd->data.args = ast_create_args("pwd ggrg");
+
+    t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
+    ast_add_child(root, cmd);
+    return root;
+}
+
 t_ast	*ft_get_ast_example(int n)
 {
 	static t_ast *(*examples[])(void) = {
@@ -388,6 +404,7 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast8,
 		ft_get_ast9,
 		ft_get_ast10,
+		ft_get_ast11,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)
