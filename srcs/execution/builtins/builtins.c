@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 16:05:55 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 17:16:33 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/28 16:19:00 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_bool	is_builtins(t_ast *node)
 	return (false);
 }
 
-t_error	exec_builtins(t_ast *root, t_ast *node)
+int	exec_builtins(t_ast *root, t_ast *node)
 {
 	char	*cmd;
 
@@ -57,7 +57,7 @@ t_error	exec_builtins(t_ast *root, t_ast *node)
 	else if (ft_strlcmp("exit", cmd))
 	{
 		expand_cmd_node(node, process_mode_1);	
-		return (exec_exit(root));
+		return (exec_exit(root, node));
 	}
 	else if (ft_strlcmp("export", cmd))
 	{
@@ -74,5 +74,5 @@ t_error	exec_builtins(t_ast *root, t_ast *node)
 		expand_cmd_node(node, process_mode_1);	
 		return (exec_unset(node));
 	}
-	return (SUCCESS);
+	return (EXIT_FAILURE);
 }
