@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:29 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 17:49:43 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/27 20:03:07 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	execute_simple_cmd(t_ast *root, t_ast *node, t_bool no_fork)
 	// Execute Builtins
 	if (is_builtins(node))
 	{
-		exec_builtins(root, node);
+		sh.exit_code = exec_builtins(root, node);
 		return ;
 	}
 	// Execute Simple Command
