@@ -1,13 +1,6 @@
 {
-	readline-internal
-	Memcheck:Leak
-	...
-	obj:*/libreadline.so*
-	obj:*/libhistory.so*
-	obj:*/libncurses*
-	obj:*/libtinfo*
-	obj:*/libc.so*
-	fun:*alloc
-	fun:*realloc
-	fun:*strdup
+    ignore_libreadline_leaks
+    Memcheck:Leak
+    ...
+    obj:*/libreadline.so.*
 }

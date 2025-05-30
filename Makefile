@@ -8,6 +8,7 @@ TEST_DIR = ./test
 LIBFT_DIR = ./Libft
 SRC_DIR = ./srcs
 SETUP_DIR = $(SRC_DIR)/setup
+SIG_DIR = $(SRC_DIR)/signals
 AST_DIR = $(SRC_DIR)/ast
 EXEC_DIR = $(SRC_DIR)/execution
 EXPAND_DIR = $(SRC_DIR)/expansion
@@ -17,7 +18,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 # TODO: Just for testing !!!
 TEST =	$(TEST_DIR)/expand.c $(TEST_DIR)/arr_utils.c $(TEST_DIR)/builtins.c \
-		$(TEST_DIR)/execution.c $(TEST_DIR)/setup.c
+		$(TEST_DIR)/execution.c $(TEST_DIR)/setup.c $(TEST_DIR)/signals.c
 
 BUILTINS =	$(BUILT_DIR)/builtins.c $(BUILT_DIR)/utils.c $(BUILT_DIR)/env.c $(BUILT_DIR)/export.c $(BUILT_DIR)/unset.c $(BUILT_DIR)/pwd.c \
 			$(BUILT_DIR)/echo.c $(BUILT_DIR)/exit.c $(BUILT_DIR)/cd.c
@@ -30,12 +31,14 @@ EXEC =	$(BUILTINS) $(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXE
 
 AST =  $(AST_DIR)/ast.c $(AST_DIR)/ast_examples.c
 
+SIG = $(SIG_DIR)/signals.c
+
 SETUP = $(SETUP_DIR)/setup.c
 
-SRCS =	$(TEST) $(SETUP) $(AST) $(EXEC)  $(SRC_DIR)/cleanup/cleanup.c \
+SRCS =	$(TEST) $(SETUP) $(SIG) $(AST) $(EXEC)  $(SRC_DIR)/cleanup/cleanup.c \
 		$(SRC_DIR)/debug/debugging.c $ $(SRC_DIR)/exit/errors.c
 
-	
+
 OBJS = $(SRCS:.c=.o)
 
 all: $(LIBFT) $(NAME)
@@ -43,7 +46,7 @@ all: $(LIBFT) $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(INCLUDES) -o minishell $(LDFLAGS)
 
-%.o: %.c ${INC_DIR}/minishell.h ${INC_DIR}/execution.h ${INC_DIR}/expand.h
+%.o: %.c ${INC_DIR}/minishell.h ${INC_DIR}/execution.h ${INC_DIR}/expand.h ${INC_DIR}/builtins.h ${INC_DIR}/signals.h ${INC_DIR}/setup.h ${INC_DIR}/typedef.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):
