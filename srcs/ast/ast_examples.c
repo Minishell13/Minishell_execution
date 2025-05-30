@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 12:19:50 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 16:37:12 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,18 +379,20 @@ t_ast	*ft_get_ast11(void)
 {
 	// attach in encounter order
 	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	c1->data.args = ast_create_args("export j=jj");
 	//? Option: -n , and args as literal text
-	// c1->data.args = ast_create_args("echo -nn -n gg --");
+	c1->data.args = ast_create_args("exit gdf");
 	//? No optoins allowed
+	// c1->data.args = ast_create_args("echo -nn -n gg --");
+	// c1->data.args = ast_create_args("export j=jj");
 	// c1->data.args = ast_create_args("env -");
 	// c1->data.args = ast_create_args("pwd -v");
-	// c1->data.args = ast_create_args("unset -n jyj");
+	// c1->data.args = ast_create_args("unset -- n jyj");
+	// c1->data.args = ast_create_args("unset @hrthrth");
 
 	t_ast *c2 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	c2->data.args = ast_create_args("env");
+	c2->data.args = ast_create_args("echo code: $?");
 
-	t_ast *and1 = ast_new_node(GRAM_OPERATOR_AND);
+	t_ast *and1 = ast_new_node(GRAM_OPERATOR_OR);
 	ast_add_child(and1, c1);
 	ast_add_child(and1, c2);
 

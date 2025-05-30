@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:40 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/28 17:10:06 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 16:26:05 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,8 @@ int	exec_unset(t_ast *node)
 			builtins_error("unset", NULL, ": no options allowed");
 			return (EXIT_FAILURE);
 		}
-		// Just for testing
-		// char *key = extract_key(keys[i], valid_key(keys[i]));
-		// unset_var(key);
-		// free(key);
-		//TODO: For real behavioure use this
 		unset_var(keys[i]);
 		i++;
 	}
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
