@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 18:41:32 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 19:54:22 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 
 // Time
 # include <sys/wait.h>
+
+// Signals
+# include <signal.h>
 
 // Utils function
 # include <stdlib.h>
@@ -117,7 +120,6 @@ typedef struct	s_token
 
 typedef struct	s_redir
 {
-	t_gram	type;
 	char	*file;
 	char	*limiter;
 	t_bool	expanded;
