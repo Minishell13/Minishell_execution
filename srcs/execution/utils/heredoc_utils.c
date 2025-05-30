@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 13:26:10 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 16:04:15 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:00:53 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	fill_here_doc(t_redir *redir, int fd)
 	{
 		ft_putstr_fd("here_doc> ", STDIN_FILENO);
 		line = get_next_line(STDIN_FILENO);
+		ft_putendl_fd(line, STDERR_FILENO);
 		if (!line)
 		{
 			ft_putstr_fd("\nminishell: warning: here-document delimited by \
@@ -94,19 +95,19 @@ void	heredoc_first(t_ast *node, int heredoc_total)
 	heredoc_index = 1;
 	while (c)
 	{
-		if (c->data.redir.type == GRAM_HEREDOC)
+		if (c->type == GRAM_HEREDOC)
 		{
 			//! Restore prev heredoc
 			if (heredoc_index < heredoc_total)
 			{
 				backup_fd = dup(STDIN_FILENO);
-				execute_redirection(c);
+				expand_and_redir(c);
 				dup2(backup_fd, STDIN_FILENO);
 				close(backup_fd);
 			}
 			//! Do not restore last heredoc
 			else
-				execute_redirection(c);
+				expand_and_redir(c);
 			heredoc_index++;
 		}
 		c = c->sibling;

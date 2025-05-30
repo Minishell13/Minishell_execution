@@ -6,18 +6,18 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 16:08:15 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:04:24 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // //* -------------------------------- IO_REDIRECTION --------------------------------
-int	parse_infile(t_redir *redir)
+int	parse_infile(t_redir *redir, t_gram type)
 {
 	int	fd;
 
-	if (redir->type == GRAM_HEREDOC)
+	if (type == GRAM_HEREDOC)
 		here_doc(redir);
 	fd = open(redir->file, O_RDONLY);
 	if (fd < 0 || check_access(redir->file, (R_OK | F_OK)) == false)
@@ -25,12 +25,12 @@ int	parse_infile(t_redir *redir)
 	return (fd);
 }
 
-int	parse_outfile(t_redir *redir)
+int	parse_outfile(t_redir *redir, t_gram type)
 {
 	int	flags;
 	int	fd;
 
-	if (redir->type == GRAM_REDIR_APPEND)
+	if (type == GRAM_REDIR_APPEND)
 		flags = (O_WRONLY | O_CREAT | O_APPEND);
 	else
 		flags = (O_WRONLY | O_CREAT | O_TRUNC);
@@ -40,13 +40,13 @@ int	parse_outfile(t_redir *redir)
 	return (fd);
 }
 
-void	redir(t_redir *r)
+void	redir(t_redir *r, t_gram type)
 {
 	int	fd;
 	// 1) Handle input redirection: '<' or '<<'
-	if (r->type == GRAM_REDIR_IN || r->type == GRAM_HEREDOC)
+	if (type == GRAM_REDIR_IN || type == GRAM_HEREDOC)
 	{
-		fd = parse_infile(r);
+		fd = parse_infile(r, type);
 		if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
 		{
 			if (fd >= 0)
@@ -58,7 +58,7 @@ void	redir(t_redir *r)
 	// 2) Handle output redirection: '>' or '>>'
 	else
 	{
-		fd = parse_outfile(r);
+		fd = parse_outfile(r, type);
 		if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
 		{
 			if (fd >= 0)
@@ -69,11 +69,38 @@ void	redir(t_redir *r)
 	}	
 }
 
-void	execute_redirection(t_ast *node)
+void	expand_and_redir(t_ast *node)
 {
 	t_redir	*r;
 	
 	expand_redir(node);
 	r = &node->data.redir;
-	redir(r);
+	redir(r, node->type);
+}
+
+void	execute_redirection(t_ast *node)
+{
+	t_ast 	*c;
+	int		heredoc_total = 0;
+
+	// 0. Count heredoc redirs
+	c = node->child;
+	heredoc_total = 0;
+	while (c)
+	{
+		if (c->type == GRAM_HEREDOC)
+			heredoc_total++;
+		c = c->sibling;
+	}
+	// 1. Do heredocs first
+	if (heredoc_total > 0)
+		heredoc_first(node, heredoc_total);
+	// 2. Do all other redirs (saving last in/out)
+	c = node->child;
+	while (c)
+	{
+		if (c->type != GRAM_HEREDOC)
+			expand_and_redir(c);
+		c = c->sibling;
+	}
 }
