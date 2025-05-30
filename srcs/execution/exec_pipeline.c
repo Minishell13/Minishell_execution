@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:18 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 16:45:55 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 19:18:12 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void run_one_stage(t_ast *root, t_ast *node)
 			break;
 
 		case GRAM_SUBSHELL:
-			execute_subshell(root, node);
+			execute_subshell(root, node, true);
 			clear_sh(root);
 			exit(sh.exit_code);
 			break;
@@ -77,9 +77,6 @@ void	exec_left(t_ast *root, t_ast *left)
 			execute_pipeline(root, left);
 		else
 			run_one_stage(root, left);
-		// Should never return
-		clear_sh(root);
-		exit(EXIT_FAILURE);
 	}
 }
 
@@ -95,9 +92,6 @@ void	exec_right(t_ast *root, t_ast *right)
 			execute_pipeline(root, right);
 		else
 			run_one_stage(root, right);
-		// Should never return
-		clear_sh(root);
-		exit(EXIT_FAILURE);
 	}
 }
 
@@ -116,10 +110,8 @@ void	execute_pipeline(t_ast *root, t_ast *node)
 	//
 	close(sh.pipefd[0]);
 	close(sh.pipefd[1]);
-	waitpid(sh.pids[0], &status, 0);
-	sh.exit_code = WEXITSTATUS(status);
-	waitpid(sh.pids[1], &status, 0);
-	sh.exit_code = WEXITSTATUS(status);
+	signals_notif(sh.pids[0], &status);
+	signals_notif(sh.pids[1], &status);
 
 	// return the exit status of the rightmost stage
 	sh.exit_code = WEXITSTATUS(status);

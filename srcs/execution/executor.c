@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/27 16:10:14 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 19:27:03 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 // TODO: Focus on execution flow, (memory, fds, error) management
 // TODO: The leaks is fixed, now go and make behavioure like shell
 // TODO: ...
+
 
 void	executor(t_ast *root, t_ast *node)
 {
@@ -43,7 +44,7 @@ void	executor(t_ast *root, t_ast *node)
 		execute_simple_cmd(root, node, false);
 		break ;
 	case GRAM_SUBSHELL:
-		execute_subshell(root, node);
+		execute_subshell(root, node, false);
 		break ;
 	default:
 		return ;

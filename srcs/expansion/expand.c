@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 14:09:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/25 11:35:17 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:08:09 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	**process_arg(char *arg, t_bool(*f)(char *, t_qmode, char ***, char **, int
 void	expand_redir(t_ast *node)
 {
 	// heredoc first
-	if (node->data.redir.type == GRAM_HEREDOC)
+	if (node->type == GRAM_HEREDOC)
 		remove_quotes(&(node->data.redir));
 	else
 	{

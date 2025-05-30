@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:29 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 12:06:05 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 19:48:06 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	execve_helper(t_ast *root, t_ast *cmd)
 {
 	char	*path;
 
+	reset_signals();
 	path = get_path(cmd->data.args[0]);
 	execve(path, cmd->data.args, sh.my_env);
 	put_error(cmd->data.args[0]);
@@ -25,40 +26,15 @@ void	execve_helper(t_ast *root, t_ast *cmd)
 	exit(sh.exit_code);
 }
 
-void	call_redir(t_ast *node)
-{
-	t_ast 	*c;
-	int		heredoc_total = 0;
-
-	// 0. Count heredoc redirs
-	c = node->child;
-	heredoc_total = 0;
-	while (c)
-	{
-		if (c->data.redir.type == GRAM_HEREDOC)
-			heredoc_total++;
-		c = c->sibling;
-	}
-	// 1. Do heredocs first
-	if (heredoc_total > 0)
-		heredoc_first(node, heredoc_total);
-	// 2. Do all other redirs (saving last in/out)
-	c = node->child;
-	while (c)
-	{
-		if (c->data.redir.type != GRAM_HEREDOC)
-			execute_redirection(c);
-		c = c->sibling;
-	}
-}
-
 void	execute_simple_cmd(t_ast *root, t_ast *node, t_bool no_fork)
 {
 	pid_t	pid;
 	int		status;
 
 	//! I need to confirm that [cmd node] can only contain [redir nodes list]
-	call_redir(node);
+	// TODO: Global redir node
+	if (node->child && node->child->type == GRAM_IO_REDIRECT)
+		execute_redirection(node->child);
 	// Execute Builtins
 	if (is_builtins(node))
 	{
@@ -75,14 +51,10 @@ void	execute_simple_cmd(t_ast *root, t_ast *node, t_bool no_fork)
 	pid = fork();
 	if (pid < 0)
 		return ;
-	if (pid == 0)
+	else if (pid == 0)
 		execve_helper(root, node);
-	waitpid(pid, &status, 0);
-	sh.exit_code = WEXITSTATUS(status);
-	clear_sh(root);
-	exit(sh.exit_code);
+	signals_notif(pid, &status);
 }
-
 
 // //* --------------------------------SIMPLE_COMMAND --------------------------------
 // t_error	execute_simple_cmd(t_ast *root, t_ast *node)
