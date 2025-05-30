@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:13:31 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/25 11:03:09 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:13:06 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ t_ast *ast_new_node(t_gram type)
 
 	// init union
 	n->data.args           = NULL;
-	n->data.redir.type     = UNKNOWN;
 	n->data.redir.file     = NULL;
 	n->data.redir.limiter  = NULL;
 	n->data.redir.expanded = false;
@@ -99,8 +98,7 @@ void    ast_destroy(t_ast *n)
 	// free this node’s payload
 	if (n->type == GRAM_SIMPLE_COMMAND && n->data.args)
 		clear_arr(n->data.args);
-	else if ((n->type == GRAM_IO_REDIRECT
-		   || n->type == GRAM_REDIR_IN
+	else if ((n->type == GRAM_REDIR_IN
 		   || n->type == GRAM_REDIR_OUT
 		   || n->type == GRAM_REDIR_APPEND
 		   || n->type == GRAM_HEREDOC)
@@ -112,7 +110,6 @@ void    ast_destroy(t_ast *n)
 		if (n->data.redir.limiter)
 			free(n->data.redir.limiter);
 	}
-
 	// keep going with siblings
 	ast_destroy(n->sibling);
 	free(n);

@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 16:37:12 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:07:38 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,22 @@ t_ast	*ft_get_ast0(void)
 {
 	
 	// heredoc << A
-	t_ast *hd = ast_new_node(GRAM_IO_REDIRECT);
+	t_ast *hd = ast_new_node(GRAM_HEREDOC);
 	generate_tmpfile(&hd->data.redir);
-	hd->data.redir.type    = GRAM_HEREDOC;
 	hd->data.redir.limiter = strdup("A");
 	
 	// then > a
-	t_ast *ro = ast_new_node(GRAM_IO_REDIRECT);
-	ro->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *ro = ast_new_node(GRAM_REDIR_OUT);
 	ro->data.redir.file = strdup("./temp/out");
+
+	t_ast *r_node = ast_new_node(GRAM_IO_REDIRECT);
+	ast_add_child(r_node, hd);
+	ast_add_child(r_node, ro);
 	
 	// attach in encounter order
 	t_ast *cmd = ast_new_node(GRAM_SIMPLE_COMMAND);
 	cmd->data.args = ast_create_args("cat");
-	ast_add_child(cmd, hd);
-	ast_add_child(cmd, ro);
+	ast_add_child(cmd, r_node);
 
 	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
 	ast_add_child(root, cmd);
@@ -79,8 +80,7 @@ t_ast	*ft_get_ast2(void)
 {
 	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
 
-	t_ast *redir = ast_new_node(GRAM_IO_REDIRECT);
-	redir->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *redir = ast_new_node(GRAM_REDIR_OUT);
 	redir->data.redir.file = strdup("./temp/out");
 	
 	t_ast *ls = ast_new_node(GRAM_SIMPLE_COMMAND);
@@ -154,8 +154,7 @@ t_ast	*ft_get_ast4(void)
 	ast_add_child(p3, p2);
 	ast_add_child(p3, c4);
 	
-	t_ast *r1 = ast_new_node(GRAM_IO_REDIRECT);
-	r1->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *r1 = ast_new_node(GRAM_REDIR_OUT);
 	r1->data.redir.file = ft_strdup("./temp/out");
 	t_ast *c5 = ast_new_node(GRAM_SIMPLE_COMMAND);
 	c5->data.args = ast_create_args("cat -e");
@@ -199,16 +198,13 @@ t_ast	*ft_get_ast5(void)
 
 t_ast	*ft_get_ast6(void)
 {
-	t_ast *r1 = ast_new_node(GRAM_IO_REDIRECT);
-	r1->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *r1 = ast_new_node(GRAM_REDIR_OUT);
 	r1->data.redir.file = strdup("./temp/a");
 
-	t_ast *r2 = ast_new_node(GRAM_IO_REDIRECT);
-	r2->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *r2 = ast_new_node(GRAM_REDIR_OUT);
 	r2->data.redir.file = strdup("./temp/b");
 
-	t_ast *r3 = ast_new_node(GRAM_IO_REDIRECT);
-	r3->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *r3 = ast_new_node(GRAM_REDIR_OUT);
 	r3->data.redir.file = strdup("./temp/c");
 
 	t_ast *cmd = ast_new_node(GRAM_SIMPLE_COMMAND);
@@ -226,22 +222,22 @@ t_ast	*ft_get_ast6(void)
 //! The heredoc run first
 t_ast	*ft_get_ast7(void)
 {	
-	
 	// > ./temp/out
-	t_ast *ro = ast_new_node(GRAM_IO_REDIRECT);
-	ro->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *ro = ast_new_node(GRAM_REDIR_OUT);
 	ro->data.redir.file = strdup("./temp/out");
 	
 	// << A
-	t_ast *hd = ast_new_node(GRAM_IO_REDIRECT);
+	t_ast *hd = ast_new_node(GRAM_HEREDOC);
 	generate_tmpfile(&hd->data.redir);
-	hd->data.redir.type    = GRAM_HEREDOC;
 	hd->data.redir.limiter = strdup("A");
+
+	t_ast *r_node = ast_new_node(GRAM_IO_REDIRECT);
+	ast_add_child(r_node, ro);
+	ast_add_child(r_node, hd);
 	
 	t_ast *cmd = ast_new_node(GRAM_SIMPLE_COMMAND);
 	cmd->data.args = ast_create_args("cat Makefile");
-	ast_add_child(cmd, ro);
-	ast_add_child(cmd, hd);
+	ast_add_child(cmd, r_node);
 
 	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
 	ast_add_child(root, cmd);
@@ -251,38 +247,31 @@ t_ast	*ft_get_ast7(void)
 //! (ls | cat -n) | (wc -l | cat -e)
 t_ast	*ft_get_ast8(void)
 {	
-	t_ast *r1 = ast_new_node(GRAM_IO_REDIRECT);
-	r1->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *r1 = ast_new_node(GRAM_REDIR_OUT);
 	r1->data.redir.file = strdup("./temp/a");
 
-	t_ast *r2 = ast_new_node(GRAM_IO_REDIRECT);
-	r2->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *r2 = ast_new_node(GRAM_REDIR_OUT);
 	r2->data.redir.file = strdup("./temp/b");
 
-	t_ast *r3 = ast_new_node(GRAM_IO_REDIRECT);
-	r3->data.redir.type = GRAM_REDIR_OUT;
+	t_ast *r3 = ast_new_node(GRAM_REDIR_OUT);
 	r3->data.redir.file = strdup("./temp/c");
 
 	// << A
-	t_ast *h1 = ast_new_node(GRAM_IO_REDIRECT);
+	t_ast *h1 = ast_new_node(GRAM_HEREDOC);
 	generate_tmpfile(&h1->data.redir);
-	h1->data.redir.type    = GRAM_HEREDOC;
 	h1->data.redir.limiter = strdup("A");
 
 	// << B
-	t_ast *h2 = ast_new_node(GRAM_IO_REDIRECT);
+	t_ast *h2 = ast_new_node(GRAM_HEREDOC);
 	generate_tmpfile(&h2->data.redir);
-	h2->data.redir.type    = GRAM_HEREDOC;
 	h2->data.redir.limiter = strdup("B");
 
 	// << C
-	t_ast *h3 = ast_new_node(GRAM_IO_REDIRECT);
+	t_ast *h3 = ast_new_node(GRAM_HEREDOC);
 	generate_tmpfile(&h3->data.redir);
-	h3->data.redir.type    = GRAM_HEREDOC;
 	h3->data.redir.limiter = strdup("C");
 
-	// t_ast *rr3 = ast_new_node(GRAM_IO_REDIRECT);
-	// rr3->data.redir.type = GRAM_REDIR_IN;
+	// t_ast *rr3 = ast_new_node(GRAM_REDIR_IN);
 	// rr3->data.redir.file = strdup("Todo.md");
 
 	t_ast *cmd = ast_new_node(GRAM_SIMPLE_COMMAND);
@@ -379,20 +368,12 @@ t_ast	*ft_get_ast11(void)
 {
 	// attach in encounter order
 	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	//? Option: -n , and args as literal text
-	c1->data.args = ast_create_args("exit gdf");
-	//? No optoins allowed
-	// c1->data.args = ast_create_args("echo -nn -n gg --");
-	// c1->data.args = ast_create_args("export j=jj");
-	// c1->data.args = ast_create_args("env -");
-	// c1->data.args = ast_create_args("pwd -v");
-	// c1->data.args = ast_create_args("unset -- n jyj");
-	// c1->data.args = ast_create_args("unset @hrthrth");
+	c1->data.args = ast_create_args("cat");
 
 	t_ast *c2 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	c2->data.args = ast_create_args("echo code: $?");
+	c2->data.args = ast_create_args("cat");
 
-	t_ast *and1 = ast_new_node(GRAM_OPERATOR_OR);
+	t_ast *and1 = ast_new_node(GRAM_PIPELINE);
 	ast_add_child(and1, c1);
 	ast_add_child(and1, c2);
 

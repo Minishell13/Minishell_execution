@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 16:14:45 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 14:40:33 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:21:39 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,17 @@ void	ast_print(const t_ast *n, int indent)
 		}
 		printf(" ]");
 	}
-	else if (n->type == GRAM_IO_REDIRECT) {
-		const char *t = gram_name(n->data.redir.type);
+	else if ((n->type == GRAM_REDIR_IN
+		   || n->type == GRAM_REDIR_OUT
+		   || n->type == GRAM_REDIR_APPEND
+		   || n->type == GRAM_HEREDOC)
+		  && n->data.redir.file)
+	{
+		const char *t = gram_name(n->type);
 		printf(" { file=\"%s\", type=%s, limiter=\"%s\" }",
-			   n->data.redir.file,
-			   t,
-			   n->data.redir.limiter ? n->data.redir.limiter : "");
+		n->data.redir.file,
+		t,
+		n->data.redir.limiter ? n->data.redir.limiter : "NULL");
 	}
 	putchar('\n');
 
