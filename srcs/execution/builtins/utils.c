@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 16:16:27 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/28 16:52:44 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 07:15:30 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_bool	check_echo(char *arg)
 {
 	size_t  len;
 	len = ft_strlen(arg);
-	if (len == 2 && arg[0] == '-' && arg[1] == 'n')
+	if (len == 2 && (arg[0] == '-' && arg[1] == 'n'))
 		return (true);
 	return (false);
 }

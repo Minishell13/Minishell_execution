@@ -6,18 +6,18 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:30 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/29 16:12:45 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 12:19:03 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	valid_key(char *arg)
+static int	valid_key(char *arg)
 {
 	int	i;
 
 	i = 0;
-	if (!ft_strchr(arg, '='))
+	if (arg[i] == '=')
 		return (-1);
 	while (arg[i] && arg[i] != '=')
 	{
@@ -30,7 +30,7 @@ int	valid_key(char *arg)
 	return (i);
 }
 
-char	*extract_key(char *arg, int end)
+static char	*extract_key(char *arg, int end)
 {
 	int		i;
 	char	*key;
@@ -45,7 +45,7 @@ char	*extract_key(char *arg, int end)
 	return (key);
 }
 
-char	*extract_value(char *arg, int end)
+static char	*extract_value(char *arg, int end)
 {
 	char	*value;
 
@@ -58,43 +58,46 @@ char	*extract_value(char *arg, int end)
 	return (value);
 }
 
-int	parse_input(char *arg)
+static t_bool	parse_input(char *arg)
 {
 	int		end;
-
+	char	*key;
+	char	*value;
 	end = valid_key(arg);
-	return (end);
+	if (end != -1)
+	{
+		key = extract_key(arg, end);
+		value = extract_value(arg, end + 1);
+		add_var(key, value);
+		free(key);
+		free(value);
+		return (true);
+	}
+	return (false);
+
 }
 
 int	exec_export(t_ast *node)
 {
-	int		i;
-	int		end;
-	char	*key;
-	char	*value;
 	char	**args;
-
-	i = 1;
 	args = node->data.args;
-	while (args[i])
+	args++;
+	while (*args)
 	{
-		if (!ft_strchr(args[i], '='))
+		if (!ft_strchr(*args, '='))
 		{
-			continue ;
-			i++;	
+			if (valid_key(*args) == -1)
+			{	
+				builtins_error("export: ", *args, ": not a valid identifier");
+				return (EXIT_FAILURE);
+			}
 		}
-		end = parse_input(args[i]);
-		if (end != -1)
-		{
-			key = extract_key(args[i], end);
-			value = extract_value(args[i], end + 1);
-			add_var(key, value);
-			free(key);
-			free(value);
+		else if (parse_input(*args) == false)
+		{	
+			builtins_error("export: ", *args, ": not a valid identifier");
+			return (EXIT_FAILURE);
 		}
-		else
-			builtins_error("export: ", args[i], ": not a valid identifier");
-		i++;
+		args++;
 	}
 	return (EXIT_SUCCESS);
 }

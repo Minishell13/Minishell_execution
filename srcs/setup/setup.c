@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:49:54 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/24 17:03:19 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 12:06:36 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,12 @@ void	add_var(char *key, char *value)
 		sh.my_env[var_index] = new_var;
 	}
 	else
+	{
 		sh.my_env = append_arr(sh.my_env, new_var);
+		// char *k = get_value(key);
+		// printf("v: %s\n", k);
+		// free(k);
+	}
 }
 
 void	setup_env(char **env)
@@ -120,7 +125,7 @@ void	setup_env(char **env)
 	int	i;
 
 	i = 0;
-	sh.my_env = ft_calloc(1, sizeof(char *));
+	sh.my_env = init_arr();
 	if (!sh.my_env)
 		return ;
 	while (env[i])

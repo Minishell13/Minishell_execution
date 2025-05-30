@@ -3,8 +3,6 @@
 
 # include "typedef.h"
 
-int		valid_key(char *arg);
-char	*extract_key(char *arg, int end);
 t_bool	check_echo(char *arg);
 t_bool	no_options(char *arg);
 t_bool	no_args(char **args);
