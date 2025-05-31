@@ -6,25 +6,11 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 13:26:10 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 20:00:53 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 14:36:30 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	generate_tmpfile(t_redir *redir)
-{
-	char	*temp;
-
-	temp = ft_itoa(getpid());
-	if (!temp)
-	{
-		redir->file = ft_strdup("/tmp/heredoc");
-		return ;
-	}
-	redir->file = ft_strjoin("/tmp/heredoc_", temp);
-	free(temp);
-}
 
 // TODO: Chose between readline or get_next_line
 void	fill_here_doc(t_redir *redir, int fd)
@@ -85,31 +71,59 @@ void	here_doc(t_redir *redir)
 		fill_here_doc(redir, fd);
 }
 
-void	heredoc_first(t_ast *node, int heredoc_total)
+int	count_heredocs(t_ast *node)
 {
-	t_ast	*c;
-	int		heredoc_index;
-	int		backup_fd;
+	if (!node)
+		return (0);
+	return count_heredocs(node->child)
+		+ (node->type == GRAM_HEREDOC)
+		+ count_heredocs(node->sibling);
+}
 
-	c = node->child;
-	heredoc_index = 1;
-	while (c)
+void exec_heredocs(t_ast *node, int total, int *index, t_bool restore)
+{
+	int backup_fd;
+
+	if (!node)
+		return;
+
+	// Detect if this node is a conditional operator
+	if (node->type == GRAM_OPERATOR_AND || node->type == GRAM_OPERATOR_OR)
+		restore = true;
+
+	// Traverse left
+	exec_heredocs(node->child, total, index, restore);
+
+	// Handle current node
+	if (node->type == GRAM_HEREDOC)
 	{
-		if (c->type == GRAM_HEREDOC)
+		if (restore)
 		{
-			//! Restore prev heredoc
-			if (heredoc_index < heredoc_total)
-			{
-				backup_fd = dup(STDIN_FILENO);
-				expand_and_redir(c);
-				dup2(backup_fd, STDIN_FILENO);
-				close(backup_fd);
-			}
-			//! Do not restore last heredoc
-			else
-				expand_and_redir(c);
-			heredoc_index++;
+			backup_fd = dup(STDIN_FILENO);
+			expand_and_redir(node);
+			dup2(backup_fd, STDIN_FILENO);
+			close(backup_fd);
 		}
-		c = c->sibling;
+		else
+			expand_and_redir(node);
+		(*index)++;
 	}
+
+	// Traverse right
+	exec_heredocs(node->sibling, total, index, restore);
+}
+
+t_bool	handle_heredocs(t_ast *root)
+{
+	int	total;
+	int	index;
+
+	if (!root)
+		return (false);
+	total = count_heredocs(root);
+	if (total > 16)
+		return (false);
+	index = 0;
+	exec_heredocs(root, total, &index, false);  // Start with restore = false
+	return (true);
 }

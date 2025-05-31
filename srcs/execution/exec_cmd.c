@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:29 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 19:48:06 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 22:56:55 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ void	execute_simple_cmd(t_ast *root, t_ast *node, t_bool no_fork)
 	pid_t	pid;
 	int		status;
 
-	//! I need to confirm that [cmd node] can only contain [redir nodes list]
-	// TODO: Global redir node
 	if (node->child && node->child->type == GRAM_IO_REDIRECT)
 		execute_redirection(node->child);
 	// Execute Builtins
@@ -48,6 +46,7 @@ void	execute_simple_cmd(t_ast *root, t_ast *node, t_bool no_fork)
 		// printf("Already Fork\n");
 		execve_helper(root, node);
 	}
+	printf("CMD\n");
 	pid = fork();
 	if (pid < 0)
 		return ;
