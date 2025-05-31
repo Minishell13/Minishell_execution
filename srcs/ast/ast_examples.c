@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 20:07:38 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 13:37:39 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 // cat << A > "''\"$f1\"''"
 t_ast	*ft_get_ast0(void)
 {
-	
 	// heredoc << A
 	t_ast *hd = ast_new_node(GRAM_HEREDOC);
 	generate_tmpfile(&hd->data.redir);
@@ -25,9 +24,13 @@ t_ast	*ft_get_ast0(void)
 	t_ast *ro = ast_new_node(GRAM_REDIR_OUT);
 	ro->data.redir.file = strdup("./temp/out");
 
+	// t_ast *rin = ast_new_node(GRAM_REDIR_IN);
+	// rin->data.redir.file = strdup("./temp/out");
+
 	t_ast *r_node = ast_new_node(GRAM_IO_REDIRECT);
 	ast_add_child(r_node, hd);
 	ast_add_child(r_node, ro);
+	// ast_add_child(r_node, rin);
 	
 	// attach in encounter order
 	t_ast *cmd = ast_new_node(GRAM_SIMPLE_COMMAND);
@@ -78,22 +81,25 @@ t_ast	*ft_get_ast1(void)
 // cat | ls > out
 t_ast	*ft_get_ast2(void)
 {
-	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
-
-	t_ast *redir = ast_new_node(GRAM_REDIR_OUT);
-	redir->data.redir.file = strdup("./temp/out");
 	
-	t_ast *ls = ast_new_node(GRAM_SIMPLE_COMMAND);
-	ls->data.args = ast_create_args("ls");
-	ast_add_child(ls, redir);
+	t_ast *rout = ast_new_node(GRAM_REDIR_OUT);
+	rout->data.redir.file = strdup("./temp/out");
+	
+	t_ast *r = ast_new_node(GRAM_IO_REDIRECT);
+	ast_add_child(r, rout);
+	
+	t_ast *grep = ast_new_node(GRAM_SIMPLE_COMMAND);
+	grep->data.args = ast_create_args("grep gg");
+	ast_add_child(grep, r);
 	
 	t_ast *cat = ast_new_node(GRAM_SIMPLE_COMMAND);
 	cat->data.args = ast_create_args("cat");
-
+	
 	t_ast *pipe = ast_new_node(GRAM_PIPELINE);
 	ast_add_child(pipe, cat);
-	ast_add_child(pipe, ls);
-
+	ast_add_child(pipe, grep);
+	
+	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
 	ast_add_child(root, pipe);
 	return root;
 }
@@ -274,15 +280,17 @@ t_ast	*ft_get_ast8(void)
 	// t_ast *rr3 = ast_new_node(GRAM_REDIR_IN);
 	// rr3->data.redir.file = strdup("Todo.md");
 
+	t_ast *r_node = ast_new_node(GRAM_IO_REDIRECT);
+	ast_add_child(r_node, h1);
+	ast_add_child(r_node, r1);
+	ast_add_child(r_node, h2);
+	ast_add_child(r_node, r2);
+	ast_add_child(r_node, h3);
+	ast_add_child(r_node, r3);
+
 	t_ast *cmd = ast_new_node(GRAM_SIMPLE_COMMAND);
 	cmd->data.args = ast_create_args("cat Makefile");
-	ast_add_child(cmd, h1);
-	ast_add_child(cmd, r1);
-	ast_add_child(cmd, h2);
-	ast_add_child(cmd, r2);
-	ast_add_child(cmd, h3);
-	// ast_add_child(cmd, rr3);
-	ast_add_child(cmd, r3);
+	ast_add_child(cmd, r_node);
 
 	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
 	ast_add_child(root, cmd);
@@ -382,6 +390,36 @@ t_ast	*ft_get_ast11(void)
 	return root;
 }
 
+t_ast	*ft_get_ast12(void)
+{
+	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c1->data.args = ast_create_args("cat");
+	
+	
+	// t_ast *hd = ast_new_node(GRAM_HEREDOC);
+	// generate_tmpfile(&hd->data.redir);
+	// hd->data.redir.limiter = strdup("A");
+
+	// t_ast *rin = ast_new_node(GRAM_REDIR_IN);
+	// rin->data.redir.file = strdup("Makefile");
+
+	t_ast *rout = ast_new_node(GRAM_REDIR_OUT);
+	rout->data.redir.file = strdup("./temp/b");
+	
+	t_ast *r = ast_new_node(GRAM_IO_REDIRECT);
+	// ast_add_child(r, rin);
+	ast_add_child(r, rout);
+	// ast_add_child(r, hd);
+	
+	t_ast *and1 = ast_new_node(GRAM_OPERATOR_AND);
+	ast_add_child(and1, c1);
+	ast_add_child(and1, r);
+
+	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
+	ast_add_child(root, and1);
+	return root;
+}
+
 t_ast	*ft_get_ast_example(int n)
 {
 	static t_ast *(*examples[])(void) = {
@@ -397,6 +435,7 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast9,
 		ft_get_ast10,
 		ft_get_ast11,
+		ft_get_ast12,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)

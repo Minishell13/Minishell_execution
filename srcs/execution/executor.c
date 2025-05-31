@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:45:09 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 19:27:03 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 13:27:46 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	executor(t_ast *root, t_ast *node)
 		execute_simple_cmd(root, node, false);
 		break ;
 	case GRAM_SUBSHELL:
-		execute_subshell(root, node, false);
+		execute_subshell(root, node);
 		break ;
 	default:
 		return ;

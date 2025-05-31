@@ -5,6 +5,7 @@
 # include "signals.h"
 # include "setup.h"
 # include "expand.h"
+# include "redirections.h"
 # include "execution.h"
 # include "builtins.h"
 # include "colors.h"
