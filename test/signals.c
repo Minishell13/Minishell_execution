@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 15:58:05 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 20:21:49 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/30 22:05:28 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int main(int ac, char **av, char **env)
 			root = ft_get_ast_example(ft_atoi(av[1]));
 		
 		// ast_print(root, 0);
+		handle_heredocs(root);
 		executor(root, root);
 
 
