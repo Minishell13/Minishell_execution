@@ -27,7 +27,7 @@ EXPAND =	$(EXPAND_DIR)/expand.c $(EXPAND_DIR)/utils.c $(EXPAND_DIR)/utils/expand
 			$(EXPAND_DIR)/utils/extract_value.c $(EXPAND_DIR)/utils/expand_heredoc.c
 
 EXEC =	$(BUILTINS) $(EXPAND) $(EXEC_DIR)/executor.c $(EXEC_DIR)/exec_cmd.c $(EXEC_DIR)/exec_pipeline.c $(EXEC_DIR)/exec_redirection.c \
-		$(EXEC_DIR)/exec_subshell.c $(EXEC_DIR)/exec_and_or.c $(EXEC_DIR)/utils/heredoc_utils.c $(EXEC_DIR)/utils/path_utils.c
+		$(EXEC_DIR)/exec_subshell.c $(EXEC_DIR)/exec_and_or.c $(EXEC_DIR)/utils/heredoc_utils.c $(EXEC_DIR)/utils/path_utils.c $(EXEC_DIR)/utils/redir_utils.c
 
 AST =  $(AST_DIR)/ast.c $(AST_DIR)/ast_examples.c
 
@@ -46,7 +46,7 @@ all: $(LIBFT) $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(INCLUDES) -o minishell $(LDFLAGS)
 
-%.o: %.c ${INC_DIR}/minishell.h ${INC_DIR}/execution.h ${INC_DIR}/expand.h ${INC_DIR}/builtins.h ${INC_DIR}/signals.h ${INC_DIR}/setup.h ${INC_DIR}/typedef.h
+%.o: %.c ${INC_DIR}/minishell.h ${INC_DIR}/execution.h ${INC_DIR}/expand.h ${INC_DIR}/builtins.h ${INC_DIR}/signals.h ${INC_DIR}/setup.h ${INC_DIR}/typedef.h ${INC_DIR}/redirections.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):
