@@ -35,3 +35,6 @@ ls && << EOF && pwd
 - Add them to your readline loop
 - each forked proceess
 - Ask about this ...
+## All heredoces in the tree must be executed first
+- count them if  > 17 exit
+- if not execute normaly by skipping any herdoc in redir list node
