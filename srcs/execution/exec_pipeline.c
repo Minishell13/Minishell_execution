@@ -6,38 +6,14 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:30:18 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 19:18:12 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 14:34:32 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //* -------------------------------- PIPELINE --------------------------------
-void	redirect_fds(t_ast *root, int fd)
-{
-	if (fd == STDOUT_FILENO)
-	{	
-		close(sh.pipefd[0]);
-		if (dup2(sh.pipefd[1], STDOUT_FILENO) == -1)
-		{
-			clear_sh(root);
-			close(sh.pipefd[1]);
-			exit(EXIT_FAILURE);
-		}
-		close(sh.pipefd[1]);
-	}
-	else if (fd == STDIN_FILENO)
-	{	
-		close(sh.pipefd[1]);
-		if (dup2(sh.pipefd[0], STDIN_FILENO) == -1)
-		{
-			clear_sh(root);
-			close(sh.pipefd[0]);
-			exit(EXIT_FAILURE);
-		}
-		close(sh.pipefd[0]);
-	}
-}
+
 
 void run_one_stage(t_ast *root, t_ast *node)
 {
@@ -53,7 +29,7 @@ void run_one_stage(t_ast *root, t_ast *node)
 			break;
 
 		case GRAM_SUBSHELL:
-			execute_subshell(root, node, true);
+			execute_subshell(root, node);
 			clear_sh(root);
 			exit(sh.exit_code);
 			break;
@@ -95,19 +71,50 @@ void	exec_right(t_ast *root, t_ast *right)
 	}
 }
 
+
+// TODO: Version without restoring fds
+// void	execute_pipeline(t_ast *root, t_ast *node)
+// {
+// 	int    status;
+
+// 	if (!node->child || !node->child->sibling)
+// 		return ;
+// 	if (pipe(sh.pipefd) < 0)
+// 		return ;
+// 	exec_left(root, node->child);
+// 	exec_right(root, node->child->sibling);
+// 	//
+// 	// 3) PARENT: clean up and wait
+// 	//
+// 	close(sh.pipefd[0]);
+// 	close(sh.pipefd[1]);
+// 	signals_notif(sh.pids[0], &status);
+// 	signals_notif(sh.pids[1], &status);
+
+// 	// return the exit status of the rightmost stage
+// 	sh.exit_code = WEXITSTATUS(status);
+// }
+
+// TODO: Version with restoring fds
 void	execute_pipeline(t_ast *root, t_ast *node)
 {
 	int    status;
+	int    stdin_backup;
+	int    stdout_backup;
+
+	stdin_backup = dup(STDIN_FILENO);
+	stdout_backup = dup(STDOUT_FILENO);
 
 	if (!node->child || !node->child->sibling)
 		return ;
+
 	if (pipe(sh.pipefd) < 0)
 		return ;
+
 	exec_left(root, node->child);
 	exec_right(root, node->child->sibling);
-	//
+
 	// 3) PARENT: clean up and wait
-	//
 	close(sh.pipefd[0]);
 	close(sh.pipefd[1]);
 	signals_notif(sh.pids[0], &status);
@@ -115,4 +122,8 @@ void	execute_pipeline(t_ast *root, t_ast *node)
 
 	// return the exit status of the rightmost stage
 	sh.exit_code = WEXITSTATUS(status);
+
+	// Restore original stdin and stdout
+	restore_fds(stdin_backup, stdout_backup);
 }
+

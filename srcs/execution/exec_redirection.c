@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:33:12 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 20:04:24 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 12:59:31 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,21 +81,8 @@ void	expand_and_redir(t_ast *node)
 void	execute_redirection(t_ast *node)
 {
 	t_ast 	*c;
-	int		heredoc_total = 0;
 
-	// 0. Count heredoc redirs
-	c = node->child;
-	heredoc_total = 0;
-	while (c)
-	{
-		if (c->type == GRAM_HEREDOC)
-			heredoc_total++;
-		c = c->sibling;
-	}
-	// 1. Do heredocs first
-	if (heredoc_total > 0)
-		heredoc_first(node, heredoc_total);
-	// 2. Do all other redirs (saving last in/out)
+	// 1. Do all other redirs (saving last in/out) exept heredocs
 	c = node->child;
 	while (c)
 	{
