@@ -33,7 +33,7 @@ AST =  $(AST_DIR)/ast.c $(AST_DIR)/ast_examples.c
 
 SIG = $(SIG_DIR)/signals.c
 
-SETUP = $(SETUP_DIR)/setup.c
+SETUP = $(SETUP_DIR)/setup.c $(SETUP_DIR)/utils.c
 
 SRCS =	$(TEST) $(SETUP) $(SIG) $(AST) $(EXEC)  $(SRC_DIR)/cleanup/cleanup.c \
 		$(SRC_DIR)/debug/debugging.c $ $(SRC_DIR)/exit/errors.c

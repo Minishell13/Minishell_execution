@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 15:58:05 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 22:05:28 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 16:24:02 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int main(int ac, char **av, char **env)
 	t_ast	*root = NULL;
 
 	setup_env(env);
-
 	while (1)
     {
 		setup_signals();

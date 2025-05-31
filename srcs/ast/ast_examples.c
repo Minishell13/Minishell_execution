@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/31 13:37:39 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 18:01:37 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,9 +162,13 @@ t_ast	*ft_get_ast4(void)
 	
 	t_ast *r1 = ast_new_node(GRAM_REDIR_OUT);
 	r1->data.redir.file = ft_strdup("./temp/out");
+	t_ast *r_node = ast_new_node(GRAM_IO_REDIRECT);
+	ast_add_child(r_node, r1);
+
+
 	t_ast *c5 = ast_new_node(GRAM_SIMPLE_COMMAND);
 	c5->data.args = ast_create_args("cat -e");
-	ast_add_child(c5, r1);
+	ast_add_child(c5, r_node);
 	
 	t_ast *p4 = ast_new_node(GRAM_PIPELINE);
 	ast_add_child(p4, p3);
@@ -347,13 +351,11 @@ t_ast	*ft_get_ast10(void)
 	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
 	c1->data.args = ast_create_args("cat");
 	t_ast *c2 = ast_new_node(GRAM_SIMPLE_COMMAND);
-	c2->data.args = ast_create_args("cat");
+	c2->data.args = ast_create_args("exit OK");
 	t_ast *p1 = ast_new_node(GRAM_PIPELINE);
 	ast_add_child(p1, c1);
 	ast_add_child(p1, c2);
 
-	
-	
 	t_ast *c3 = ast_new_node(GRAM_SIMPLE_COMMAND);
 	c3->data.args = ast_create_args("wc -l");
 	t_ast *c4 = ast_new_node(GRAM_SIMPLE_COMMAND);
@@ -400,15 +402,15 @@ t_ast	*ft_get_ast12(void)
 	// generate_tmpfile(&hd->data.redir);
 	// hd->data.redir.limiter = strdup("A");
 
-	// t_ast *rin = ast_new_node(GRAM_REDIR_IN);
-	// rin->data.redir.file = strdup("Makefile");
+	t_ast *rin = ast_new_node(GRAM_REDIR_IN);
+	rin->data.redir.file = strdup("Makefile");
 
-	t_ast *rout = ast_new_node(GRAM_REDIR_OUT);
-	rout->data.redir.file = strdup("./temp/b");
+	// t_ast *rout = ast_new_node(GRAM_REDIR_OUT);
+	// rout->data.redir.file = strdup("./temp/b");
 	
 	t_ast *r = ast_new_node(GRAM_IO_REDIRECT);
-	// ast_add_child(r, rin);
-	ast_add_child(r, rout);
+	ast_add_child(r, rin);
+	// ast_add_child(r, rout);
 	// ast_add_child(r, hd);
 	
 	t_ast *and1 = ast_new_node(GRAM_OPERATOR_AND);
@@ -417,6 +419,35 @@ t_ast	*ft_get_ast12(void)
 
 	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
 	ast_add_child(root, and1);
+	return root;
+}
+
+t_ast	*ft_get_ast13(void)
+{
+	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	c1->data.args = ast_create_args("./minishell 14");
+	
+	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
+	ast_add_child(root, c1);
+	return root;
+}
+
+t_ast	*ft_get_ast14(void)
+{
+	t_ast *c1 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	// c1->data.args = ast_create_args("exit gsg");
+	c1->data.args = ast_create_args("./minishell 14");
+	
+	t_ast *c2 = ast_new_node(GRAM_SIMPLE_COMMAND);
+	// c2->data.args = ast_create_args("export SHLVL=gdsgsg544684sgsgsg\"gdg\"'bfdbdfb'bfdbdbd5b5d");
+	c2->data.args = ast_create_args("echo $SHLVL");
+
+	t_ast *a1 = ast_new_node(GRAM_OPERATOR_AND);
+	ast_add_child(a1, c1);
+	ast_add_child(a1, c2);
+	
+	t_ast *root = ast_new_node(GRAM_COMPLETE_COMMAND);
+	ast_add_child(root, a1);
 	return root;
 }
 
@@ -436,6 +467,8 @@ t_ast	*ft_get_ast_example(int n)
 		ft_get_ast10,
 		ft_get_ast11,
 		ft_get_ast12,
+		ft_get_ast13,
+		ft_get_ast14,
 	};
 	int max = sizeof(examples) / sizeof(examples[0]);
 	if (n < 0 || n >= max)

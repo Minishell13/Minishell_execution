@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:05 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/28 16:53:40 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 16:05:06 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,22 @@ int	exec_cd(t_ast *node)
 
 	len = len_arr(node->data.args);
 	if (len == 1)
-		return (builtins_error("cd", NULL, ": no relative or absolute path"));
+	{
+		fdprintf(STDERR_FILENO,
+				"minishell: cd: no relative or absolute path\n");
+		return (EXIT_FAILURE);
+	}
 	if (len > 2)
-		return (builtins_error("cd", NULL, ": too many arguments"));
+	{
+		fdprintf(STDERR_FILENO,
+				"minishell: cd: too many arguments\n");
+		return (EXIT_FAILURE);
+	}
 	path = node->data.args[1];
 	if (chdir(path) != 0)
 	{
-		perror("minishell");
+		fdprintf(STDERR_FILENO,
+				"minishell: cd: %s\n", strerror(errno));
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);

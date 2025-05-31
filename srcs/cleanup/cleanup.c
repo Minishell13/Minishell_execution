@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:03:02 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/26 16:14:47 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 18:00:31 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,7 @@ void	ft_free_count_array(char **arr, int count)
 void	clear_sh(t_ast *root)
 {
 	ast_destroy(root);
+	restore_fds(sh.in, sh.out);
+	close_all_tracked_fds();
 	clear_arr(sh.my_env);
 }

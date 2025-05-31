@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:30 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 12:19:03 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 15:47:01 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,13 @@ static t_bool	parse_input(char *arg)
 	int		end;
 	char	*key;
 	char	*value;
+
 	end = valid_key(arg);
 	if (end != -1)
 	{
 		key = extract_key(arg, end);
 		value = extract_value(arg, end + 1);
-		add_var(key, value);
-		free(key);
-		free(value);
+		export_var(key, value, true, true);
 		return (true);
 	}
 	return (false);

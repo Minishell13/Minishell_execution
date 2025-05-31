@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:31:59 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/31 13:34:53 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 19:10:50 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,13 @@
 // TODO The heredoc must be restored or somting if it is attached with &&, ||
 
 //* -------------------------------- AND_OR --------------------------------
-// void	execute_and_or(t_ast *root, t_ast *node)
-// {
-// 	executor(root, node->child);
-// 	printf("and_or exit code: %d\n", sh.exit_code);
-// 	if (node->type == GRAM_OPERATOR_AND && sh.exit_code == 0)
-// 		executor(root, node->child->sibling);
-// 	else if (node->type == GRAM_OPERATOR_OR && sh.exit_code != 0)
-// 		executor(root, node->child->sibling);
-// }
-
-
-
-
 void	and_or_wrapper(t_ast *root, t_ast *node)
 {
-	int	stdin_backup;
-	int	stdout_backup;
-
-	stdin_backup = dup(STDIN_FILENO);
-	stdout_backup = dup(STDOUT_FILENO);
+	sh.in = track_dup(STDIN_FILENO);
+	sh.out = track_dup(STDOUT_FILENO);
 	executor(root, node);
 	// Restore in case redirection happened
-	restore_fds(stdin_backup, stdout_backup);
+	restore_fds(sh.in, sh.out);
 }
 
 void	execute_and_or(t_ast *root, t_ast *node)
@@ -49,4 +33,3 @@ void	execute_and_or(t_ast *root, t_ast *node)
 	else if (node->type == GRAM_OPERATOR_OR && sh.exit_code != 0)
 		and_or_wrapper(root, node->child->sibling);
 }
-

@@ -2,14 +2,16 @@ NAME = libft.a
 LIBC = ar rcs
 CC = cc
 ARR_DIR = ./array
+FDP_DIR = ./fdprintf
 INCLUDES = ./includes
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror -I${INCLUDES}
 
 ARR_SRCS =	${ARR_DIR}/inner_merge_arr.c ${ARR_DIR}/merge_arr.c ${ARR_DIR}/arr_utils.c ${ARR_DIR}/clear_arr.c \
 			${ARR_DIR}/int_arr.c
+FDP = ${FDP_DIR}/fdprintf.c ${FDP_DIR}/utils.c 
 
-SRCS =	${ARR_SRCS}	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
+SRCS =	${ARR_SRCS} ${FDP}	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
 		ft_isprint.c ft_strlen.c ft_memset.c ft_bzero.c \
 		ft_memcpy.c ft_memmove.c ft_strlcpy.c ft_strlcat.c \
 		ft_calloc.c ft_strdup.c ft_toupper.c ft_tolower.c \
@@ -29,7 +31,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(LIBC) $(NAME) $(OBJS)
 
-%.o: %.c ${INCLUDES}/libft.h ${INCLUDES}/ft_printf.h ${INCLUDES}/get_next_line.h ${INCLUDES}/malloc.h ${INCLUDES}/t_bool.h ${INCLUDES}/array.h
+%.o: %.c ${INCLUDES}/libft.h ${INCLUDES}/ft_printf.h ${INCLUDES}/get_next_line.h ${INCLUDES}/malloc.h ${INCLUDES}/t_bool.h ${INCLUDES}/array.h ${INCLUDES}/fdprintf.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:

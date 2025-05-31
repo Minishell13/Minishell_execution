@@ -6,118 +6,51 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 11:49:54 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 12:06:36 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 16:04:29 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//TODO: The anv of your shell must be setuped correctly
-//TODO: Create utils ...
-
-t_bool	var_exist(char *key)
+void	export_var(char *k, char *v, t_bool alcd1, t_bool alcd2)
 {
-	int		i;
-	size_t	key_len;
+	char	*key;
+	char	*val;
 
-	i = 0;
-	key_len = ft_strlen(key);
-	while (sh.env[i])
-	{
-		if (ft_strncmp(sh.my_env[i], key, key_len) == 0
-			&& sh.my_env[i][key_len] && sh.my_env[i][key_len] == '=')
-		{
-			return (true);
-		}
-		i++;
-	}
-	return (false);
-}
-
-int	get_var_index(char *key)
-{
-	int		i;
-	size_t	key_len;
-
-	i = 0;
-	key_len = ft_strlen(key);
-	while (sh.my_env[i])
-	{
-		if (ft_strncmp(sh.my_env[i], key, key_len) == 0
-			&& sh.my_env[i][key_len] && sh.my_env[i][key_len] == '=')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-void	unset_var(char *key)
-{
-	int		i;
-	size_t	key_len;
-	char	**new_env = ft_calloc(1, sizeof(char *));
-
-	i = 0;
-	key_len = ft_strlen(key);
-	while (sh.my_env[i])
-	{
-		if (ft_strncmp(sh.my_env[i], key, key_len) == 0
-			&& sh.my_env[i][key_len] && sh.my_env[i][key_len] == '=')
-		{
-			i++;
-			continue ;
-		}
-		new_env = append_arr(new_env, ft_strdup(sh.my_env[i]));
-		i++;
-	}
-	clear_arr(sh.my_env);
-	sh.my_env = new_env;
-}
-
-char	*get_value(char *key)
-{
-	int		i;
-	size_t	key_len;
-	char	*value;
-
-	i = 0;
-	key_len = ft_strlen(key);
-	while (sh.my_env[i])
-	{
-		if (ft_strncmp(sh.my_env[i], key, key_len) == 0
-			&& sh.my_env[i][key_len] && sh.my_env[i][key_len] == '=')
-		{
-			value = sh.my_env[i] + key_len;
-			value = ft_strdup(value + 1);
-			return (value);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-void	add_var(char *key, char *value)
-{
-	char	*tmp;
-	char	*new_var;
-	int		var_index;
-
-	var_index = get_var_index(key);
-	tmp = ft_strjoin(key, "=");
-	new_var = ft_strjoin(tmp, value);
-	free(tmp);
-	if (var_index != -1)
-	{
-		free(sh.my_env[var_index]);
-		sh.my_env[var_index] = new_var;
-	}
+	if (alcd1)
+		key = k;
 	else
+		key = ft_strdup(k);
+	if (alcd2)
+		val = v;
+	else
+		val = ft_strdup(v);
+	add_var(key, val);
+	free(key);
+	free(val);
+}
+
+void	add_shell_lvl()
+{
+	char	*lvl_value;
+	int		lvl;
+
+	lvl_value = get_value("SHLVL");
+	if (!lvl_value)
 	{
-		sh.my_env = append_arr(sh.my_env, new_var);
-		// char *k = get_value(key);
-		// printf("v: %s\n", k);
-		// free(k);
+		export_var("SHLVL", "1", false, false);
+		return ;
 	}
+	lvl = ft_atoi(lvl_value) + 1;
+	printf("lvl: %d\n", lvl - 1);
+	if (lvl >= 1000)
+	{
+		fdprintf(STDERR_FILENO,
+				"warning: shell level (%d) too high, resetting to 1\n", lvl);
+		lvl = 1;
+	}
+	free(lvl_value);
+	export_var("SHLVL", ft_itoa(lvl), false, true);
 }
 
 void	setup_env(char **env)
@@ -133,4 +66,5 @@ void	setup_env(char **env)
 		sh.my_env = append_arr(sh.my_env, ft_strdup(env[i]));
 		i++;
 	}
+	add_shell_lvl();
 }

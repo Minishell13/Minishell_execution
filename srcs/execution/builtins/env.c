@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 19:47:58 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/28 16:53:58 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 16:06:04 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,11 @@ int	exec_env(t_ast *node)
 	int	i;
 
 	if (!no_args(node->data.args))
-		return (builtins_error("env", NULL, ": no options allowed"));
+	{
+		fdprintf(STDERR_FILENO,
+				"minishell: env: no options allowed\n");
+		return (EXIT_FAILURE);
+	}
 	i = 0;
 	if (!sh.my_env)
 		return (EXIT_FAILURE);

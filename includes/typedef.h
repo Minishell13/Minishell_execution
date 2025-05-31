@@ -6,7 +6,7 @@
 /*   By: abnsila <abnsila@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:49:24 by abnsila           #+#    #+#             */
-/*   Updated: 2025/05/30 19:54:22 by abnsila          ###   ########.fr       */
+/*   Updated: 2025/05/31 17:04:22 by abnsila          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,20 @@
 // Error
 # include <errno.h>
 
+#define MAX_TRACKED_FDS 1024
+
 typedef struct	s_minishell
 {
 	char	*shell;
 	char	**env;
 	char	**my_env;
 	int		exit_code;
+	int		in;
+	int		out;
 	pid_t	pids[2];
-	int		pipefd[2];
+	int		pipefd[2][2];
+	int		tracked_fds[MAX_TRACKED_FDS];
+	int		tracked_fds_count;
 }				t_minishell;
 
 typedef enum e_error
